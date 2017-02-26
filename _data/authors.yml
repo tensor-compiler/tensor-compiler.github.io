@@ -1,0 +1,47 @@
+fred:
+  name: Fredrik Kjolstad
+  site: http://fredrikbk.com
+
+shoaib:
+  name: Shoaib Kamil
+  site: http://people.csail.mit.edu/skamil/
+
+jrk:
+  name: Jonathan Ragan-Kelley
+  site: http://people.csail.mit.edu/jrk/
+
+dave:
+  name: David I. W. Levin
+  site: http://diwlevin.webfactional.com/researchdb/
+
+shin:
+  name: Shinjiro Sueda
+  site: http://www.calpoly.edu/~ssueda/
+
+desai:
+  name: Desai Chen
+  site: http://people.csail.mit.edu/desaic/
+
+etienne:
+  name: Etienne Vouga
+  site: http://www.cs.utexas.edu/users/evouga/
+
+danny:
+  name: Danny M. Kaufman
+  site: http://www.cs.columbia.edu/~kaufman/
+
+tej:
+  name: Gurtej Kanwar
+  site: https://www.linkedin.com/in/gurtej-kanwar-9a4b5b56
+
+wojciech:
+  name: Wojciech Matusik
+  site: http://people.csail.mit.edu/wojciech/
+
+saman:
+  name: Saman Amarasinghe
+  site: http://people.csail.mit.edu/saman/
+
+gilbert:
+  name: Gilbert Louis Bernstein
+  site: http://www.gilbertbernstein.com
