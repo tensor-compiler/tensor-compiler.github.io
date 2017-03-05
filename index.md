@@ -1,6 +1,6 @@
 ---
 layout: post
-title: the Tensor Algebra Compiler (taco)
+title: The Tensor Algebra Compiler (taco)
 ---
 The Tensor Algebra Compiler (taco)
 ==================================
