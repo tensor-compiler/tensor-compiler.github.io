@@ -18,12 +18,12 @@ body{
 }
 
 .data-analytics{
-  background: url('./images/data_analytics_thumbnail.png') no-repeat #fff;
+  background: url('./images/data_analytics_thumbnail.jpg') no-repeat #fff;
   background-position: 50% -10%;
 }
 
 .performance-engineering{
-  background: url('./images/performance_engineering_thumbnail.png') no-repeat #fff;
+  background: url('./images/performance_engineering_thumbnail.jpg') no-repeat #fff;
   background-position: 50% -10%;
 }
 
