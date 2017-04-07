@@ -1,0 +1,38 @@
+body{
+  background: #333;
+  color:white;
+}
+
+.taco-small{
+  background: url("./images/taco-small.png");
+}
+
+.scientific-computing{
+  background: url('./images/scientific_computing_thumbnail.png') no-repeat #fff;
+  background-position: 50% -10%;
+}
+
+.machine-learning{
+  background: url('./images/machine_learning_thumbnail.png') no-repeat #fff;
+  background-position: 50% -10%;
+}
+
+.data-analytics{
+  background: url('./images/data_analytics_thumbnail.png') no-repeat #fff;
+  background-position: 50% -10%;
+}
+
+.performance-engineering{
+  background: url('./images/performance_engineering_thumbnail.png') no-repeat #fff;
+  background-position: 50% -10%;
+}
+
+.demo-card-square{
+  margin-left:auto;
+  margin-right: auto;
+}
+
+.demo-card-square.mdl-card {
+  width: 320px;
+  height: 320px;
+}
