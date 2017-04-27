@@ -1,30 +1,43 @@
 body{
-  background: #333;
-  color:white;
+  background: #eee;
+  color:black;
+}
+
+.light-bg{
+  background: #fff;
+}
+
+.dark-bg{
+  background: #eee;
 }
 
 .taco-small{
   background: url("./images/taco-small.png");
 }
 
+
 .scientific-computing{
   background: url('./images/scientific_computing_thumbnail.png') no-repeat #fff;
-  background-position: 50% -10%;
+  background-size: 80%;
+  background-position: 50% 0%;
 }
 
 .machine-learning{
-  background: url('./images/machine_learning_thumbnail.jpg') no-repeat #fff;
-  background-position: 50% -10%;
+  background: url('./images/machine_learning_thumbnail.png') no-repeat #fff;
+  background-size: 70%;
+  background-position: 50% 0%;
 }
 
 .data-analytics{
-  background: url('./images/data_analytics_thumbnail.jpg') no-repeat #fff;
-  background-position: 50% -10%;
+  background: url('./images/data_analytics_thumbnail.png') no-repeat #fff;
+  background-size: 80%;
+  background-position: 50% 0%;
 }
 
 .performance-engineering{
-  background: url('./images/performance_engineering_thumbnail.jpg') no-repeat #fff;
-  background-position: 50% -10%;
+  background: url('./images/performance_engineering_thumbnail.png') no-repeat #fff;
+  background-size: 80%;
+  background-position: 50% 0%;
 }
 
 .demo-card-square{
