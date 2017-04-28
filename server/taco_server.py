@@ -20,11 +20,17 @@ class Server(BaseHTTPRequestHandler):
       cmd = "taco " + cmd + " -write-source=kernel.c"
       ret = subprocess.call(str.split(cmd))
       
+      logFile = "success.log"
+
       if ret != 0:
         response['error'] = 'Input expression is currently not supported by taco'
+        logFile = "errors.log"
       else:
         with open('kernel.c', 'r') as f:
           response['compute-kernel'] = f.read()
+
+      with open(logFile, 'a') as f:
+        f.write(cmd + "\n")
 
       self.send_response(200)
     except:
