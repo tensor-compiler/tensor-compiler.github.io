@@ -16,8 +16,10 @@ class Server(BaseHTTPRequestHandler):
       cmd = urllib.parse.unquote(msg.decode())
       if len(cmd) > 1024:
         raise Exception
+
+      prettyCmd = "taco \"" + cmd.replace(" ", "\" ", 1)
       
-      cmd = "taco " + cmd + " -write-source=kernel.c"
+      cmd = "/home/ubuntu/taco/build/bin/taco " + cmd + " -write-source=kernel.c"
       ret = subprocess.call(str.split(cmd))
       
       logFile = "success.log"
@@ -30,7 +32,7 @@ class Server(BaseHTTPRequestHandler):
           response['compute-kernel'] = f.read()
 
       with open(logFile, 'a') as f:
-        f.write(cmd + "\n")
+        f.write(prettyCmd + "\n")
 
       self.send_response(200)
     except:
