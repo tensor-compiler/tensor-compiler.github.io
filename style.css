@@ -15,12 +15,30 @@ body{
   background: url("./images/taco-small.png");
 }
 
+.whytaco-icon{
+  width: 160px;
+  height: 160px;
+}
+
 .banner{
   height: 200px;
   margin:0;
   padding-left: 20px;
   padding-top: 50px;
   /*background:#fff;*/
+}
+
+.mdl-layout__header-row{
+  padding-left: 30px;
+}
+
+a{
+  text-decoration: none;
+}
+
+.fast-textbox,.easy-textbox, .versatile-textbox{
+  padding:auto;
+  width:50%;
 }
 
 .scientific-computing{
