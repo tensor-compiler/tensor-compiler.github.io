@@ -55,10 +55,16 @@ function demo() {
   };
 
   var txtExprView = {
+    timerEvent: null,
+
     updateView: function() {
+      clearTimeout(txtExprView.timerEvent);
       if (model.input.error !== "") {
-        $("#lblError").html(model.input.error);
-        $("#txtExpr").parent().addClass('is-invalid');
+        var markError = function() {
+          $("#lblError").html(model.input.error);
+          $("#txtExpr").parent().addClass('is-invalid');
+        }
+        txtExprView.timerEvent = setTimeout(markError, 400);
       } else {
         $("#txtExpr").parent().removeClass('is-invalid');
       }
@@ -72,9 +78,13 @@ function demo() {
   };
 
   var tblFormatsView = {
+    timerEvent: null,
+
     updateView: function() {
+      clearTimeout(tblFormatsView.timerEvent);
       if (model.input.error !== "") {
-        $("#tblFormats").hide();
+        var hideTable = function() { $("#tblFormats").hide(); };
+        tblFormatsView.timerEvent = setTimeout(hideTable, 400);
       } else {
         var listTensorsBody = "";
         for (t in model.input.tensorOrders) {
@@ -143,14 +153,14 @@ function demo() {
   });
 
   $("#btnGetKernel").click(function() {
-    $("#txtKernel").html("/* Your custom-generated kernel will appear here... */");
+    $("#txtKernel").html("/* Your custom generated kernel will appear here... */");
     $('pre code').each(
       function(i, block) {
         hljs.highlightBlock(block);
       }
     );
 
-    $("#btnGetKernel").html("Waiting...");
+    $("#btnGetKernel").html("Processing...");
     $("#btnGetKernel").prop("disabled", true);
 
     var command = model.input.expression.replace(/ /g, "");
@@ -175,7 +185,7 @@ function demo() {
 
     $.ajax({
         type: "POST",
-        url: "http://localhost",
+        url: "http://tensor-compiler-online.csail.mit.edu",
         data: escape(command),
         async: true,
         cache: false,
