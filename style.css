@@ -15,6 +15,13 @@ body{
   background: url("./images/taco-small.png");
 }
 
+.banner{
+  height: 200px;
+  margin:0;
+  padding-left: 20px;
+  padding-top: 50px;
+  /*background:#fff;*/
+}
 
 .scientific-computing{
   background: url('./images/scientific_computing_thumbnail.png') no-repeat #fff;
@@ -24,7 +31,7 @@ body{
 
 .machine-learning{
   background: url('./images/machine_learning_thumbnail.png') no-repeat #fff;
-  background-size: 70%;
+  background-size: 57%;
   background-position: 50% 0%;
 }
 
