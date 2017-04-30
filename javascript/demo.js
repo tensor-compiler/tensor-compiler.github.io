@@ -78,8 +78,31 @@ function demo() {
   };
 
   var tblFormatsView = {
+    cache: {},
     timerEvent: null,
 
+    createCacheEntry(listId) {
+      var dims = $("#" + listId).sortable("toArray");
+      var formats = [];
+      var ordering = [];
+
+      for (var i = 1; i < dims.length; ++i) {
+        formats.push($("#" + dims[i] + "_select").attr("data-val"));
+        ordering.push(parseInt(dims[i].split("_")[1]));
+      }
+
+      return { formats: formats, ordering: ordering };
+    },
+    getFormatString(desc) {
+      switch (desc) {
+        case 'd':
+          return "Dense";
+        case 's':
+          return "Sparse";
+        default:
+          return "";
+      }
+    },
     updateView: function() {
       clearTimeout(tblFormatsView.timerEvent);
       if (model.input.error !== "") {
@@ -88,7 +111,13 @@ function demo() {
       } else {
         var listTensorsBody = "";
         for (t in model.input.tensorOrders) {
-          if (model.input.tensorOrders[t] > 0) {
+          var order = model.input.tensorOrders[t];
+          var cached = (tblFormatsView.cache.hasOwnProperty(t) && 
+                        tblFormatsView.cache[t].formats.length == order);
+
+          if (order > 0) {
+            var listId = "dims" + t;
+
             listTensorsBody += "<tr>";
             listTensorsBody += "<td class=\"mdl-data-table__cell--non-numeric\" ";
             listTensorsBody += "width=\"100\"><div align=\"center\">";
@@ -96,27 +125,36 @@ function demo() {
             listTensorsBody += "</div></td>";
             listTensorsBody += "<td class=\"mdl-data-table__cell--non-numeric\" ";
             listTensorsBody += "style=\"padding: 0px\">";
-            listTensorsBody += "<ul id=\"dims";
-            listTensorsBody += t;
+            listTensorsBody += "<ul id=\"";
+            listTensorsBody += listId;
             listTensorsBody += "\" class=\"ui-state-default sortable\">";
             listTensorsBody += "<li class=\"ui-state-default\" ";
             listTensorsBody += "style=\"width: 0px; padding: 0px\"></li>";
-            for (var i = 0; i < model.input.tensorOrders[t]; ++i) {
-              var id = "dim" + t + "_" + i;
+
+            for (var i = 0; i < order; ++i) {
+              var dim = cached ? tblFormatsView.cache[t].ordering[i] : i;
+              var format = cached ? tblFormatsView.cache[t].formats[i] : "d";
+              var id = "dim" + t + "_" + dim;
               var selectId = id + "_select";
+
               listTensorsBody += "<li id=\"";
               listTensorsBody += id;
               listTensorsBody += "\" class=\"ui-state-default\">";
               listTensorsBody += "<div class=\"mdl-textfield mdl-js-textfield ";
               listTensorsBody += "mdl-textfield--floating-label getmdl-select\">";
-              listTensorsBody += "<input class=\"mdl-textfield__input\" id=\"";
+              listTensorsBody += "<input class=\"mdl-textfield__input ";
+              listTensorsBody += "format-input\" id=\"";
               listTensorsBody += selectId;
-              listTensorsBody += "\" value=\"Dense\" type=\"text\" readonly ";
-              listTensorsBody += "tabIndex=\"-1\" data-val=\"d\"/>";
+              listTensorsBody += "\" type=\"text\" readonly tabIndex=\"-1\" ";
+              listTensorsBody += "value=\"";
+              listTensorsBody += tblFormatsView.getFormatString(format);
+              listTensorsBody += "\" data-val=\"";
+              listTensorsBody += format;
+              listTensorsBody += "\"/>";
               listTensorsBody += "<label class=\"mdl-textfield__label\" for=\"";
               listTensorsBody += selectId;
               listTensorsBody += "\">Dimension ";
-              listTensorsBody += (i + 1);
+              listTensorsBody += (dim + 1);
               listTensorsBody += "</label>";
               listTensorsBody += "<ul class=\"mdl-menu mdl-menu--bottom-left ";
               listTensorsBody += "mdl-js-menu\" for=\"";
@@ -128,6 +166,7 @@ function demo() {
               listTensorsBody += "s\">Sparse</li>";
               listTensorsBody += "</ul></div></li>";
             }
+
             listTensorsBody += "</ul></td></tr>";
           }
         }
@@ -135,7 +174,30 @@ function demo() {
         if (listTensorsBody !== "") {
           $("#listTensors").html(listTensorsBody);
           getmdlSelect.init(".getmdl-select");
-          $(".sortable").sortable();
+
+          $(".sortable").sortable({
+              update: function(ev, ui) {
+                var listId = ui.item.parent().attr('id');
+                var tensor = listId.replace("dims", "");
+
+                tblFormatsView.cache[tensor] = 
+                    tblFormatsView.createCacheEntry(listId);
+              }
+          });
+          $(".format-input").change(function() {
+            var listId = $(this).parent().parent().parent().attr('id');
+            var tensor = listId.replace("dims", "");
+
+            tblFormatsView.cache[tensor] = 
+                tblFormatsView.createCacheEntry(listId);
+          });
+          for (t in model.input.tensorOrders) {
+            if (model.input.tensorOrders[t] > 0) {
+              tblFormatsView.cache[t] = 
+                  tblFormatsView.createCacheEntry("dims" + t);
+            }
+          }
+
           $("#tblFormats").show();
         } else {
           $("#tblFormats").hide();

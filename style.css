@@ -74,3 +74,16 @@ a{
   width: 320px;
   height: 320px;
 }
+
+.sortable {
+  list-style-type: none; 
+  margin: 0px; 
+  padding: 0px;
+}
+
+.sortable li {
+  float: left;
+  width: 100px; 
+  padding: 0.5em
+}
+
