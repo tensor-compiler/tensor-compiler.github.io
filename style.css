@@ -15,6 +15,10 @@ body{
   background: url("./images/taco-small.png");
 }
 
+.body-text{
+  text-align: justify;
+}
+
 .whytaco-icon{
   width: 160px;
   height: 160px;
@@ -25,7 +29,6 @@ body{
   margin:0;
   padding-left: 20px;
   padding-top: 50px;
-  /*background:#fff;*/
 }
 
 .mdl-layout__header-row{
@@ -49,7 +52,7 @@ a{
 
 .machine-learning{
   background: url('./images/machine_learning_thumbnail.png') no-repeat #fff;
-  background-size: 57%;
+  background-size: 90%;
   background-position: 50% 0%;
 }
 
