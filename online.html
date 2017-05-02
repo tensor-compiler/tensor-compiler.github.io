@@ -1,0 +1,140 @@
+<html>
+  <head>
+    <!-- Title -->
+    <title>taco - Try Online</title>
+    <!-- CSS and JavaScript -->
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.rawgit.com/CreativeIT/getmdl-select/master/getmdl-select.min.css">
+    <script src="https://cdn.rawgit.com/CreativeIT/getmdl-select/master/getmdl-select.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/highlight.min.js"></script>
+    <script src="javascripts/demo.min.js"></script>
+  </head>
+  <body>
+    <!-- Always shows a header, even in smaller screens. -->
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+      <header class="mdl-layout__header">
+        <div class="mdl-layout__header-row">
+          <!-- Title -->
+          <span class="mdl-layout-title">taco: the tensor algebra compiler</span>
+          <!-- Add spacer, to align navigation to the right -->
+          <div class="mdl-layout-spacer"></div>
+          <!-- Navigation -->
+          <nav class="mdl-navigation">
+            <a class="mdl-navigation__link" href="">Docs</a>
+            <a class="mdl-navigation__link" href="">Publications</a>
+            <a class="mdl-navigation__link" href="https://github.com/mit-commit/taco">GitHub</a>
+          </nav>
+        </div>        
+      </header>
+      <main class="mdl-layout__content">
+        <div class="page-content">
+          <div class="mdl-grid">
+            <div class="mdl-layout-spacer"></div>
+            <div class="mdl-cell mdl-cell--8-col">
+              <h6 style="margin-bottom: 0px; margin-top: 16px">Input a tensor algebra expression in index notation to generate code that computes it:</h6>
+              <table style="width: 100%">
+                <tr>
+                  <td>
+                    <div class="mdl-textfield mdl-js-textfield" style="width: 100%">
+                      <input id="txtExpr" class="mdl-textfield__input" value="y(i) = A(i,j) * x(j)" style="font-family: monospace" spellcheck="false" autocomplete="false" autocorrect="false" autocapitalize="false">
+                      <span id="lblError" class="mdl-textfield__error" style="font-size: 14px"></span>
+                    </div>
+                  </td>
+                  <td style="width: 32px">
+                    <div style="position:relative">
+                      <button id="btnExamples" class="mdl-button mdl-js-button mdl-button--icon" style="width: 100%">
+                        <i class="material-icons">more_vert</i>
+                      </button>
+                      <ul id="listExamples" class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="btnExamples"></ul>
+                    </div>
+                  </td>
+                  <td style="width: 180px">
+                    <button id="btnGetKernel" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"" style="width: 100%">Generate Kernel</button>
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <div class="mdl-layout-spacer"></div>
+          </div>
+          <div id="tblFormats" class="mdl-grid" style="padding-top: 4px; padding-bottom: 0px">
+            <div class="mdl-layout-spacer"></div>
+            <div class="mdl-cell mdl-cell--8-col">
+              <table class="mdl-data-table mdl-js-data-table" style="width: 100%; margin-bottom: 8px">
+                <thead>
+                  <tr>
+                    <th class="mdl-data-table__cell--non-numeric" width="100"><div align="center" style="position:relative; top:-1px"><big>Tensor</big></div></th>
+                    <th class="mdl-data-table__cell--non-numeric" style="padding-left: 7px">
+                      <div style="display:inline"><big>Format&nbsp;</big></div>
+                      <div style="display:inline">(reorder dimensions by dragging the drop-down menus)</div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody id="listTensors"></tbody>
+              </table>
+            </div>
+            <div class="mdl-layout-spacer"></div>
+          </div>
+          <div class="mdl-grid" style="padding-top: 4px">
+            <div class="mdl-layout-spacer"></div>
+            <div class="mdl-cell mdl-cell--8-col">
+              <div id="panelKernels" class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+                <table style="width: 100%">
+                  <tr>
+                    <td>
+                      <div class="mdl-tabs__tab-bar" style="justify-content: flex-start">
+                          <a href="#compute-panel" class="mdl-tabs__tab is-active">Compute Loops</a>
+                          <a href="#assembly-panel" class="mdl-tabs__tab">Assembly Loops</a>
+                          <a href="#full-panel" class="mdl-tabs__tab">Complete Code</a>
+                      </div>
+                    </td>
+                    <td style="width: 180px" align="right">
+                      <!--<div class="mdl-tabs__tab-bar" style="justify-content: flex-end">
+                          <a href="" class="mdl-tabs__tab">Download</a>
+                      </div>-->
+                      <button id="btnDownload" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"" style="width: 100%">Download</button>
+                    </td>
+                  </tr>
+                </table>
+
+                <div class="mdl-tabs__panel is-active" id="compute-panel">
+                  <pre style="margin-top: 0px">
+                    <code id="txtComputeLoops" class="lang-cpp">/* The generated compute loops will appear here */</code>
+                  </pre>
+                </div>
+                <div class="mdl-tabs__panel" id="assembly-panel">
+                  <pre style="margin-top: 0px">
+                    <code id="txtAssemblyLoops" class="lang-cpp">/* The generated assembly loops will appear here */</code>
+                  </pre>
+                </div>
+                <div class="mdl-tabs__panel" id="full-panel">
+                  <pre style="margin-top: 0px">
+                    <code id="txtFullCode" class="lang-cpp">/* The complete generated code will appear here */</code>
+                  </pre>
+                </div>
+              </div>
+
+              <p style="line-height: 100%" align="justify">The generated code is provided "as is" without warranty of any kind. To help us improve taco, we retain an anonymized record all tensor algebra expressions submitted to the taco online server.</p>
+            </div>
+            <div class="mdl-layout-spacer"></div>
+          </div>
+
+          <script>demo()</script>
+
+          <footer class="mdl-mini-footer">
+            <div class="mdl-mini-footer__left-section">
+            </div>
+            <div class="mdl-mini-footer__right-section">
+            </div>
+          </footer>
+        </div>
+      </main>
+    </div>
+
+  </body>
+</html>

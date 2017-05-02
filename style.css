@@ -1,0 +1,115 @@
+body{
+  background: #f6f6f6;
+  color:black;
+}
+
+.light-bg{
+  background:#fff;
+}
+
+/*.light-bg{
+  position: relative;
+}
+
+.light-bg:after {
+    content : "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-image: url('./images/space.png'); 
+    background-size: 160%;
+    background-position: 30% 20%;
+    width: 100%;
+    height: 100%;
+    opacity : 0.8;
+    z-index: -1;
+}*/
+
+.dark-bg{
+  background: #eee;
+}
+
+.taco-small{
+  background: url("./images/taco-small.png");
+}
+
+.body-text{
+  text-align: justify;
+}
+
+.whytaco-icon{
+  width: 160px;
+  height: 160px;
+}
+
+.banner{
+  height: 200px;
+  margin:0;
+  padding-left: 20px;
+  padding-top: 50px;
+}
+
+.mdl-layout__header-row{
+  padding-left: 30px;
+}
+
+a{
+  text-decoration: none;
+}
+
+.fast-textbox,.easy-textbox, .versatile-textbox, .whytaco-box{
+  margin:auto;
+  width:50%;
+/*  color:white;
+*/}
+
+.scientific-computing{
+  background: url('./images/scientific_computing_thumbnail.png') no-repeat #fff;
+  background-size: 80%;
+  background-position: 50% 0%;
+}
+
+.machine-learning{
+  background: url('./images/machine_learning_thumbnail.png') no-repeat #fff;
+  background-size: 90%;
+  background-position: 50% 0%;
+}
+
+.data-analytics{
+  background: url('./images/data_analytics_thumbnail.png') no-repeat #fff;
+  background-size: 100%;
+  background-position: 0% 600%;
+}
+
+.performance-engineering{
+  background: url('./images/speed.png') no-repeat #fff;
+  background-size: 48%;
+  background-position: 50% 20%;
+}
+
+.demo-card-square{
+  margin-left:auto;
+  margin-right: auto;
+}
+
+.demo-card-square.mdl-card {
+  width: 320px;
+  height: 320px;
+}
+
+.sortable {
+  list-style-type: none; 
+  margin: 0px; 
+  padding: 0px;
+}
+
+.sortable li {
+  float: left;
+  width: 100px; 
+  padding: 0.5em;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  margin-top: 5px;
+}
+
