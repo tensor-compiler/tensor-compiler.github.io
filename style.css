@@ -84,6 +84,9 @@ a{
 .sortable li {
   float: left;
   width: 100px; 
-  padding: 0.5em
+  padding: 0.5em;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  margin-top: 5px;
 }
 

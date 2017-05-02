@@ -1,31 +1,48 @@
 function demo() {
+  var State = Object.freeze({Valid: 1, Invalid: 2, Processing: 3});
+
   var model = {
     input: {
       expression: "",
-      tensorOrders: {},
-      error: ""
+      tensorOrders: {}
     },
-    computeKernel: "",
+    output: {
+      computeLoops: "",
+      assemblyLoops: "",
+      fullCode: ""
+    },
+    error: "",
+    state: State.Valid,
 
     inputViews: [],
-    computeKernelViews: [],
+    outputViews: [],
+    stateViews: [],
 
     addInputView: function(newView) {
       model.inputViews.push(newView);
-      newView();
+      newView(400);
     },
     updateInputViews: function() {
       for (v in model.inputViews) {
-        model.inputViews[v]();
+        model.inputViews[v](400);
       }
     },
-    addComputeKernelView: function(newView) {
-      model.computeKernelViews.push(newView);
-      newView();
+    addOutputView: function(newView) {
+      model.outputViews.push(newView);
+      newView(0);
     },
-    updateComputeKernelViews: function() {
-      for (v in model.computeKernelViews) {
-        model.computeKernelViews[v]();
+    updateOutputViews: function() {
+      for (v in model.outputViews) {
+        model.outputViews[v](0);
+      }
+    },
+    addStateView: function(newView) {
+      model.stateViews.push(newView);
+      newView(0);
+    },
+    updateStateViews: function() {
+      for (v in model.stateViews) {
+        model.stateViews[v](0);
       }
     },
 
@@ -33,47 +50,53 @@ function demo() {
       model.input.expression = expression;
       if (model.input.expression.length > 256) {
         model.input.tensorOrders = {};
-        model.input.error = "Input expression is too long";
+        model.error = "Input expression is too long";
       } else {
         try {
           model.input.tensorOrders = parser.parse(expression);
-          model.input.error = "";
+          model.error = "";
           for (t in model.input.tensorOrders) {
             if (model.input.tensorOrders[t] < 0) {
               model.input.tensorOrders = {};
-              model.input.error = "Tensor " + t + " has inconsistent order";
+              model.error = "Tensor " + t + " has inconsistent order";
               break;
             }
           }
         } catch (e) {
           model.input.tensorOrders = {};
-          model.input.error = "Input expression is invalid";
+          model.error = "Input expression is invalid";
         }
       }
+      model.setState(model.error === "" ? State.Valid : State.Invalid);
       model.updateInputViews();
     },
+    setOutput: function(computeLoops, assemblyLoops, fullCode, error) {
+      model.output = { computeLoops: computeLoops,
+                       assemblyLoops: assemblyLoops,
+                       fullCode: fullCode };
+      model.error = error;
+      model.updateOutputViews();
+    },
+    setState: function(state) {
+      model.state = state;
+      model.updateStateViews();
+    }
   };
 
   var txtExprView = {
     timerEvent: null,
 
-    updateView: function() {
+    updateView: function(timeout) {
       clearTimeout(txtExprView.timerEvent);
-      if (model.input.error !== "") {
+      if (model.error !== "") {
         var markError = function() {
-          $("#lblError").html(model.input.error);
+          $("#lblError").html(model.error);
           $("#txtExpr").parent().addClass('is-invalid');
-        }
-        txtExprView.timerEvent = setTimeout(markError, 400);
+        };
+        txtExprView.timerEvent = setTimeout(markError, timeout);
       } else {
         $("#txtExpr").parent().removeClass('is-invalid');
       }
-    }
-  };
-
-  var btnGetKernelView = {
-    updateView: function() {
-      $("#btnGetKernel").prop('disabled', model.input.error !== "");
     }
   };
 
@@ -103,9 +126,9 @@ function demo() {
           return "";
       }
     },
-    updateView: function() {
+    updateView: function(timeout) {
       clearTimeout(tblFormatsView.timerEvent);
-      if (model.input.error !== "") {
+      if (model.error !== "") {
         var hideTable = function() { $("#tblFormats").hide(); };
         tblFormatsView.timerEvent = setTimeout(hideTable, 400);
       } else {
@@ -120,7 +143,7 @@ function demo() {
 
             listTensorsBody += "<tr>";
             listTensorsBody += "<td class=\"mdl-data-table__cell--non-numeric\" ";
-            listTensorsBody += "width=\"100\"><div align=\"center\">";
+            listTensorsBody += "width=\"100\"><div align=\"center\" style=\"font-size: 16px\">";
             listTensorsBody += t;
             listTensorsBody += "</div></td>";
             listTensorsBody += "<td class=\"mdl-data-table__cell--non-numeric\" ";
@@ -145,12 +168,18 @@ function demo() {
               listTensorsBody += "<input class=\"mdl-textfield__input ";
               listTensorsBody += "format-input\" id=\"";
               listTensorsBody += selectId;
-              listTensorsBody += "\" type=\"text\" readonly tabIndex=\"-1\" ";
+              listTensorsBody += "\" type=\"text\" readonly ";
               listTensorsBody += "value=\"";
               listTensorsBody += tblFormatsView.getFormatString(format);
               listTensorsBody += "\" data-val=\"";
               listTensorsBody += format;
               listTensorsBody += "\"/>";
+              listTensorsBody += "<label for=\"";
+              listTensorsBody += selectId
+              listTensorsBody += "\">";
+              listTensorsBody += "<i class=\"mdl-icon-toggle__label ";
+              listTensorsBody += "material-icons\">keyboard_arrow_down</i>";
+              listTensorsBody += "</label>";
               listTensorsBody += "<label class=\"mdl-textfield__label\" for=\"";
               listTensorsBody += selectId;
               listTensorsBody += "\">Dimension ";
@@ -207,23 +236,70 @@ function demo() {
   };
 
   model.addInputView(txtExprView.updateView);
-  model.addInputView(btnGetKernelView.updateView);
   model.addInputView(tblFormatsView.updateView);
 
   $("#txtExpr").keyup(function() {
     model.setInput($("#txtExpr").val());
   });
 
-  $("#btnGetKernel").click(function() {
-    $("#txtKernel").html("/* Your custom generated kernel will appear here... */");
-    $('pre code').each(
-      function(i, block) {
-        hljs.highlightBlock(block);
-      }
-    );
+  var panelKernelsView = {
+    updateView: function(timeout) {
+      var computeLoops = (model.output.computeLoops === "") ? 
+                         "/* The generated compute loops will appear here */" :
+                         model.output.computeLoops.replace(/</g, "&lt;");
+      var assemblyLoops = (model.output.assemblyLoops === "") ? 
+                          "/* The generated assembly loops will appear here */" :
+                          model.output.assemblyLoops.replace(/</g, "&lt;");
+      var fullCode = (model.output.fullCode === "") ? 
+                     "/* The complete generated code will appear here */" :
+                     model.output.fullCode.replace(/</g, "&lt;");
+    
+      $("#txtComputeLoops").html(computeLoops);
+      $("#txtAssemblyLoops").html(assemblyLoops);
+      $("#txtFullCode").html(fullCode);
+      $('pre code').each(
+        function(i, block) {
+          hljs.highlightBlock(block);
+        }
+      );
+    }
+  };
 
-    $("#btnGetKernel").html("Processing...");
-    $("#btnGetKernel").prop("disabled", true);
+  var btnDownloadView = {
+    updateView: function(timeout) {
+      if (model.output.fullCode === "") {
+        $("#btnDownload").hide();
+        $("#btnDownload").parent().css("width", "0px");
+      } else {
+        $("#btnDownload").show();
+        $("#btnDownload").parent().css("width", "180px");
+      }
+    }
+  };
+
+  model.addOutputView(txtExprView.updateView);
+  model.addOutputView(panelKernelsView.updateView);
+  model.addOutputView(btnDownloadView.updateView);
+
+  $("#btnDownload").click(function() {
+    var blob = new Blob([model.output.fullCode], 
+                        {type: "text/plain;charset=utf-8"});
+    saveAs(blob, "taco_kernel.c");
+  });
+
+  var btnGetKernelView = {
+    updateView: function(timeout) {
+      $("#btnGetKernel").prop('disabled', model.state !== State.Valid);
+      $("#btnGetKernel").html(model.state === State.Processing ? 
+                              "Processing..." : "Generate Kernel");
+    }
+  };
+
+  model.addStateView(btnGetKernelView.updateView);
+
+  $("#btnGetKernel").click(function() {
+    model.setOutput("", "", "", ""); 
+    model.setState(State.Processing);
 
     var command = model.input.expression.replace(/ /g, "");
     for (t in model.input.tensorOrders) {
@@ -241,7 +317,8 @@ function demo() {
       
       command += ":";
       for (var i = 1; i <= order; ++i) {
-        command += parseInt(dims[i].split("_")[1]);
+        command += dims[i].split("_")[1];
+        command += (i === order) ? "" : ",";
       }
     }
 
@@ -252,33 +329,47 @@ function demo() {
         async: true,
         cache: false,
         success: function(response) {
-          if (response['error'] != "") {
-            $("#lblError").html(response['error']);
-            $("#txtExpr").parent().addClass('is-invalid');
-          } else {
-            $("#txtExpr").parent().removeClass('is-invalid');
-            $("#txtKernel").html(response['compute-kernel'].replace(/</g, "&lt;"));
-            $('pre code').each(
-              function(i, block) {
-                hljs.highlightBlock(block);
-              }
-            );
-          }
-          
-          $("#btnGetKernel").html("Generate kernel");
-          $("#btnGetKernel").prop("disabled", false);
+          model.setOutput(response['compute-kernel'], 
+                          response['assembly-kernel'], 
+                          response['full-kernel'], response['error']);
+          model.setState(State.Valid); 
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
-          $("#lblError").html("Unable to connect to taco on-the-go");
-          $("#txtExpr").parent().addClass('is-invalid');
-          
-          $("#btnGetKernel").html("Generate kernel");
-          $("#btnGetKernel").prop("disabled", false);
+          var errorMsg = "Unable to connect to the taco online server";
+          model.setOutput("", "", "", errorMsg); 
+          model.setState(State.Valid); 
         }
     });
   });
-  
-  model.setInput("a(i) = B(i,j) * c(j)");
+
+  var examples = [
+      { name: "Matrix-vector multiplication", code: "y(i) = A(i,j) * x(j)" },
+      { name: "Tensor-times-vector", code: "A(i,j) = B(i,j,k) * c(k)" },
+      { name: "MTTKRP", code: "A(i,j) = B(i,k,l) * C(k,j) * D(l,j)" }
+  ];
+
+  var listExamplesBody = "";
+  for (var i = 0; i < examples.length; ++i) {
+    listExamplesBody += "<li id=\"example";
+    listExamplesBody += i;
+    listExamplesBody += "\" class=\"mdl-menu__item\">";
+    listExamplesBody += examples[i].name;
+    listExamplesBody += ":&nbsp; <code>";
+    listExamplesBody += examples[i].code;
+    listExamplesBody += "</code></li>";
+  }
+
+  $("#listExamples").html(listExamplesBody);
+  for (var i = 0; i < examples.length; ++i) {
+    (function(code) {
+      $("#example" + i).click(function() {
+        $("#txtExpr").val(code);
+        model.setInput(code);
+      });
+    })(examples[i].code);
+  }
+
+  model.setInput("y(i) = A(i,j) * x(j)");
   hljs.initHighlightingOnLoad();
 }
 

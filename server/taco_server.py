@@ -7,7 +7,7 @@ import subprocess
 
 class Server(BaseHTTPRequestHandler):
   def do_POST(self):
-    response = {'error': ''}
+    response = {'compute-kernel': '', 'assembly-kernel': '', 'full-kernel': '', 'error': ''}
     
     try:
       length = int(self.headers['Content-Length'])
@@ -19,8 +19,8 @@ class Server(BaseHTTPRequestHandler):
 
       prettyCmd = "taco \"" + cmd.replace(" ", "\" ", 1)
       
-      cmd = "/home/ubuntu/taco/build/bin/taco " + cmd + " -write-source=kernel.c"
-      ret = subprocess.call(str.split(cmd))
+      cmd = "/home/ubuntu/taco/build/bin/taco " + cmd
+      ret = subprocess.call(str.split(cmd + " -write-source=taco_kernel.c"), timeout=2)
       
       logFile = "success.log"
 
@@ -28,8 +28,11 @@ class Server(BaseHTTPRequestHandler):
         response['error'] = 'Input expression is currently not supported by taco'
         logFile = "errors.log"
       else:
-        with open('kernel.c', 'r') as f:
-          response['compute-kernel'] = f.read()
+        with open('taco_kernel.c', 'r') as f:
+          response['full-kernel'] = f.read()
+        
+        response['compute-kernel'] = subprocess.check_output(str.split(cmd + " -nocolor")).decode()
+        response['assembly-kernel'] = subprocess.check_output(str.split(cmd + " -nocolor -print-assembly")).decode()
 
       with open(logFile, 'a') as f:
         f.write(prettyCmd + "\n")
@@ -46,7 +49,8 @@ class Server(BaseHTTPRequestHandler):
 def run(serverClass=HTTPServer, handlerClass=Server, port=80):
   serverAddress = ('', port)
   httpd = serverClass(serverAddress, handlerClass)
-  print('Starting httpd...')
+
+  print('Starting server...')
   httpd.serve_forever()
 
 if __name__ == "__main__":
