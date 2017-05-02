@@ -105,7 +105,7 @@ function demo() {
     cache: {},
     timerEvent: null,
 
-    createCacheEntry(listId) {
+    createCacheEntry: function(listId) {
       var dims = $("#" + listId).sortable("toArray");
       var formats = [];
       var ordering = [];
@@ -117,7 +117,7 @@ function demo() {
 
       return { formats: formats, ordering: ordering };
     },
-    getFormatString(desc) {
+    getFormatString: function(desc) {
       switch (desc) {
         case 'd':
           return "Dense";
