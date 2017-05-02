@@ -70,11 +70,12 @@ function demo() {
       model.setState(model.error === "" ? State.Valid : State.Invalid);
       model.updateInputViews();
     },
-    setOutput: function(computeLoops, assemblyLoops, fullCode, error) {
+    setOutput: function(computeLoops, assemblyLoops, fullCode, error, state) {
       model.output = { computeLoops: computeLoops,
                        assemblyLoops: assemblyLoops,
                        fullCode: fullCode };
       model.error = error;
+      model.setState(state);
       model.updateOutputViews();
     },
     setState: function(state) {
@@ -298,8 +299,7 @@ function demo() {
   model.addStateView(btnGetKernelView.updateView);
 
   $("#btnGetKernel").click(function() {
-    model.setOutput("", "", "", ""); 
-    model.setState(State.Processing);
+    model.setOutput("", "", "", "", State.Processing); 
 
     var command = model.input.expression.replace(/ /g, "");
     for (t in model.input.tensorOrders) {
@@ -331,19 +331,19 @@ function demo() {
         success: function(response) {
           model.setOutput(response['compute-kernel'], 
                           response['assembly-kernel'], 
-                          response['full-kernel'], response['error']);
-          model.setState(State.Valid); 
+                          response['full-kernel'], 
+                          response['error'], State.Valid);
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
           var errorMsg = "Unable to connect to the taco online server";
-          model.setOutput("", "", "", errorMsg); 
-          model.setState(State.Valid); 
+          model.setOutput("", "", "", errorMsg, State.Valid); 
         }
     });
   });
 
   var examples = [
       { name: "Matrix-vector multiplication", code: "y(i) = A(i,j) * x(j)" },
+      { name: "Matrix addition", code: "A(i,j) = B(i,j) + C(i,j)" },
       { name: "Tensor-times-vector", code: "A(i,j) = B(i,j,k) * c(k)" },
       { name: "MTTKRP", code: "A(i,j) = B(i,k,l) * C(k,j) * D(l,j)" }
   ];
