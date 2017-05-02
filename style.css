@@ -4,8 +4,27 @@ body{
 }
 
 .light-bg{
-  background: #fff;
+  background:#fff;
 }
+
+/*.light-bg{
+  position: relative;
+}
+
+.light-bg:after {
+    content : "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-image: url('./images/space.png'); 
+    background-size: 160%;
+    background-position: 30% 20%;
+    width: 100%;
+    height: 100%;
+    opacity : 0.8;
+    z-index: -1;
+}*/
 
 .dark-bg{
   background: #eee;
@@ -42,7 +61,8 @@ a{
 .fast-textbox,.easy-textbox, .versatile-textbox, .whytaco-box{
   margin:auto;
   width:50%;
-}
+/*  color:white;
+*/}
 
 .scientific-computing{
   background: url('./images/scientific_computing_thumbnail.png') no-repeat #fff;
@@ -58,14 +78,14 @@ a{
 
 .data-analytics{
   background: url('./images/data_analytics_thumbnail.png') no-repeat #fff;
-  background-size: 80%;
-  background-position: 50% 0%;
+  background-size: 100%;
+  background-position: 0% 600%;
 }
 
 .performance-engineering{
-  background: url('./images/performance_engineering_thumbnail.png') no-repeat #fff;
-  background-size: 80%;
-  background-position: 50% 0%;
+  background: url('./images/speed.png') no-repeat #fff;
+  background-size: 48%;
+  background-position: 50% 20%;
 }
 
 .demo-card-square{
