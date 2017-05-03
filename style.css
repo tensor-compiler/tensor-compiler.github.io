@@ -130,8 +130,9 @@ a{
 }
 
 .bibtex{
-  background: #fff;
   padding: 10px;
+  padding-left: 0;
+  border-radius: 10px;
 }
 
 .getpdf{
