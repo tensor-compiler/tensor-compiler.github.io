@@ -36,29 +36,29 @@ ParenFactor = "(" _ tensors:Expr _ ")" {
     return tensors;
 }
 
-NegFactor = "-" tensors:Factor {
+NegFactor = "-" _ tensors:Factor {
     return tensors;
 }
 
-Access = tensor:Var order:(UnderscoreVar / UnderscoreVarList / ParenVarList / _) {
+Access = tensor:Var _ order:(UnderscoreVar / UnderscoreVarList / ParenVarList / _) {
     var ret = {};
     ret[tensor] = order;
     return ret;
 }
 
-UnderscoreVar = "_" Var {
+UnderscoreVar = "_" _ Var {
     return 1;
 }
 
-UnderscoreVarList = "_" "{" order:VarList "}" {
+UnderscoreVarList = "_" _ "{" _ order:VarList _ "}" {
     return order;
 }
 
-ParenVarList = "(" order:VarList ")" {
+ParenVarList = "(" _ order:VarList _ ")" {
     return order;
 }
 
-VarList = head:Var tail:("," Var)* {
+VarList = head:Var tail:(_ "," _ Var)* {
     return 1 + tail.length;
 }
 

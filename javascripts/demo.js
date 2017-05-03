@@ -273,7 +273,7 @@ function demo() {
         $("#btnDownload").parent().css("width", "0px");
       } else {
         $("#btnDownload").show();
-        $("#btnDownload").parent().css("width", "180px");
+        $("#btnDownload").parent().css("width", "200px");
       }
     }
   };
