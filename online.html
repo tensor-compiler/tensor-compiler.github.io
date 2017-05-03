@@ -13,7 +13,11 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/styles/default.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/highlight.min.js"></script>
-    <script src="javascripts/demo.min.js"></script>
+    <!--<script src="javascripts/demo.min.js"></script>-->
+    <script src="javascripts/jquery.ui.touch-punch.min.js"></script>
+    <script src="javascripts/FileSaver.min.js"></script>
+    <script src="javascripts/parser.js"></script>
+    <script src="javascripts/demo.js"></script>
   </head>
   <body>
     <!-- Always shows a header, even in smaller screens. -->
@@ -21,7 +25,7 @@
       <header class="mdl-layout__header">
         <div class="mdl-layout__header-row">
           <!-- Title -->
-          <span class="mdl-layout-title">taco: the tensor algebra compiler</span>
+          <a class="menu-title" href="index.html"> <span class="mdl-layout-title">taco: the tensor algebra compiler</span> </a>
           <!-- Add spacer, to align navigation to the right -->
           <div class="mdl-layout-spacer"></div>
           <!-- Navigation -->
@@ -36,7 +40,7 @@
         <div class="page-content">
           <div class="mdl-grid">
             <div class="mdl-layout-spacer"></div>
-            <div class="mdl-cell mdl-cell--8-col">
+            <div class="mdl-cell mdl-cell--9-col">
               <h6 style="margin-bottom: 0px; margin-top: 18px">Input a tensor algebra expression in index notation to generate code that computes it:</h6>
               <table style="width: 100%">
                 <tr>
@@ -54,7 +58,7 @@
                       <ul id="listExamples" class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="btnExamples"></ul>
                     </div>
                   </td>
-                  <td style="width: 180px">
+                  <td style="width: 200px">
                     <button id="btnGetKernel" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"" style="width: 100%">Generate Kernel</button>
                   </td>
                 </tr>
@@ -64,7 +68,7 @@
           </div>
           <div id="tblFormats" class="mdl-grid" style="padding-top: 0px; padding-bottom: 0px">
             <div class="mdl-layout-spacer"></div>
-            <div class="mdl-cell mdl-cell--8-col">
+            <div class="mdl-cell mdl-cell--9-col">
               <table class="mdl-data-table mdl-js-data-table" style="width: 100%; margin-bottom: 8px">
                 <thead>
                   <tr>
@@ -82,7 +86,7 @@
           </div>
           <div class="mdl-grid" style="padding-top: 6px">
             <div class="mdl-layout-spacer"></div>
-            <div class="mdl-cell mdl-cell--8-col">
+            <div class="mdl-cell mdl-cell--9-col">
               <div id="panelKernels" class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
                 <table style="width: 100%">
                   <tr>
@@ -93,7 +97,7 @@
                           <a href="#full-panel" class="mdl-tabs__tab">Complete Code</a>
                       </div>
                     </td>
-                    <td style="width: 180px" align="right">
+                    <td style="width: 200px" align="right">
                       <!--<div class="mdl-tabs__tab-bar" style="justify-content: flex-end">
                           <a href="" class="mdl-tabs__tab">Download</a>
                       </div>-->
@@ -101,7 +105,6 @@
                     </td>
                   </tr>
                 </table>
-
                 <div class="mdl-tabs__panel is-active" id="compute-panel">
                   <pre style="margin-top: 0px">
                     <code id="txtComputeLoops" class="lang-cpp">/* The generated compute loops will appear here */</code>
@@ -118,8 +121,7 @@
                   </pre>
                 </div>
               </div>
-
-              <p style="line-height: 100%" align="justify">The generated code is provided "as is" without warranty of any kind. To help us improve taco, we retain an anonymized record all tensor algebra expressions submitted to the taco online server.</p>
+              <p style="line-height: 100%; font-size: 12px" align="justify">The generated code is provided "as is" without warranty of any kind. To help us improve taco, we keep an anonymized record of all tensor algebra expressions submitted to the taco online server.</p>
             </div>
             <div class="mdl-layout-spacer"></div>
           </div>
