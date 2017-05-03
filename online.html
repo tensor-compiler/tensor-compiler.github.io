@@ -1,7 +1,7 @@
 <html>
   <head>
     <!-- Title -->
-    <title>taco</title>
+    <title>taco - Try Online</title>
     <!-- CSS and JavaScript -->
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
@@ -13,9 +13,7 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/styles/default.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/highlight.min.js"></script>
-    <script src="javascript/FileSaver.min.js"></script>
-    <script src="javascript/parser.js"></script>
-    <script src="javascript/demo.js"></script>
+    <script src="javascripts/demo.min.js"></script>
   </head>
   <body>
     <!-- Always shows a header, even in smaller screens. -->
@@ -23,16 +21,15 @@
       <header class="mdl-layout__header">
         <div class="mdl-layout__header-row">
           <!-- Title -->
-          <span class="mdl-layout-title">taco</span>
+          <span class="mdl-layout-title">taco: the tensor algebra compiler</span>
           <!-- Add spacer, to align navigation to the right -->
           <div class="mdl-layout-spacer"></div>
           <!-- Navigation -->
           <nav class="mdl-navigation">
-            <a class="mdl-navigation__link" href="">About</a>
             <a class="mdl-navigation__link" href="">Docs</a>
+            <a class="mdl-navigation__link" href="">Publications</a>
             <a class="mdl-navigation__link" href="https://github.com/mit-commit/taco">GitHub</a>
           </nav>
-
         </div>        
       </header>
       <main class="mdl-layout__content">
@@ -40,7 +37,7 @@
           <div class="mdl-grid">
             <div class="mdl-layout-spacer"></div>
             <div class="mdl-cell mdl-cell--8-col">
-              <h6 style="margin-bottom: 0px; margin-top: 16px">Input a tensor algebra expression in index notation to generate code that computes it:</h6>
+              <h6 style="margin-bottom: 0px; margin-top: 18px">Input a tensor algebra expression in index notation to generate code that computes it:</h6>
               <table style="width: 100%">
                 <tr>
                   <td>
@@ -65,13 +62,13 @@
             </div>
             <div class="mdl-layout-spacer"></div>
           </div>
-          <div id="tblFormats" class="mdl-grid" style="padding-top: 4px; padding-bottom: 0px">
+          <div id="tblFormats" class="mdl-grid" style="padding-top: 0px; padding-bottom: 0px">
             <div class="mdl-layout-spacer"></div>
             <div class="mdl-cell mdl-cell--8-col">
               <table class="mdl-data-table mdl-js-data-table" style="width: 100%; margin-bottom: 8px">
                 <thead>
                   <tr>
-                    <th class="mdl-data-table__cell--non-numeric" width="100"><div align="center"><big>Tensor</big></div></th>
+                    <th class="mdl-data-table__cell--non-numeric" width="100"><div align="center" style="position:relative; top:-1px"><big>Tensor</big></div></th>
                     <th class="mdl-data-table__cell--non-numeric" style="padding-left: 7px">
                       <div style="display:inline"><big>Format&nbsp;</big></div>
                       <div style="display:inline">(reorder dimensions by dragging the drop-down menus)</div>
@@ -83,7 +80,7 @@
             </div>
             <div class="mdl-layout-spacer"></div>
           </div>
-          <div class="mdl-grid" style="padding-top: 4px">
+          <div class="mdl-grid" style="padding-top: 6px">
             <div class="mdl-layout-spacer"></div>
             <div class="mdl-cell mdl-cell--8-col">
               <div id="panelKernels" class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
@@ -100,7 +97,7 @@
                       <!--<div class="mdl-tabs__tab-bar" style="justify-content: flex-end">
                           <a href="" class="mdl-tabs__tab">Download</a>
                       </div>-->
-                      <button id="btnDownload" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"" style="width: 100%; position: relative; top: 4px">Download</button>
+                      <button id="btnDownload" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"" style="width: 100%">Download</button>
                     </td>
                   </tr>
                 </table>
@@ -131,7 +128,6 @@
 
           <footer class="mdl-mini-footer">
             <div class="mdl-mini-footer__left-section">
-              <div class="mdl-logo">Made with ❤ by the taco team</div>
             </div>
             <div class="mdl-mini-footer__right-section">
             </div>
