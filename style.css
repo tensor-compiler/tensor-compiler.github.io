@@ -26,6 +26,11 @@ body{
     z-index: -1;
 }*/
 
+.menu-title{
+  color:white;
+/*  font-size: 20px;
+*/}
+
 .dark-bg{
   background: #eee;
 }
@@ -113,3 +118,22 @@ a{
   margin-top: 5px;
 }
 
+
+/*Publications: */
+.demo-list-three {
+  width: 650px;
+  margin:0 auto;
+}
+
+.paper{
+  padding: 0;
+}
+
+.bibtex{
+  background: #fff;
+  padding: 10px;
+}
+
+.getpdf{
+  width:100%;
+}

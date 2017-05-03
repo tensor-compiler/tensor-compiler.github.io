@@ -1,0 +1,109 @@
+<html>
+  <head>
+    <!-- Title -->
+    <title>taco</title>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="collapsible.css">
+    <!-- Compiled and minified JavaScript -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+          
+    <!-- CSS and JavaScript -->
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
+    <link rel="stylesheet" href="style.css">
+
+
+  </head>
+  <body>
+    <!-- Always shows a header, even in smaller screens. -->
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+      <header class="mdl-layout__header">
+        <div class="mdl-layout__header-row">
+          <!-- Title -->
+          <a class="menu-title" href="index.html"> <span class="mdl-layout-title">taco: the Tensor Algebra Compiler</span> </a>
+          <!-- Add spacer, to align navigation to the right -->
+          <div class="mdl-layout-spacer"></div>
+          <!-- Navigation -->
+          <nav class="mdl-navigation">
+            <a class="mdl-navigation__link" href="">About</a>
+            <a class="mdl-navigation__link" href="">Docs</a>
+            <a class="mdl-navigation__link" href="">Publications</a>
+            <a class="mdl-navigation__link" href="https://github.com/mit-commit/taco">GitHub</a>
+          </nav>
+
+        </div>        
+      </header>
+
+      <main class="mdl-layout__content">
+        <div class="page-content">
+          <div class="mdl-grid">
+            <!-- Three Line List with secondary info and action -->
+            <div class="mdl-cell mdl-cell--2-col"></div>
+            <div class="mdl-cell mdl-cell--8-col">
+              <p class="mdl-typography mdl-typography--display-2">Publications</p>
+              <ul class="collapsible" data-collapsible="accordion">
+                <li>
+                  <div class="collapsible-header"><i class="material-icons">library_books</i>Tensor Algebra Compiler <span class="mdl-typography--caption-color-contrast right">Fredrik Kjolstad, Shoaib Kamil, Stephen Chou, David Lugato, and Saman Amarasinghe</span></div>
+                  <div class="collapsible-body">
+                    <span>
+<!--                       <p class="mdl-typography--display-1">Paper</p>
+ -->                      <a href="tacopaper.pdf"><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent getpdf">GET PDF</button></a>
+                      <br/>
+                      <br/>                      
+                      <p class="mdl-typography--display-1">Abstract</p>
+
+                      <div> Tensor and linear algebra is pervasive in data analytics and the physical sciences. Often the tensors, matrices or even vectors are sparse. Computing expressions involving a mix of sparse and dense tensors, matrices and vectors requires writing kernels for every operation and combination of formats of interest. The number of possibilities is infinite, which makes it impossible to write library code for all. This problem cries out for a compiler approach. This paper presents a new technique that compiles compound tensor algebra expressions combined with descriptions of tensor formats into efficient loops. The technique is evaluated in a prototype compiler called taco, demonstrating competitive performance to best-in-class hand-written codes for tensor and matrix operations.</div>
+                      <br/>
+                      <div>
+                      <br/>
+                      <p class="mdl-typography--display-1">BibTex</p>
+
+                      <pre class="bibtex">
+<code>@techreport{kjolstad17:tensor-compiler-techreport,
+author={Fredrik Kjolstad, Shoaib Kamil Stephen Chou, David Lugato and Saman Amarasinghe},
+title=,
+institution={Massachusetts Institute of Technology},
+year={2017},
+month={February},
+publisher={CSAIL},
+source={http://hdl.handle.net/1721.1/107013},
+keywords = {Tensor, tensor algebra, linear algebra, C++ library}
+}</code></pre>
+                      </div>
+                    </span>
+                  </div>
+                </li>
+              </ul>
+        
+              <!-- <ul class="demo-list-three mdl-list">
+                <p class="mdl-typography--display-1">Publications</p>
+                <li class="mdl-list__item mdl-list__item--three-line paper">
+                  <span class="mdl-list__item-primary-content">
+                    <a href="./tacopaper.pdf"> <span>The Tensor Algebra Compiler</span> </a>
+                    <span class="mdl-list__item-text-body">
+                      Fredrik Kjolstad, Shoaib Kamil, Stephen Chou, David Lugato and Saman Amarasinghe
+                    </span>
+                  </span>
+                </li>
+              </ul> -->
+            </div>
+            <div class="mdl-cell mdl-cell--3-col"></div>
+          </div>
+
+        </div>
+      </main>
+      <footer class="mdl-mini-footer">
+        <div class="mdl-mini-footer__left-section">
+          <div class="mdl-logo">Made with &#10084; by the taco team</div>
+        </div>
+
+        <div class="mdl-mini-footer__right-section">
+          <div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
