@@ -1,0 +1,1 @@
+The Tensor Algebra Compiler (taco) is fast growing and currently has multiple individuals helping out with the development. You can join the community by subscribing to our mailing list here: http://tensor-compiler.org. 
