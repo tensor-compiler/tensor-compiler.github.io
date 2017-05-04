@@ -2,6 +2,11 @@ body{
   background: #f6f6f6;
   color:black;
 }
+/*
+footer{
+  position: relative;
+  bottom: 0;
+}*/
 
 .light-bg{
   background:#fff;
@@ -30,6 +35,14 @@ body{
   color:white;
 /*  font-size: 20px;
 */}
+
+.color-grey{
+  color: #9e9e9e;
+}
+
+.titles-grey{
+  color:#323232;
+}
 
 .dark-bg{
   background: #eee;
@@ -65,7 +78,7 @@ a{
 
 .fast-textbox,.easy-textbox, .versatile-textbox, .whytaco-box{
   margin:auto;
-  width:50%;
+  width:70%;
 /*  color:white;
 */}
 
@@ -78,19 +91,19 @@ a{
 .machine-learning{
   background: url('./images/machine_learning_thumbnail.png') no-repeat #fff;
   background-size: 90%;
-  background-position: 50% 0%;
+  background-position: 50% 20%;
 }
 
 .data-analytics{
   background: url('./images/data_analytics_thumbnail.png') no-repeat #fff;
   background-size: 100%;
-  background-position: 0% 600%;
+  background-position: 0% 0%;
 }
 
 .performance-engineering{
   background: url('./images/speed.png') no-repeat #fff;
   background-size: 48%;
-  background-position: 50% 20%;
+  background-position: 50% 30%;
 }
 
 .demo-card-square{
@@ -137,4 +150,10 @@ a{
 
 .getpdf{
   width:100%;
+}
+
+.parent-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
