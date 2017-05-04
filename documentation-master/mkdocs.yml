@@ -1,0 +1,20 @@
+site_name: Documentation - TACO
+site_url:
+site_description: Documentation for TACO - The efficient and vesatile tensor expression compiler!
+site_favicon: favicon.ico
+theme_dir: 'readthedocs'
+repo_url: https://github.com/mit-commit/taco
+repo_name: GitHub
+site_author: Apurva Shrivastava
+pages:
+- Home: index.md
+- Get Started:
+    - 'Installation': 'installation.md'
+    - 'Quick Start': 'quickstart.md'
+- Building:
+    - 'Example 1: Tensor Times Vector': 'build/tensor-vector.md'
+    - 'Example 2: Another Example': 'build/tensor-vector.md'
+    - 'Example 3: Canonical Decomposition': 'build/canonical-decomp.md'
+- Joining The Community:
+    - 'How to Join': 'joining.md'
+
