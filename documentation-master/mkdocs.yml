@@ -8,13 +8,19 @@ repo_name: GitHub
 site_author: Apurva Shrivastava
 pages:
 - Home: index.md
-- Get Started:
+- Background:
+    - 'Background Information': 'introduction.md'
+    - 'Problem': 'problem.md'
+    - 'taco': 'taco.md'
+    - 'Read the Paper': 'paper.md'
+- Get Setup:
     - 'Installation': 'installation.md'
     - 'Quick Start': 'quickstart.md'
-- Building:
-    - 'Example 1: Tensor Times Vector': 'build/tensor-vector.md'
-    - 'Example 2: Another Example': 'build/tensor-vector.md'
-    - 'Example 3: Canonical Decomposition': 'build/canonical-decomp.md'
+- taco Usage:
+    - 'Basic Example: Tensor Times Vector': 'build/tensor-vector.md'
+    - 'Scientific Computing': 'scientificcomputing.md'
+    - 'Machine Learning': 'machinelearning.md'
+    - 'Data Analytics': 'dataanalytics.md'
+    - 'Performance Engineering': 'performanceengineering.md'
 - Joining The Community:
     - 'How to Join': 'joining.md'
-
