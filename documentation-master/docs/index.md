@@ -11,4 +11,4 @@ The sidebar to the left will help you navigate your way around the documentation
 
 ## Getting help
 
-If you have any question or contribution, do not hesitate to use the INSERT SOMETHING or shoot us a mail via **tensor-compiler@lists.csail.mit.edu**.
+If you have any question or contribution, do not shoot us an email via **tensor-compiler@lists.csail.mit.edu**.

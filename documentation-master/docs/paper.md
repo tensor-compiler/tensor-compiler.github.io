@@ -1,1 +1,1 @@
-[]**The Tensor Algebra Compiler PDF**](tacopaper.pdf)
+[The Tensor Algebra Compiler PDF](tacopaper.pdf)

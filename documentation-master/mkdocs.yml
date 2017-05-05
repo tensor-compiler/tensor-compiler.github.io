@@ -16,8 +16,10 @@ pages:
 - Get Setup:
     - 'Installation': 'installation.md'
     - 'Quick Start': 'quickstart.md'
-- taco Usage:
+- Basic Functions:
     - 'Basic Example: Tensor Times Vector': 'build/tensor-vector.md'
+    - 'Mechanics: Command-Line and C++': 'mechanics.md'
+- taco Usage:
     - 'Scientific Computing': 'scientificcomputing.md'
     - 'Machine Learning': 'machinelearning.md'
     - 'Data Analytics': 'dataanalytics.md'
