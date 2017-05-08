@@ -46,10 +46,7 @@ function demo() {
     },
 
     setInput: function(expression) {
-      if (model.req && model.req.readyState !== 4) {
-        model.req.abort();
-      }
-      model.setReq(null);
+      model.cancelReq();
       model.setOutput("", "", "", "");
 
       model.input.expression = expression;
@@ -85,6 +82,14 @@ function demo() {
       model.updateReqViews();
     },
 
+    cancelReq: function() {
+      if (model.req) {
+        if (model.req.readyState !== 4) {
+          model.req.abort();
+        }
+        model.setReq(null);
+      }
+    },
     getError: function() {
       return (model.output.error !== "") ? model.output.error : model.input.error;
     }
@@ -218,6 +223,9 @@ function demo() {
 
                 tblFormatsView.cache[tensor] = 
                     tblFormatsView.createCacheEntry(listId);
+                
+                model.cancelReq();
+                model.setOutput("", "", "", "");
               }
           });
           $(".format-input").change(function() {
@@ -226,6 +234,9 @@ function demo() {
 
             tblFormatsView.cache[tensor] = 
                 tblFormatsView.createCacheEntry(listId);
+            
+            model.cancelReq();
+            model.setOutput("", "", "", "");
           });
           for (t in model.input.tensorOrders) {
             if (model.input.tensorOrders[t] > 0) {
