@@ -3,6 +3,7 @@ site_url:
 site_description: Documentation for TACO - The efficient and vesatile tensor expression compiler!
 site_favicon: favicon.ico
 theme_dir: 'readthedocs'
+extra_css: [extra.css]
 repo_url: https://github.com/mit-commit/taco
 repo_name: GitHub
 site_author: Apurva Shrivastava

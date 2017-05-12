@@ -1,49 +1,93 @@
-**The Tensor Algebra Compiler: Scientific Computing**
+**Scientific Computing with taco: SpMV**
 
-In the realm of scientific computing, taco can be exceptional. TACO is easy to use, versatile, and efficient so it can handle numerous different kinds of tasks in regards to scientific computing. Because of its high performance, as will be discussed here through an example, it can effectively compute many operations in the best way possible to our knowledge.
-
-### SpMV: Sparse Matrix Vector Multiplication
-
-In the realm of scientific computing, sparse Matrix-Vector multiplication operations occur often. We dive into how taco helps solve this along with a brief performance assessment. A more in-depth discussion about this can be read in our paper.
-
-For taco SpMV is simply multiplying a 2-tensor by a 1-tensor. Thus, the discussion here has not done anything special to optimize for SpMV and simply uses the same tensor algebra code generic tensor algebra code generation through taco.
-
-For code generation it is as easy as putting the following statement into the compiler:
+Sparse matrix-vector multiplication (SpMV) is a bottleneck operation in many scientific and engineering computations. Mathematically, the operation performed in this example can be expressed as `y = alpha * A * x + beta * z`, where `x`, `y`, and `z` are dense vectors, `A` is a sparse matrix, and `alpha` and `beta` are scalar values. This operation can also be expressed in index notation as 
 
 ```
-taco "a(i) = B(i,j) * c(j)" -f=B:ds
+y(i) = alpha * A(i,j) * x(j) + beta * z(i)
 ```
 
-If the line above isn't clear, we refer you to read the "Quick Start" section in "Get Setup" of the documentation. Or by entering the command `./build/bin/taco` you can see the options for use when inside the taco directory. The -f flag specifies the matrix format as (dense, sparse). The lower case letters represent the vector and the uppercase represents the matrix. Running the above command on a compiler will automatically generate code that solves SpMV.
+You can use the taco C++ library to easily and efficiently compute the SpMV as demonstrated here:
 
-The output below should appear from running the command above:
-```
-void compute(Tensor a, Tensor B, Tensor c) {
-  // a(i) = (B(i, +j)) + (c(+j))
-  a1_ptr = 0;
-  // --------------------------------- i ----------------------------------
-  for (int i = 0; i < 3; i += 1) {
-    B1_ptr = ((0 * 3) + i);
-    a1_ptr = ((0 * 3) + i);
-    // --------------------------------- +j ---------------------------------
-    tj = 0;
-    for (int B2_ptr = B.d2.ptr[B1_ptr]; B2_ptr < B.d2.ptr[(B1_ptr + 1)]; B2_ptr += 1) {
-      j = B.d2.idx[B2_ptr];
-      c1_ptr = ((0 * 3) + j);
-      tj = (tj + (B.vals[B2_ptr] + c.vals[c1_ptr]));
-      a.vals[a1_ptr] = (a.vals[a1_ptr] + (B.vals[B2_ptr] + c.vals[c1_ptr]));
-    }
-    // -------------------------------- /+j ---------------------------------
-    // a.vals[a1_ptr] = (B.vals[B2_ptr] + c.vals[c1_ptr]);
+```c++
+// On Linux and MacOS, you can compile and run this program like so:
+//   g++ -std=c++11 -O3 -DNDEBUG -DTACO -I ../../include -L../../build/lib -ltaco spmv.cpp -o spmv
+//   LD_LIBRARY_PATH=../../build/lib ./spmv
+
+#include <random>
+
+#include "taco.h"
+
+using namespace taco;
+
+int main(int argc, char* argv[]) {
+  std::default_random_engine gen(0);
+  std::uniform_real_distribution<double> unif(0.0, 1.0);
+
+  // Predeclare the storage formats that the inputs and output will be stored as.
+  // To define a format, you must specify whether each dimension is dense or sparse 
+  // and (optionally) the order in which dimensions should be stored. The formats 
+  // declared below correspond to compressed sparse row (csr) and dense vector (dv). 
+  Format csr({Dense,Sparse});
+  Format  dv({Dense});
+  
+  // Load a sparse matrix from file (stored in the Matrix Market format) and 
+  // store it as a compressed sparse row matrix. Matrices correspond to order-2 
+  // tensors in taco.
+  Tensor<double> A = read("../data/pwtk.mtx", csr);
+
+  // Generate a random dense vector and store it in the dense vector format. 
+  // Vectors correspond to order-1 tensors in taco.
+  Tensor<double> x({A.getDimensions()[1]}, dv);
+  for (int i = 0; i < x.getDimensions()[0]; ++i) {
+    x.insert({i}, unif(gen));
   }
-  // --------------------------------- /i ---------------------------------
+  x.pack();
+
+  // Generate another random dense vetor and store it in the dense vector format..
+  Tensor<double> z({A.getDimensions()[0]}, dv);
+  for (int i = 0; i < z.getDimensions()[0]; ++i) {
+    z.insert({i}, unif(gen));
+  }
+  z.pack();
+
+  // Declare and initializing the scaling factors in the SpMV computation. 
+  // Scalars correspond to order-0 tensors in taco.
+  Tensor<double> alpha(42.0);
+  Tensor<double> beta(33.0);
+
+  // Declare the output matrix to be a sparse matrix with the same dimensions as 
+  // input matrix B, to be also stored as a doubly compressed sparse row matrix.
+  Tensor<double> y({A.getDimensions()[0]}, dv);
+
+  // Define the SpMV computation using index notation.
+  Var i, j(Var::Sum);
+  y(i) = alpha() * (A(i,j) * x(j)) + beta() * z(i);
+
+  // At this point, we have defined how entries in the output vector should be 
+  // computed from entries in the input matrice and vectorsbut have not actually 
+  // performed the computation yet. To do so, we must first tell taco to generate 
+  // code that can be executed to compute the SpMV operation.
+  y.compile();
+
+  // We can now call the functions taco generated to assemble the indices of the 
+  // output vector and then actually compute the SpMV.
+  y.assemble();
+  y.compute();
+
+  // Write the output of the computation to file (stored in the FROSTT format).
+  write("y.tns", y);
 }
 ```
 
-We can also do this in C++. To see how this would be done we can follow the "Mechanics" guide to see how the command-line and C++ tools relate.
+Under the hood, when you run the above C++ program, taco generates the imperative code shown below to compute the SpMV. taco is able to evaluate this compound operation efficiently with a single kernel that avoids materializing the intermediate matrix-vector product.
 
-### Note on Performance
-
-taco does very well compared to the current best alternatives. This is described in much greater detail in the prepare in Section 8, Evaluation. The graph below sums up the findings. Essentially, we see that taco generates code that is competitive with the current best hand-made libraries, despite taco not having yet implemented sophisticated optimizations for parallelism and vectorization.
-
-![spmv](/img/spmv_image.png)
+```c++
+for (int iA = 0; iA < 217918; iA++) {
+  double tj = 0;
+  for (int A2_pos = A.d2.pos[iA]; A2_pos < A.d2.pos[(iA + 1)]; A2_pos++) {
+    int jA = A.d2.idx[A2_pos];
+    tj += A.vals[A2_pos] * x.vals[jA];
+  }
+  y.vals[iA] = (alpha.vals[0] * tj) + (beta.vals[0] * z.vals[iA]);
+}
+```
