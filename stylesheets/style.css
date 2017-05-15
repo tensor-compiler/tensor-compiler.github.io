@@ -83,25 +83,25 @@ a{
 */}
 
 .scientific-computing{
-  background: url('./images/scientific_computing_thumbnail.png') no-repeat #fff;
+  background: url('../images/scientific_computing_thumbnail.png') no-repeat #fff;
   background-size: 80%;
   background-position: 50% 0%;
 }
 
 .machine-learning{
-  background: url('./images/machine_learning_thumbnail.png') no-repeat #fff;
+  background: url('../images/machine_learning_thumbnail.png') no-repeat #fff;
   background-size: 90%;
   background-position: 50% 20%;
 }
 
 .data-analytics{
-  background: url('./images/data_analytics_thumbnail.png') no-repeat #fff;
+  background: url('../images/data_analytics_thumbnail.png') no-repeat #fff;
   background-size: 100%;
   background-position: 0% 0%;
 }
 
 .performance-engineering{
-  background: url('./images/speed.png') no-repeat #fff;
+  background: url('../images/speed.png') no-repeat #fff;
   background-size: 48%;
   background-position: 50% 30%;
 }
@@ -167,4 +167,9 @@ a{
 
 .normal-section-header > div {
   margin-bottom: 0px;
+}
+
+.demo-btn {
+  width: 100%;
+  font-weight: 400;
 }
