@@ -1,22 +1,20 @@
-site_name: Documentation - TACO
+site_name: taco Documentation
 site_url:
-site_description: Documentation for TACO - The efficient and vesatile tensor expression compiler!
+site_description: 
 site_favicon: favicon.ico
 theme_dir: 'readthedocs'
-repo_url: https://github.com/mit-commit/taco
-repo_name: GitHub
+extra_css: [extra.css]
+extra_javascript: 
+    - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+markdown_extensions:
+    - mdx_math
 site_author: Apurva Shrivastava
 pages:
-- Home: index.md
-- Get Started:
-    - 'Installation': 'installation.md'
-    - 'Quick Start': 'quickstart.md'
-- Building:
-    - 'Basic Compiling Examples': 'shortcode-doc.md'
-    - 'Example 1: Tensor Times Vector': 'build/tensor-vector.md'
-    - 'Example 2: Another Example': 'build/tensor-vector.md'
-    - 'Example 3: Canonical Decomposition': 'build/canonical-decomp.md'
-- Joining The Community:
-    - 'How to Join': 'social-login/configuration.md'
-- Extras:
-    - 'Extras': 'extras/recaptcha.md'
+    - Home: index.md
+    - C++ Library:
+        - 'Defining Tensors': 'tensors.md'
+        - 'Computing on Tensors': 'computations.md'
+    - Example Applications:
+        - 'Scientific Computing: SpMV': 'scientific_computing.md'
+        - 'Machine Learning: SDDMM': 'machine_learning.md'
+        - 'Data Analytics: MTTKRP': 'data_analytics.md'

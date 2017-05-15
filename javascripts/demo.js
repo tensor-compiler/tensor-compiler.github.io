@@ -1,22 +1,21 @@
 function demo() {
-  var State = Object.freeze({Valid: 1, Invalid: 2, Processing: 3});
-
   var model = {
     input: {
       expression: "",
-      tensorOrders: {}
+      tensorOrders: {},
+      error: ""
     },
     output: {
       computeLoops: "",
       assemblyLoops: "",
-      fullCode: ""
+      fullCode: "",
+      error: ""
     },
-    error: "",
-    state: State.Valid,
+    req: null,
 
     inputViews: [],
     outputViews: [],
-    stateViews: [],
+    reqViews: [],
 
     addInputView: function(newView) {
       model.inputViews.push(newView);
@@ -36,51 +35,63 @@ function demo() {
         model.outputViews[v](0);
       }
     },
-    addStateView: function(newView) {
-      model.stateViews.push(newView);
+    addReqView: function(newView) {
+      model.reqViews.push(newView);
       newView(0);
     },
-    updateStateViews: function() {
-      for (v in model.stateViews) {
-        model.stateViews[v](0);
+    updateReqViews: function() {
+      for (v in model.reqViews) {
+        model.reqViews[v](0);
       }
     },
 
     setInput: function(expression) {
+      model.cancelReq();
+      model.setOutput("", "", "", "");
+
       model.input.expression = expression;
       if (model.input.expression.length > 256) {
         model.input.tensorOrders = {};
-        model.error = "Input expression is too long";
+        model.input.error = "Input expression is too long";
       } else {
         try {
           model.input.tensorOrders = parser.parse(expression);
-          model.error = "";
+          model.input.error = "";
           for (t in model.input.tensorOrders) {
             if (model.input.tensorOrders[t] < 0) {
               model.input.tensorOrders = {};
-              model.error = "Tensor " + t + " has inconsistent order";
+              model.input.error = "Tensor " + t + " has inconsistent order";
               break;
             }
           }
         } catch (e) {
           model.input.tensorOrders = {};
-          model.error = "Input expression is invalid";
+          model.input.error = "Input expression is invalid";
         }
       }
-      model.setState(model.error === "" ? State.Valid : State.Invalid);
       model.updateInputViews();
     },
-    setOutput: function(computeLoops, assemblyLoops, fullCode, error, state) {
+    setOutput: function(computeLoops, assemblyLoops, fullCode, error) {
       model.output = { computeLoops: computeLoops,
                        assemblyLoops: assemblyLoops,
-                       fullCode: fullCode };
-      model.error = error;
-      model.setState(state);
+                       fullCode: fullCode, error: error };
       model.updateOutputViews();
     },
-    setState: function(state) {
-      model.state = state;
-      model.updateStateViews();
+    setReq: function(req) {
+      model.req = req;
+      model.updateReqViews();
+    },
+
+    cancelReq: function() {
+      if (model.req) {
+        if (model.req.readyState !== 4) {
+          model.req.abort();
+        }
+        model.setReq(null);
+      }
+    },
+    getError: function() {
+      return (model.output.error !== "") ? model.output.error : model.input.error;
     }
   };
 
@@ -89,9 +100,9 @@ function demo() {
 
     updateView: function(timeout) {
       clearTimeout(txtExprView.timerEvent);
-      if (model.error !== "") {
+      if (model.getError() !== "") {
         var markError = function() {
-          $("#lblError").html(model.error);
+          $("#lblError").html(model.getError());
           $("#txtExpr").parent().addClass('is-invalid');
         };
         txtExprView.timerEvent = setTimeout(markError, timeout);
@@ -129,9 +140,9 @@ function demo() {
     },
     updateView: function(timeout) {
       clearTimeout(tblFormatsView.timerEvent);
-      if (model.error !== "") {
+      if (model.getError() !== "") {
         var hideTable = function() { $("#tblFormats").hide(); };
-        tblFormatsView.timerEvent = setTimeout(hideTable, 400);
+        tblFormatsView.timerEvent = setTimeout(hideTable, timeout);
       } else {
         var listTensorsBody = "";
         for (t in model.input.tensorOrders) {
@@ -212,6 +223,9 @@ function demo() {
 
                 tblFormatsView.cache[tensor] = 
                     tblFormatsView.createCacheEntry(listId);
+                
+                model.cancelReq();
+                model.setOutput("", "", "", "");
               }
           });
           $(".format-input").change(function() {
@@ -220,6 +234,9 @@ function demo() {
 
             tblFormatsView.cache[tensor] = 
                 tblFormatsView.createCacheEntry(listId);
+            
+            model.cancelReq();
+            model.setOutput("", "", "", "");
           });
           for (t in model.input.tensorOrders) {
             if (model.input.tensorOrders[t] > 0) {
@@ -236,8 +253,16 @@ function demo() {
     }
   };
 
+  var btnGetKernelView = {
+    updateView: function(timeout) {
+      $("#btnGetKernel").prop('disabled', model.input.error !== "" || model.req);
+      $("#btnGetKernel").html(model.req ? "Processing..." : "Generate Kernel");
+    }
+  };
+
   model.addInputView(txtExprView.updateView);
   model.addInputView(tblFormatsView.updateView);
+  model.addInputView(btnGetKernelView.updateView);
 
   $("#txtExpr").keyup(function() {
     model.setInput($("#txtExpr").val());
@@ -288,18 +313,10 @@ function demo() {
     saveAs(blob, "taco_kernel.c");
   });
 
-  var btnGetKernelView = {
-    updateView: function(timeout) {
-      $("#btnGetKernel").prop('disabled', model.state !== State.Valid);
-      $("#btnGetKernel").html(model.state === State.Processing ? 
-                              "Processing..." : "Generate Kernel");
-    }
-  };
-
-  model.addStateView(btnGetKernelView.updateView);
+  model.addReqView(btnGetKernelView.updateView);
 
   $("#btnGetKernel").click(function() {
-    model.setOutput("", "", "", "", State.Processing); 
+    model.setOutput("", "", "", "");
 
     var command = model.input.expression.replace(/ /g, "");
     for (t in model.input.tensorOrders) {
@@ -322,7 +339,7 @@ function demo() {
       }
     }
 
-    $.ajax({
+    var req = $.ajax({
         type: "POST",
         url: "http://tensor-compiler-online.csail.mit.edu",
         data: escape(command),
@@ -332,13 +349,16 @@ function demo() {
           model.setOutput(response['compute-kernel'], 
                           response['assembly-kernel'], 
                           response['full-kernel'], 
-                          response['error'], State.Valid);
+                          response['error']);
+          model.setReq(null);
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
           var errorMsg = "Unable to connect to the taco online server";
-          model.setOutput("", "", "", errorMsg, State.Valid); 
+          model.setOutput("", "", "", errorMsg); 
+          model.setReq(null);
         }
     });
+    model.setReq(req);
   });
 
   var examples = [
