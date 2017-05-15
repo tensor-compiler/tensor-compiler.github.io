@@ -15,30 +15,28 @@
       <header class="mdl-layout__header">
         <div class="mdl-layout__header-row">
           <!-- Title -->
-          <span class="mdl-layout-title">taco: the Tensor Algebra Compiler</span>
+          <a class="menu-title" href="index.html"> <span class="mdl-layout-title">taco: the tensor algebra compiler</span> </a>
           <!-- Add spacer, to align navigation to the right -->
           <div class="mdl-layout-spacer"></div>
           <!-- Navigation -->
           <nav class="mdl-navigation">
-            <a class="mdl-navigation__link" href="">About</a>
-            <a class="mdl-navigation__link" href="">Docs</a>
+            <a class="mdl-navigation__link" href="docs/index.html">Docs</a>
             <a class="mdl-navigation__link" href="publications.html">Publications</a>
-            <a class="mdl-navigation__link" href="https://github.com/mit-commit/taco">GitHub</a>
+            <a class="mdl-navigation__link" href="online.html">Demo</a>
+            <a class="mdl-navigation__link" href="https://github.com/tensor-compiler/taco">GitHub</a>
           </nav>
-
-        </div>        
+        </div>
       </header>
 
       <main class="mdl-layout__content">
         <div class="page-content">
-
           <div class="mdl-grid">
             <div class="mdl-cell mdl-cell--12-col banner">
               <p class="mdl-typography--headline titles-grey"> A fast and versatile library for linear and tensor algebra</p>
               <a href="online.html">
                 <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Try Online</button>
               </a>              
-              <a href="https://github.com/mit-commit/taco">
+              <a href="https://github.com/tensor-compiler/taco">
                 <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Github</button>
               </a>
             </div>
@@ -50,8 +48,8 @@
                   <h2 class="mdl-card__title-text">Scientific Computing</h2>
                 </div>
                 <div class="mdl-card__actions mdl-card--border">
-                  <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" nofollow href="https://github.com/ramimanna/">
-                    See Examples
+                  <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" nofollow href="docs/scientific_computing/index.html">
+                    See an Example
                   </a>
                 </div>
               </div>
@@ -64,8 +62,8 @@
                   <h2 class="mdl-card__title-text">Machine Learning</h2>
                 </div>
                 <div class="mdl-card__actions mdl-card--border">
-                  <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" nofollow href="https://github.com/ramimanna/">
-                    See Examples
+                  <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" nofollow href="docs/machine_learning/index.html">
+                    See an Example
                   </a>
                 </div>
               </div>
@@ -78,8 +76,8 @@
                   <h2 class="mdl-card__title-text">Data Analytics</h2>
                 </div>
                 <div class="mdl-card__actions mdl-card--border">
-                  <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" nofollow href="https://github.com/ramimanna/">
-                    See Examples
+                  <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" nofollow href="docs/data_analytics/index.html">
+                    See an Example
                   </a>
                 </div>
               </div>
@@ -92,8 +90,8 @@
                   <h2 class="mdl-card__title-text">Performance Engineering</h2>
                 </div>
                 <div class="mdl-card__actions mdl-card--border">
-                  <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" nofollow href="https://github.com/ramimanna/">
-                    See Examples
+                  <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" nofollow href="online.html">
+                    See an Example
                   </a>
                 </div>
               </div>
@@ -103,7 +101,7 @@
           
           <div class="mdl-grid">
             <div class="mdl-cell mdl-cell--12-col">
-              <h1 class="mdl-typography--display-1 text-center titles-grey">Why should I use taco?
+              <h1 class="mdl-typography--headline text-center titles-grey home-header">Why should I use taco?
               </h1>
             </div>
           </div>
@@ -111,8 +109,8 @@
           <div class="mdl-grid light-bg">
             <div class="mdl-cell mdl-cell--6-col">
               <div class="fast-textbox">
-                <p class="mdl-typography--headline">taco is fast!</p>
-                <p class="mdl-typography--body-1 body-text">Under the hood, taco employs a novel compiler-based technique to generate kernels that are optimized for the computations you want to perform. This enables taco to achieve performance that exceeds the MATLAB Tensor Toolbox by up to several orders of magnitude and that is competitive with other high-performance sparse linear and tensor algebra libraries like Eigen and SPLATT.</p>
+                <p class="mdl-typography--headline">taco is fast</p>
+                <p class="mdl-typography--body-1 body-text">Under the hood, the taco library employs a novel compiler-based technique to generate kernels that are optimized for the computations you want to perform. This enables taco to achieve performance that exceeds the MATLAB Tensor Toolbox by up to several orders of magnitude and that is competitive with other high-performance sparse linear and tensor algebra libraries like Eigen, Intel MKL, and SPLATT.</p>
               </div>
             </div>
             <div class="mdl-cell mdl-cell--6-col parent-center">
@@ -124,40 +122,45 @@
 
           <div class="mdl-grid dark-bg">
             <div class="mdl-cell mdl-cell--6-col parent-center">
-              <div class="whytaco-box">              
-                <img class="whytaco-icon" src="./images/easy.png">
+              <div class="whytaco-box">
+                <img class="whytaco-icon" src="./images/versatile.png">
               </div>
             </div>
             <div class="mdl-cell mdl-cell--6-col">
-              <div class="easy-textbox">
-                <p class="mdl-typography--headline">taco is easy to use!</p>
-                <p class="mdl-typography--body-1 body-text"> From the installation to the actual usage, taco is incredibly easy to use. The installation process requires just a few commands on the terminal. After that, code can be generated immediately through just one command on the terminal. Easy to use code has also been a primary target for taco. Functions in C++ have been tailored to the user in order to create a simple format for use. </p>
+              <div class="versatile-textbox">
+                <p class="mdl-typography--headline">taco is versatile</p>
+                <p class="mdl-typography--body-1 body-text">The compiler-based technique that underlies taco enables it to support a wide variety of linear and tensor algebra operations, ranging from simpler ones like sparse matrix-vector multiplication to more complex ones like MTTKRP on tensors of any order. Tensors can be stored in a wide range of storage formats, including many commonly used sparse matrix and tensor formats such as CSR.
+                </p>
               </div>
+              
             </div>
           </div>
 
           <div class="mdl-grid light-bg">
             <div class="mdl-cell mdl-cell--6-col">
-              <div class="versatile-textbox">
-                <p class="mdl-typography--headline">taco is versatile!</p>
-                <p class="mdl-typography--body-1 body-text">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-                </p>
+              <div class="easy-textbox">
+                <p class="mdl-typography--headline">taco is easy to use</p>
+                <p class="mdl-typography--body-1 body-text">With taco, you can define even complex tensor algebra computations on dense and sparse tensors in just a couple of lines of C++ code using tensor index notation. The taco library takes care of generating the potentially very complicated kernels that are needed to perform your desired computations.</p>
               </div>
             </div>
             <div class="mdl-cell mdl-cell--6-col parent-center">
               <div class="whytaco-box">
-                <img class="whytaco-icon" src="./images/versatile.png">
+                <img class="whytaco-icon" src="./images/easy.png">
               </div>
             </div>
           </div>
           <footer class="mdl-mini-footer">
-            <div class="mdl-mini-footer__left-section">
-              <div class="mdl-logo">Made with &#10084; by the taco team</div>
-            </div>
-
             <div class="mdl-mini-footer__right-section">
-              <div>Icons made by <a class="color-grey" href="http://www.freepik.com" title="Freepik">Freepik</a> from <a class="color-grey" href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a class="color-grey" href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+              <div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
             </div>
+            <script>
+              (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+              })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+              ga('create', 'UA-93058524-1', 'auto');
+              ga('send', 'pageview');
+            </script>
           </footer>
         </div>
       </main>
