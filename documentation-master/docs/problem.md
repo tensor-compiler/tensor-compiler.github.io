@@ -1,5 +1,0 @@
-**The Problem**
-
-Optimized kernels that compute compound tensor operations can often be slow and complicated. First, sparse input tensors are compressed into indexed data structures that the kernels operate on. Second, only non-zero output values should be produced and the calculations differ between computed components depending on the input tensors that contribute non-zero values. Lastly, the newly made sparse tensor data structure do not support constant time random access. This requires kernels to carefully figure out how to do co-iteration over multiple tensors. The current approach to this problem was to manually write code for tensor operations. There are some major issues with this approach. First, the temporary tensors used to support these operations can be much larger than the kernel's inputs and output for some compound operation. It is also infeasible to write optimized code for each and every operation since there's so many different combinations of expressions occurring. 
-
-*Bottom Line:* These issues scream for a compiler approach. 

@@ -1,14 +1,11 @@
-**[TACO](http://tensor-compiler.org)** is a compiler that takes expressions and compiles it to code. This makes it possible to find efficiently runnable code for computations of linear and tensor operations.  Getting started with TACO is ***extremely easy*** as well.
+**[taco](http://tensor-compiler.org)** is a library for compiling dense and sparse linear and tensor algebra expressions. The expressions can range from simple kernels like SpMV to more complex kernels like MTTKRP, where the operands can be dense, sparse, or a mix of dense and sparse. taco automatically generates efficient compute kernels (loops) to evaluate these expressions.
 
-It is built with the ease and simplicity that any person of any background can get up. This documentation serves to take users from the beginning stages to advanced in regards to using all things TACO.
+The sidebar to the left links to documentation for the taco C++ library as well as some examples demonstrating how taco can be used in real-world applications.
 
-The sidebar to the left will help you navigate your way around the documentation area of TACO.
+# System Requirements
 
-## System Requirements
+* A C compiler that supports C99 and OpenMP (if parallelism is desired), such as GCC or Clang
 
-* CMake 2.8.3
+# Getting Help
 
-
-## Getting help
-
-If you have any question or contribution, do not shoot us an email via **tensor-compiler@lists.csail.mit.edu**.
+Questions and bug reports can be submitted [here](https://github.com/tensor-compiler/taco/issues).

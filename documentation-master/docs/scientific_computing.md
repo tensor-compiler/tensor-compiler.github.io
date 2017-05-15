@@ -1,8 +1,6 @@
-**Scientific Computing with taco: SpMV**
+Sparse matrix-vector multiplication (SpMV) is a bottleneck operation in many scientific and engineering computations. Mathematically, the operation demonstrated in this example can be expressed as \(y = \alpha Ax + \beta z\), where \(x\), \(y\), and \(z\) are dense vectors, \(A\) is a sparse matrix, and \(\alpha\) and \(\beta\) are scalar values. This operation can also be expressed in index notation as 
 
-Sparse matrix-vector multiplication (SpMV) is a bottleneck operation in many scientific and engineering computations. Mathematically, the operation performed in this example can be expressed as `y = alpha * A * x + beta * z`, where `x`, `y`, and `z` are dense vectors, `A` is a sparse matrix, and `alpha` and `beta` are scalar values. This operation can also be expressed in index notation as 
-
-```
+```c++
 y(i) = alpha * A(i,j) * x(j) + beta * z(i)
 ```
 

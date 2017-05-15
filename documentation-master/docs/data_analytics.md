@@ -1,9 +1,7 @@
-**Data Analytics with taco: MTTKRP**
+Matricized tensor times Khatri-Rao product (MTTKRP) is a bottleneck operation in various algorithms - such as Alternating Least Squares - for computing sparse tensor factorizations like the Canonical Polyadic Decomposition. Mathematically, mode-1 MTTKRP (for order-3 tensors) can be expressed as \(A = B_{(1)} (D \odot C)\), where \(A\), \(C\), and \(D\) are (typically) dense matrices, \(B\) is an order-3 tensor (matricizied along the first mode), and \(\odot\) denotes the Khatri-Rao product. This operation can also be expressed in index notation as 
 
-Matricized tensor times Khatri-Rao product (MTTKRP) is a bottleneck operation in various algorithms - such as Alternating Least Squares - for computing sparse tensor factorizations like the Canonical Polyadic Decomposition. Mathematically, mode-1 MTTKRP (for order-3 tensors) can be expressed as `A = B_(1) * (D . C)`, where `A`, `C`, and `D` are (typically) dense matrices, `B` is an order-3 tensor (matricizied along the first mode), and `.` denotes the Khatri-Rao product. This operation can also be expressed in index notation as 
-
-```
-  A(i,j) = B(i,k,l) * D(l,j) * C(k,j)
+```c++
+A(i,j) = B(i,k,l) * D(l,j) * C(k,j)
 ```
 
 You can use the taco C++ library to easily and efficiently compute the MTTKRP as demonstrated here:
