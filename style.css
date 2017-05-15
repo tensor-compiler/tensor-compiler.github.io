@@ -131,7 +131,6 @@ a{
   margin-top: 5px;
 }
 
-
 /*Publications: */
 .demo-list-three {
   width: 650px;
@@ -160,4 +159,12 @@ a{
 
 .home-header {
   padding-left: 12px;
+}
+
+.normal-section-header {
+  padding-bottom: 0px;
+}
+
+.normal-section-header > div {
+  margin-bottom: 0px;
 }
