@@ -1,6 +1,4 @@
-site_name: taco Documentation
-site_url:
-site_description: 
+site_name: 'Documentation - taco: the tensor algebra compiler'
 site_favicon: favicon.ico
 theme_dir: 'readthedocs'
 extra_css: [extra.css]
