@@ -88,26 +88,30 @@ a{
 
 .scientific-computing{
   background: url('../images/scientific_computing_thumbnail.png') no-repeat #fff;
-  background-size: 80%;
-  background-position: 50% 0%;
+  background-size: 260px;
+  background-position: 50% 10%;
 }
 
 .machine-learning{
   background: url('../images/machine_learning_thumbnail.png') no-repeat #fff;
-  background-size: 90%;
+  background-size: 320px;
   background-position: 50% 20%;
 }
 
 .data-analytics{
   background: url('../images/data_analytics_thumbnail.png') no-repeat #fff;
-  background-size: 100%;
-  background-position: 0% 0%;
+  background-size: 320px;
+  background-position: 50% 0%;
 }
 
 .performance-engineering{
   background: url('../images/speed.png') no-repeat #fff;
-  background-size: 48%;
+  background-size: 160px;
   background-position: 50% 30%;
+}
+
+.demo-card-container {
+  min-width: 320px;
 }
 
 .demo-card-square{
@@ -116,7 +120,7 @@ a{
 }
 
 .demo-card-square.mdl-card {
-  width: 320px;
+  width: 90%;
   height: 320px;
 }
 
@@ -146,9 +150,11 @@ a{
 }
 
 .bibtex{
-  padding: 10px;
+  white-space: pre-wrap;
+  padding: 0px;
   padding-left: 0;
   border-radius: 10px;
+  margin: 0px;
 }
 
 .getpdf{
