@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
   Tensor<double> A(B.getDimensions(), dcsr);
 
   // Define the SDDMM computation using index notation.
-  Var i, j, k(Var::Sum);
+  IndexVar i, j, k;
   A(i,j) = B(i,j) * C(i,k) * D(k,j);
 
   // At this point, we have defined how entries in the output matrix should be 

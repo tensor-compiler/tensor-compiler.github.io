@@ -208,7 +208,7 @@ int main(int argc, char* argv[]) {
   Tensor&lt;double&gt; y({A.getDimensions()[0]}, dv);
 
   // Define the SpMV computation using index notation.
-  Var i, j(Var::Sum);
+  IndexVar i, j;
   y(i) = alpha() * (A(i,j) * x(j)) + beta() * z(i);
 
   // At this point, we have defined how entries in the output vector should be 

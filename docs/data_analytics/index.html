@@ -208,7 +208,7 @@ int main(int argc, char* argv[]) {
   Tensor&lt;double&gt; A({B.getDimensions()[0], 25}, rm);
 
   // Define the MTTKRP computation using index notation.
-  Var i, j, k(Var::Sum), l(Var::Sum);
+  IndexVar i, j, k, l;
   A(i,j) = B(i,k,l) * D(l,j) * C(k,j);
 
   // At this point, we have defined how entries in the output matrix should be 
