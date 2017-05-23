@@ -158,7 +158,8 @@ function demo() {
 
             listTensorsBody += "<tr>";
             listTensorsBody += "<td class=\"mdl-data-table__cell--non-numeric\" ";
-            listTensorsBody += "width=\"100\"><div align=\"center\" style=\"font-size: 16px\">";
+            listTensorsBody += "width=\"100\"><div align=\"center\" ";
+            listTensorsBody += "style=\"font-size: 16px\">";
             listTensorsBody += t;
             listTensorsBody += "</div></td>";
             listTensorsBody += "<td class=\"mdl-data-table__cell--non-numeric\" ";
@@ -179,7 +180,8 @@ function demo() {
               listTensorsBody += id;
               listTensorsBody += "\" class=\"ui-state-default\">";
               listTensorsBody += "<div class=\"mdl-textfield mdl-js-textfield ";
-              listTensorsBody += "mdl-textfield--floating-label getmdl-select\">";
+              listTensorsBody += "mdl-textfield--floating-label getmdl-select\" ";
+              listTensorsBody += "style=\"cursor: move\">";
               listTensorsBody += "<input class=\"mdl-textfield__input ";
               listTensorsBody += "format-input\" id=\"";
               listTensorsBody += selectId;
