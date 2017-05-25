@@ -74,7 +74,7 @@ A = read("A.tns", Format({Dense, Sparse, Sparse}), false);
 Currently, taco supports loading from the following matrix and tensor file formats:
 
 * [Matrix Market (Coordinate) Format (.mtx)](http://math.nist.gov/MatrixMarket/formats.html#MMformat)
-* [Harwell-Boeing Format (.hb)](http://math.nist.gov/MatrixMarket/formats.html#hb)
+* [Rutherford-Boeing Format (.rb)](https://www.cise.ufl.edu/research/sparse/matrices/DOC/rb.pdf)
 * [FROSTT Format (.tns)](http://frostt.io/tensors/file-formats.html)
 
 # Writing Tensors to File

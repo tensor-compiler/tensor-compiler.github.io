@@ -153,7 +153,7 @@
             <div class="section">
               
                 <p>Sampled dense-dense matrix product (SDDMM) is a bottleneck operation in many factor analysis algorithms used in machine learning, including Alternating 
-Least Squares and Latent Dirichlet Allocation [1]. Mathematically, the operation can be expressed as <script type="math/tex">A = B \circ CD</script>, where <script type="math/tex">A</script> and <script type="math/tex">B</script> are sparse matrices, <script type="math/tex">C</script> and <script type="math/tex">D</script> are dense matrices, and <script type="math/tex">\circ</script> denotes component-wise multiplication. This operation can also be expressed in index notation as </p>
+Least Squares and Latent Dirichlet Allocation [1]. Mathematically, the operation can be expressed as <script type="math/tex">A = B \circ CD</script>, where <script type="math/tex">A</script> and <script type="math/tex">B</script> are sparse matrices, <script type="math/tex">C</script> and <script type="math/tex">D</script> are dense matrices, and <script type="math/tex">\circ</script> denotes component-wise multiplication. This operation can also be expressed in <a href="../computations/#specifying-tensor-algebra-computations">index notation</a> as </p>
 <pre><code class="c++">A(i,j) = B(i,j) * C(i,k) * D(k,j)
 </code></pre>
 

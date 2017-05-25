@@ -152,7 +152,7 @@
           <div role="main">
             <div class="section">
               
-                <p>Sparse matrix-vector multiplication (SpMV) is a bottleneck operation in many scientific and engineering computations. Mathematically, the operation demonstrated in this example can be expressed as <script type="math/tex">y = \alpha Ax + \beta z</script>, where <script type="math/tex">x</script>, <script type="math/tex">y</script>, and <script type="math/tex">z</script> are dense vectors, <script type="math/tex">A</script> is a sparse matrix, and <script type="math/tex">\alpha</script> and <script type="math/tex">\beta</script> are scalar values. This operation can also be expressed in index notation as </p>
+                <p>Sparse matrix-vector multiplication (SpMV) is a bottleneck operation in many scientific and engineering computations. Mathematically, the operation demonstrated in this example can be expressed as <script type="math/tex">y = \alpha Ax + \beta z</script>, where <script type="math/tex">x</script>, <script type="math/tex">y</script>, and <script type="math/tex">z</script> are dense vectors, <script type="math/tex">A</script> is a sparse matrix, and <script type="math/tex">\alpha</script> and <script type="math/tex">\beta</script> are scalar values. This operation can also be expressed in <a href="../computations/#specifying-tensor-algebra-computations">index notation</a> as </p>
 <pre><code class="c++">y(i) = alpha * A(i,j) * x(j) + beta * z(i)
 </code></pre>
 
