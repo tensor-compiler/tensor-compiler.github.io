@@ -23,10 +23,12 @@ class Server(BaseHTTPRequestHandler):
       logFile = "/home/ubuntu/success.log"
       tacoPath = "/home/ubuntu/taco/build/bin/taco"
       writePath = "/tmp/taco_kernel.c"
-      cmd = tacoPath + " " + cmd
+      computePath = "/tmp/taco_compute.c"
+      assemblyPath = "/tmp/taco_assembly.c"
+      cmd = tacoPath + " " + cmd + " -write-source=" + writePath + " -write-compute=" + computePath + " -write-assembly=" + assemblyPath
 
       try:
-        ret = subprocess.call(str.split(cmd + " -write-source=" + writePath), timeout=4)
+        ret = subprocess.call(str.split(cmd), timeout=4)
         
         if ret != 0:
           response['error'] = 'Input expression is currently not supported by taco'
@@ -35,9 +37,12 @@ class Server(BaseHTTPRequestHandler):
           with open('/tmp/taco_kernel.c', 'r') as f:
             fullKernel = f.read().replace(tacoPath, "taco", 1).replace(writePath, "taco_kernel.c", 1)
             response['full-kernel'] = fullKernel
-          
-          response['compute-kernel'] = subprocess.check_output(str.split(cmd + " -nocolor")).decode()
-          response['assembly-kernel'] = subprocess.check_output(str.split(cmd + " -nocolor -print-assembly")).decode()
+          with open('/tmp/taco_compute.c', 'r') as f:
+            computeKernel = f.read()
+            response['compute-kernel'] = computeKernel
+          with open('/tmp/taco_assembly.c', 'r') as f:
+            assemblyKernel = f.read()
+            response['assembly-kernel'] = assemblyKernel
       except subprocess.TimeoutExpired:
         response['error'] = 'Server currently does not have sufficient resource to process the request' 
         logFile = "/home/ubuntu/timeout.log"
