@@ -1,4 +1,4 @@
-Sparse matrix-vector multiplication (SpMV) is a bottleneck operation in many scientific and engineering computations. Mathematically, the operation demonstrated in this example can be expressed as \(y = \alpha Ax + \beta z\), where \(x\), \(y\), and \(z\) are dense vectors, \(A\) is a sparse matrix, and \(\alpha\) and \(\beta\) are scalar values. This operation can also be expressed in index notation as 
+Sparse matrix-vector multiplication (SpMV) is a bottleneck operation in many scientific and engineering computations. Mathematically, the operation demonstrated in this example can be expressed as \(y = \alpha Ax + \beta z\), where \(x\), \(y\), and \(z\) are dense vectors, \(A\) is a sparse matrix, and \(\alpha\) and \(\beta\) are scalar values. This operation can also be expressed in [index notation](computations.md#specifying-tensor-algebra-computations) as 
 
 ```c++
 y(i) = alpha * A(i,j) * x(j) + beta * z(i)
@@ -58,7 +58,7 @@ int main(int argc, char* argv[]) {
   Tensor<double> y({A.getDimensions()[0]}, dv);
 
   // Define the SpMV computation using index notation.
-  Var i, j(Var::Sum);
+  IndexVar i, j;
   y(i) = alpha() * (A(i,j) * x(j)) + beta() * z(i);
 
   // At this point, we have defined how entries in the output vector should be 

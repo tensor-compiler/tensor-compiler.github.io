@@ -15,7 +15,7 @@ A(i,j,k) = B(i,j,k) * C(i,j,k) * D(i,j,k)
 The syntax shown above corresponds to exactly what you would have to write in C++ with the taco library to define tensor algebra computations. Note, however, that prior to defining a tensor algebra computation, all index variables have to be declared. This can be done as shown below:
 
 ```c++
-Var i, j, k;  // Declare index variables for previous example
+IndexVar i, j, k;  // Declare index variables for previous example
 ```
 
 ## Expressing Reductions

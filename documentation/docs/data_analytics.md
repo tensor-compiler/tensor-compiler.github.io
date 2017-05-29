@@ -1,4 +1,4 @@
-Matricized tensor times Khatri-Rao product (MTTKRP) is a bottleneck operation in various algorithms - such as Alternating Least Squares - for computing sparse tensor factorizations like the Canonical Polyadic Decomposition. Mathematically, mode-1 MTTKRP (for order-3 tensors) can be expressed as \(A = B_{(1)} (D \odot C)\), where \(A\), \(C\), and \(D\) are (typically) dense matrices, \(B\) is an order-3 tensor (matricizied along the first mode), and \(\odot\) denotes the Khatri-Rao product. This operation can also be expressed in index notation as 
+Matricized tensor times Khatri-Rao product (MTTKRP) is a bottleneck operation in various algorithms - such as Alternating Least Squares - for computing sparse tensor factorizations like the Canonical Polyadic Decomposition. Mathematically, mode-1 MTTKRP (for order-3 tensors) can be expressed as \(A = B_{(1)} (D \odot C)\), where \(A\), \(C\), and \(D\) are (typically) dense matrices, \(B\) is an order-3 tensor (matricizied along the first mode), and \(\odot\) denotes the Khatri-Rao product. This operation can also be expressed in [index notation](computations.md#specifying-tensor-algebra-computations) as 
 
 ```c++
 A(i,j) = B(i,k,l) * D(l,j) * C(k,j)
@@ -58,7 +58,7 @@ int main(int argc, char* argv[]) {
   Tensor<double> A({B.getDimensions()[0], 25}, rm);
 
   // Define the MTTKRP computation using index notation.
-  Var i, j, k(Var::Sum), l(Var::Sum);
+  IndexVar i, j, k, l;
   A(i,j) = B(i,k,l) * D(l,j) * C(k,j);
 
   // At this point, we have defined how entries in the output matrix should be 
