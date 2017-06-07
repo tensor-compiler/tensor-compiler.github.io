@@ -28,14 +28,14 @@ class Server(BaseHTTPRequestHandler):
       cmd = tacoPath + " " + cmd + " -write-source=" + writePath + " -write-compute=" + computePath + " -write-assembly=" + assemblyPath
 
       try:
-        ret = subprocess.call(str.split(cmd), timeout=4)
+        ret = subprocess.call(str.split(cmd), timeout=15)
         
         if ret != 0:
           response['error'] = 'Input expression is currently not supported by taco'
           logFile = "/home/ubuntu/errors.log"
         else:
           with open('/tmp/taco_kernel.c', 'r') as f:
-            fullKernel = f.read().replace(tacoPath, "taco", 1).replace(writePath, "taco_kernel.c", 1)
+            fullKernel = f.read().replace(tacoPath, "taco", 1).replace("/tmp/", "")
             response['full-kernel'] = fullKernel
           with open('/tmp/taco_compute.c', 'r') as f:
             computeKernel = f.read()
