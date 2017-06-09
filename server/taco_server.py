@@ -4,6 +4,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 import urllib.parse
 import subprocess
+import re
 from datetime import datetime
 
 class Server(BaseHTTPRequestHandler):
@@ -28,24 +29,22 @@ class Server(BaseHTTPRequestHandler):
       cmd = tacoPath + " " + cmd + " -write-source=" + writePath + " -write-compute=" + computePath + " -write-assembly=" + assemblyPath
 
       try:
-        ret = subprocess.call(str.split(cmd), timeout=15)
-        
-        if ret != 0:
-          response['error'] = 'Input expression is currently not supported by taco'
-          logFile = "/home/ubuntu/errors.log"
-        else:
-          with open('/tmp/taco_kernel.c', 'r') as f:
-            fullKernel = f.read().replace(tacoPath, "taco", 1).replace("/tmp/", "")
-            response['full-kernel'] = fullKernel
-          with open('/tmp/taco_compute.c', 'r') as f:
-            computeKernel = f.read()
-            response['compute-kernel'] = computeKernel
-          with open('/tmp/taco_assembly.c', 'r') as f:
-            assemblyKernel = f.read()
-            response['assembly-kernel'] = assemblyKernel
+        subprocess.check_output(str.split(cmd), timeout=15, stderr=subprocess.STDOUT)
+        with open('/tmp/taco_kernel.c', 'r') as f:
+          fullKernel = f.read().replace(tacoPath, "taco", 1).replace("/tmp/", "", 3)
+          response['full-kernel'] = fullKernel
+        with open('/tmp/taco_compute.c', 'r') as f:
+          computeKernel = f.read()
+          response['compute-kernel'] = computeKernel
+        with open('/tmp/taco_assembly.c', 'r') as f:
+          assemblyKernel = f.read()
+          response['assembly-kernel'] = assemblyKernel
       except subprocess.TimeoutExpired:
         response['error'] = 'Server currently does not have sufficient resource to process the request' 
         logFile = "/home/ubuntu/timeout.log"
+      except subprocess.CalledProcessError as e:
+        response['error'] = re.compile(':\n .*\n').search(e.output.decode()).group()[3:-1]
+        logFile = "/home/ubuntu/errors.log"
       except:
         raise
 
