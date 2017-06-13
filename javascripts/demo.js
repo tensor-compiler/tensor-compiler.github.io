@@ -350,6 +350,7 @@ function demo() {
         data: escape(command),
         async: true,
         cache: false,
+        tries: 0,
         success: function(response) {
           model.setOutput(response['compute-kernel'], 
                           response['assembly-kernel'], 
@@ -358,6 +359,11 @@ function demo() {
           model.setReq(null);
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
+          ++this.tries;
+          if (this.tries < 2) {
+          	$.ajax(this);
+          	return;
+          } 
           var errorMsg = "Unable to connect to the taco online server";
           model.setOutput("", "", "", errorMsg); 
           model.setReq(null);
