@@ -71,6 +71,7 @@ int assemble(taco_tensor_t *A, taco_tensor_t *B, taco_tensor_t *c) {
     }
   }
   A0_pos_arr[1] = A0_pos;
+
   A_val_arr = (double*)malloc(sizeof(double) * A1_pos);
 
   A->indices[0][0] = (uint8_t*)(A0_pos_arr);

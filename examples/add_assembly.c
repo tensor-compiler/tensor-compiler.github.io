@@ -53,4 +53,5 @@ for (int iB = 0; iB < B0_size; iB++) {
   }
   A1_pos_arr[(iB + 1)] = A1_pos;
 }
+
 allocate A_val_arr[A1_pos]

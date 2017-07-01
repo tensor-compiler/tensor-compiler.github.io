@@ -88,6 +88,7 @@ int assemble(taco_tensor_t *A, taco_tensor_t *B, taco_tensor_t *C) {
     }
     A1_pos_arr[(iB + 1)] = A1_pos;
   }
+
   A_val_arr = (double*)malloc(sizeof(double) * A1_pos);
 
   A->indices[1][0] = (uint8_t*)(A1_pos_arr);

@@ -34,4 +34,5 @@ for (int B0_pos = B0_pos_arr[0]; B0_pos < B0_pos_arr[1]; B0_pos++) {
   }
 }
 A0_pos_arr[1] = A0_pos;
+
 allocate A_val_arr[A1_pos]
