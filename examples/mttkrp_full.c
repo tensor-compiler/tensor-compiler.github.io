@@ -54,7 +54,7 @@ int compute(taco_tensor_t *A, taco_tensor_t *B, taco_tensor_t *C, taco_tensor_t 
   for (int A_pos = 0; A_pos < (A0_size * A1_size); A_pos++) {
     A_val_arr[A_pos] = 0;
   }
-  #pragma omp parallel for
+  #pragma omp parallel for schedule(dynamic, 16)
   for (int B0_pos = B0_pos_arr[0]; B0_pos < B0_pos_arr[1]; B0_pos++) {
     int32_t iB = B0_idx_arr[B0_pos];
     for (int B1_pos = B1_pos_arr[B0_pos]; B1_pos < B1_pos_arr[B0_pos + 1]; B1_pos++) {
