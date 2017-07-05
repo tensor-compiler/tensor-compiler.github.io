@@ -315,7 +315,7 @@ function demo() {
   $("#btnDownload").click(function() {
     var blob = new Blob([model.output.fullCode], 
                         {type: "text/plain;charset=utf-8"});
-    saveAs(blob, "taco_kernel.c");
+    saveAs(blob, "taco_kernel.h");
   });
 
   model.addReqView(btnGetKernelView.updateView);
