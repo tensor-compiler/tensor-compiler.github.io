@@ -29,7 +29,7 @@ class Server(BaseHTTPRequestHandler):
       cmd = tacoPath + " " + cmd + " -write-source=" + writePath + " -write-compute=" + computePath + " -write-assembly=" + assemblyPath
 
       try:
-        subprocess.check_output(str.split(cmd), timeout=15, stderr=subprocess.STDOUT)
+        subprocess.check_output(str.split(cmd), timeout=3, stderr=subprocess.STDOUT)
         with open('/tmp/taco_kernel.c', 'r') as f:
           fullKernel = f.read().replace(tacoPath, "taco", 1).replace("/tmp/", "", 3)
           response['full-kernel'] = fullKernel
@@ -40,15 +40,18 @@ class Server(BaseHTTPRequestHandler):
           assemblyKernel = f.read()
           response['assembly-kernel'] = assemblyKernel
       except subprocess.TimeoutExpired:
-        response['error'] = 'Server currently does not have sufficient resource to process the request' 
+        response['error'] = 'Server is unable to process the request in a timely manner'
         logFile = "/home/ubuntu/timeout.log"
       except subprocess.CalledProcessError as e:
         response['error'] = re.compile(':\n .*\n').search(e.output.decode()).group()[3:-1]
+        if response['error'].strip() == "":
+          response['error'] = 'Expression is currently not supported'
         logFile = "/home/ubuntu/errors.log"
       except:
-        raise
+        response['error'] = 'Expression is currently not supported'
+        logFile = "/home/ubuntu/errors.log"
 
-      ip = self.client_address[0]
+      ip = ".".join(self.client_address[0].split('.')[0:-2]) + ".*.*"
       time = datetime.now().isoformat(' ')
       with open(logFile, 'a') as f:
         f.write(time + " (" + ip + "): " + prettyCmd + "\n")
