@@ -1,13 +1,16 @@
 #!/usr/bin/python
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from socketserver import ThreadingMixIn
+from datetime import datetime
+import threading
 import json
 import urllib.parse
 import subprocess
 import re
-from datetime import datetime
+import time
 
-class Server(BaseHTTPRequestHandler):
+class Handler(BaseHTTPRequestHandler):
   def do_POST(self):
     response = {'compute-kernel': '', 'assembly-kernel': '', 'full-kernel': '', 'error': ''}
     
@@ -23,20 +26,22 @@ class Server(BaseHTTPRequestHandler):
       
       logFile = "/home/ubuntu/success.log"
       tacoPath = "/home/ubuntu/taco/build/bin/taco"
-      writePath = "/tmp/taco_kernel.c"
-      computePath = "/tmp/taco_compute.c"
-      assemblyPath = "/tmp/taco_assembly.c"
+
+      prefix = "/tmp/" + str(threading.current_thread().ident) + "_"
+      writePath = prefix + "taco_kernel.c"
+      computePath = prefix + "taco_compute.c"
+      assemblyPath = prefix + "taco_assembly.c"
       cmd = tacoPath + " " + cmd + " -write-source=" + writePath + " -write-compute=" + computePath + " -write-assembly=" + assemblyPath
 
       try:
         subprocess.check_output(str.split(cmd), timeout=3, stderr=subprocess.STDOUT)
-        with open('/tmp/taco_kernel.c', 'r') as f:
-          fullKernel = f.read().replace(tacoPath, "taco", 1).replace("/tmp/", "", 3)
+        with open(writePath, 'r') as f:
+          fullKernel = f.read().replace(tacoPath, "taco", 1).replace(prefix, "", 3)
           response['full-kernel'] = fullKernel
-        with open('/tmp/taco_compute.c', 'r') as f:
+        with open(computePath, 'r') as f:
           computeKernel = f.read()
           response['compute-kernel'] = computeKernel
-        with open('/tmp/taco_assembly.c', 'r') as f:
+        with open(assemblyPath, 'r') as f:
           assemblyKernel = f.read()
           response['assembly-kernel'] = assemblyKernel
       except subprocess.TimeoutExpired:
@@ -52,9 +57,9 @@ class Server(BaseHTTPRequestHandler):
         logFile = "/home/ubuntu/errors.log"
 
       ip = ".".join(self.client_address[0].split('.')[0:-2]) + ".*.*"
-      time = datetime.now().isoformat(' ')
+      curTime = datetime.now().isoformat(' ')
       with open(logFile, 'a') as f:
-        f.write(time + " (" + ip + "): " + prettyCmd + "\n")
+        f.write(curTime + " (" + ip + "): " + prettyCmd + "\n")
 
       self.send_response(200)
     except:
@@ -65,8 +70,13 @@ class Server(BaseHTTPRequestHandler):
     self.end_headers()
     
     self.wfile.write(str.encode(json.dumps(response)))
+
+class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
+  def finish_request(self, request, client_address):
+    request.settimeout(5)
+    HTTPServer.finish_request(self, request, client_address)
         
-def run(serverClass=HTTPServer, handlerClass=Server, port=80):
+def run(serverClass=ThreadedHTTPServer, handlerClass=Handler, port=80):
   serverAddress = ('', port)
   httpd = serverClass(serverAddress, handlerClass)
 
