@@ -10,11 +10,11 @@ A1_pos_arr[0] = 0;
 
 int32_t A0_pos = A0_pos_arr[0];
 int32_t A1_pos = A1_pos_arr[A0_pos];
-for (int B0_pos = B0_pos_arr[0]; B0_pos < B0_pos_arr[1]; B0_pos++) {
+for (int32_t B0_pos = B0_pos_arr[0]; B0_pos < B0_pos_arr[1]; B0_pos++) {
   int32_t iB = B0_idx_arr[B0_pos];
-  for (int B1_pos = B1_pos_arr[B0_pos]; B1_pos < B1_pos_arr[B0_pos + 1]; B1_pos++) {
+  for (int32_t B1_pos = B1_pos_arr[B0_pos]; B1_pos < B1_pos_arr[B0_pos + 1]; B1_pos++) {
     int32_t jB = B1_idx_arr[B1_pos];
-    for (int B2_pos = B2_pos_arr[B1_pos]; B2_pos < B2_pos_arr[B1_pos + 1]; B2_pos++) {
+    for (int32_t B2_pos = B2_pos_arr[B1_pos]; B2_pos < B2_pos_arr[B1_pos + 1]; B2_pos++) {
       int32_t kB = B2_idx_arr[B2_pos];
 
     }

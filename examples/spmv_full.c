@@ -43,9 +43,9 @@ int compute(taco_tensor_t *y, taco_tensor_t *A, taco_tensor_t *x) {
   double* restrict x_val_arr = (double*)(x->vals);
 
   #pragma omp parallel for
-  for (int iA = 0; iA < A0_size; iA++) {
+  for (int32_t iA = 0; iA < A0_size; iA++) {
     double tj = 0;
-    for (int A1_pos = A1_pos_arr[iA]; A1_pos < A1_pos_arr[iA + 1]; A1_pos++) {
+    for (int32_t A1_pos = A1_pos_arr[iA]; A1_pos < A1_pos_arr[iA + 1]; A1_pos++) {
       int32_t jA = A1_idx_arr[A1_pos];
       tj += A_val_arr[A1_pos] * x_val_arr[jA];
     }

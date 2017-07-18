@@ -42,7 +42,7 @@ int assemble(taco_tensor_t *A, taco_tensor_t *B, taco_tensor_t *C) {
 
   int32_t A0_pos = 0;
   int32_t A1_pos = A1_pos_arr[A0_pos];
-  for (int iB = 0; iB < B0_size; iB++) {
+  for (int32_t iB = 0; iB < B0_size; iB++) {
     int32_t B1_pos = B1_pos_arr[iB];
     int32_t C1_pos = C1_pos_arr[iB];
     while ((B1_pos < B1_pos_arr[iB + 1]) && (C1_pos < C1_pos_arr[iB + 1])) {
@@ -112,7 +112,7 @@ int compute(taco_tensor_t *A, taco_tensor_t *B, taco_tensor_t *C) {
 
   int32_t A0_pos = 0;
   int32_t A1_pos = A1_pos_arr[A0_pos];
-  for (int iB = 0; iB < B0_size; iB++) {
+  for (int32_t iB = 0; iB < B0_size; iB++) {
     int32_t B1_pos = B1_pos_arr[iB];
     int32_t C1_pos = C1_pos_arr[iB];
     while ((B1_pos < B1_pos_arr[iB + 1]) && (C1_pos < C1_pos_arr[iB + 1])) {

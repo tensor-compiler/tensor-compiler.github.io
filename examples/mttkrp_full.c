@@ -51,18 +51,18 @@ int compute(taco_tensor_t *A, taco_tensor_t *B, taco_tensor_t *C, taco_tensor_t 
   int D1_size = *(int*)(D->indices[1][0]);
   double* restrict D_val_arr = (double*)(D->vals);
 
-  for (int A_pos = 0; A_pos < (A0_size * A1_size); A_pos++) {
+  for (int32_t A_pos = 0; A_pos < (A0_size * A1_size); A_pos++) {
     A_val_arr[A_pos] = 0;
   }
   #pragma omp parallel for schedule(dynamic, 16)
-  for (int B0_pos = B0_pos_arr[0]; B0_pos < B0_pos_arr[1]; B0_pos++) {
+  for (int32_t B0_pos = B0_pos_arr[0]; B0_pos < B0_pos_arr[1]; B0_pos++) {
     int32_t iB = B0_idx_arr[B0_pos];
-    for (int B1_pos = B1_pos_arr[B0_pos]; B1_pos < B1_pos_arr[B0_pos + 1]; B1_pos++) {
+    for (int32_t B1_pos = B1_pos_arr[B0_pos]; B1_pos < B1_pos_arr[B0_pos + 1]; B1_pos++) {
       int32_t kB = B1_idx_arr[B1_pos];
-      for (int B2_pos = B2_pos_arr[B1_pos]; B2_pos < B2_pos_arr[B1_pos + 1]; B2_pos++) {
+      for (int32_t B2_pos = B2_pos_arr[B1_pos]; B2_pos < B2_pos_arr[B1_pos + 1]; B2_pos++) {
         int32_t lB = B2_idx_arr[B2_pos];
         double tl = B_val_arr[B2_pos];
-        for (int jC = 0; jC < C1_size; jC++) {
+        for (int32_t jC = 0; jC < C1_size; jC++) {
           int32_t C1_pos = (kB * C1_size) + jC;
           int32_t D1_pos = (lB * D1_size) + jC;
           int32_t A1_pos = (iB * A1_size) + jC;
