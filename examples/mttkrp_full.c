@@ -23,50 +23,50 @@ typedef struct {
 #endif
 
 int assemble(taco_tensor_t *A, taco_tensor_t *B, taco_tensor_t *C, taco_tensor_t *D) {
-  int A0_size = *(int*)(A->indices[0][0]);
-  int A1_size = *(int*)(A->indices[1][0]);
-  double* restrict A_val_arr = (double*)(A->vals);
+  int A1_size = *(int*)(A->indices[0][0]);
+  int A2_size = *(int*)(A->indices[1][0]);
+  double* restrict A_vals = (double*)(A->vals);
 
-  A_val_arr = (double*)malloc(sizeof(double) * (A0_size * A1_size));
+  A_vals = (double*)malloc(sizeof(double) * (A1_size * A2_size));
 
-  A->vals = (uint8_t*)A_val_arr;
+  A->vals = (uint8_t*)A_vals;
   return 0;
 }
 
 int compute(taco_tensor_t *A, taco_tensor_t *B, taco_tensor_t *C, taco_tensor_t *D) {
-  int A0_size = *(int*)(A->indices[0][0]);
-  int A1_size = *(int*)(A->indices[1][0]);
-  double* restrict A_val_arr = (double*)(A->vals);
-  int* restrict B0_pos_arr = (int*)(B->indices[0][0]);
-  int* restrict B0_idx_arr = (int*)(B->indices[0][1]);
-  int* restrict B1_pos_arr = (int*)(B->indices[1][0]);
-  int* restrict B1_idx_arr = (int*)(B->indices[1][1]);
-  int* restrict B2_pos_arr = (int*)(B->indices[2][0]);
-  int* restrict B2_idx_arr = (int*)(B->indices[2][1]);
-  double* restrict B_val_arr = (double*)(B->vals);
-  int C0_size = *(int*)(C->indices[0][0]);
-  int C1_size = *(int*)(C->indices[1][0]);
-  double* restrict C_val_arr = (double*)(C->vals);
-  int D0_size = *(int*)(D->indices[0][0]);
-  int D1_size = *(int*)(D->indices[1][0]);
-  double* restrict D_val_arr = (double*)(D->vals);
+  int A1_size = *(int*)(A->indices[0][0]);
+  int A2_size = *(int*)(A->indices[1][0]);
+  double* restrict A_vals = (double*)(A->vals);
+  int* restrict B1_pos = (int*)(B->indices[0][0]);
+  int* restrict B1_idx = (int*)(B->indices[0][1]);
+  int* restrict B2_pos = (int*)(B->indices[1][0]);
+  int* restrict B2_idx = (int*)(B->indices[1][1]);
+  int* restrict B3_pos = (int*)(B->indices[2][0]);
+  int* restrict B3_idx = (int*)(B->indices[2][1]);
+  double* restrict B_vals = (double*)(B->vals);
+  int C1_size = *(int*)(C->indices[0][0]);
+  int C2_size = *(int*)(C->indices[1][0]);
+  double* restrict C_vals = (double*)(C->vals);
+  int D1_size = *(int*)(D->indices[0][0]);
+  int D2_size = *(int*)(D->indices[1][0]);
+  double* restrict D_vals = (double*)(D->vals);
 
-  for (int32_t A_pos = 0; A_pos < (A0_size * A1_size); A_pos++) {
-    A_val_arr[A_pos] = 0;
+  for (int32_t pA = 0; pA < (A1_size * A2_size); pA++) {
+    A_vals[pA] = 0;
   }
   #pragma omp parallel for schedule(dynamic, 16)
-  for (int32_t B0_pos = B0_pos_arr[0]; B0_pos < B0_pos_arr[1]; B0_pos++) {
-    int32_t iB = B0_idx_arr[B0_pos];
-    for (int32_t B1_pos = B1_pos_arr[B0_pos]; B1_pos < B1_pos_arr[B0_pos + 1]; B1_pos++) {
-      int32_t kB = B1_idx_arr[B1_pos];
-      for (int32_t B2_pos = B2_pos_arr[B1_pos]; B2_pos < B2_pos_arr[B1_pos + 1]; B2_pos++) {
-        int32_t lB = B2_idx_arr[B2_pos];
-        double tl = B_val_arr[B2_pos];
-        for (int32_t jC = 0; jC < C1_size; jC++) {
-          int32_t C1_pos = (kB * C1_size) + jC;
-          int32_t D1_pos = (lB * D1_size) + jC;
-          int32_t A1_pos = (iB * A1_size) + jC;
-          A_val_arr[A1_pos] = A_val_arr[A1_pos] + ((tl * C_val_arr[C1_pos]) * D_val_arr[D1_pos]);
+  for (int32_t pB1 = B1_pos[0]; pB1 < B1_pos[1]; pB1++) {
+    int32_t iB = B1_idx[pB1];
+    for (int32_t pB2 = B2_pos[pB1]; pB2 < B2_pos[pB1 + 1]; pB2++) {
+      int32_t kB = B2_idx[pB2];
+      for (int32_t pB3 = B3_pos[pB2]; pB3 < B3_pos[pB2 + 1]; pB3++) {
+        int32_t lB = B3_idx[pB3];
+        double tl = B_vals[pB3];
+        for (int32_t jC = 0; jC < C2_size; jC++) {
+          int32_t pC2 = (kB * C2_size) + jC;
+          int32_t pD2 = (lB * D2_size) + jC;
+          int32_t pA2 = (iB * A2_size) + jC;
+          A_vals[pA2] = A_vals[pA2] + ((tl * C_vals[pC2]) * D_vals[pD2]);
         }
       }
     }

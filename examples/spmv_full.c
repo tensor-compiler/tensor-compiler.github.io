@@ -23,33 +23,33 @@ typedef struct {
 #endif
 
 int assemble(taco_tensor_t *y, taco_tensor_t *A, taco_tensor_t *x) {
-  int y0_size = *(int*)(y->indices[0][0]);
-  double* restrict y_val_arr = (double*)(y->vals);
+  int y1_size = *(int*)(y->indices[0][0]);
+  double* restrict y_vals = (double*)(y->vals);
 
-  y_val_arr = (double*)malloc(sizeof(double) * y0_size);
+  y_vals = (double*)malloc(sizeof(double) * y1_size);
 
-  y->vals = (uint8_t*)y_val_arr;
+  y->vals = (uint8_t*)y_vals;
   return 0;
 }
 
 int compute(taco_tensor_t *y, taco_tensor_t *A, taco_tensor_t *x) {
-  int y0_size = *(int*)(y->indices[0][0]);
-  double* restrict y_val_arr = (double*)(y->vals);
-  int A0_size = *(int*)(A->indices[0][0]);
-  int* restrict A1_pos_arr = (int*)(A->indices[1][0]);
-  int* restrict A1_idx_arr = (int*)(A->indices[1][1]);
-  double* restrict A_val_arr = (double*)(A->vals);
-  int x0_size = *(int*)(x->indices[0][0]);
-  double* restrict x_val_arr = (double*)(x->vals);
+  int y1_size = *(int*)(y->indices[0][0]);
+  double* restrict y_vals = (double*)(y->vals);
+  int A1_size = *(int*)(A->indices[0][0]);
+  int* restrict A2_pos = (int*)(A->indices[1][0]);
+  int* restrict A2_idx = (int*)(A->indices[1][1]);
+  double* restrict A_vals = (double*)(A->vals);
+  int x1_size = *(int*)(x->indices[0][0]);
+  double* restrict x_vals = (double*)(x->vals);
 
   #pragma omp parallel for
-  for (int32_t iA = 0; iA < A0_size; iA++) {
+  for (int32_t iA = 0; iA < A1_size; iA++) {
     double tj = 0;
-    for (int32_t A1_pos = A1_pos_arr[iA]; A1_pos < A1_pos_arr[iA + 1]; A1_pos++) {
-      int32_t jA = A1_idx_arr[A1_pos];
-      tj += A_val_arr[A1_pos] * x_val_arr[jA];
+    for (int32_t pA2 = A2_pos[iA]; pA2 < A2_pos[iA + 1]; pA2++) {
+      int32_t jA = A2_idx[pA2];
+      tj += A_vals[pA2] * x_vals[jA];
     }
-    y_val_arr[iA] = tj;
+    y_vals[iA] = tj;
   }
 
   return 0;
