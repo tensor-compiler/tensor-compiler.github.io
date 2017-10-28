@@ -16,10 +16,9 @@
     <link rel="stylesheet" href="stylesheets/style.css">
 
     <!-- Vega and Vega lite -->
-    <script src="https://d3js.org/d3.v3.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vega/3.0.0-beta.30/vega.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vega-lite/2.0.0-beta.2/vega-lite.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vega-embed/3.0.0-beta.14/vega-embed.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vega/3.0.2/vega.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vega-lite/2.0.0-rc3/vega-lite.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vega-embed/3.0.0-beta.20/vega-embed.js"></script>
 
   </head>
   <body>
@@ -58,24 +57,25 @@
                 <br/>
 
                 <div class="mdl-card__title mdl-card--expand">
-                  <h1 class="mdl-card__title-text">mac-econ</h1>
+                  <h1 class="mdl-card__title-text">rma10</h1>
                 </div>
 
                 <div id="vis"></div>
                 <script>
                 // Assign the specification to a local variable vlSpec.
                 var vlSpec = {
-                  "name": "mac-econ",
-                  "width": 220, "height": 170,
-                  "data": {"url": "http://tensor-compiler.org/performance-results/mac_econ.csv"},
+                  "name": "rma10",
+                  "width": 210, "height": 170,
+                  "data": {"url": "http://tensor-compiler.org/performance-results/rma10.csv"},
                   "mark": "line",
                   "encoding": {
                     "x": {
                       "field": "date",
                       "type": "temporal",
-                      "axis": {"domain": false, "format": "%b / %d", "labelAngle": 0, "tickSize": 5}
+                      "axis": {"domain": false, "format": "%b / %d", "labelAngle": 0, "tickSize": 5, "labelOverlap": true}
                     },
                     "y": {
+                      "aggregate": "mean",
                       "field": "mean",
                       "type": "quantitative",
                       "axis": {"title": "execution time (ms)"}
@@ -112,24 +112,25 @@
                 <br/>
 
                 <div class="mdl-card__title mdl-card--expand">
-                  <h1 class="mdl-card__title-text">rma10</h1>
+                  <h1 class="mdl-card__title-text">cant</h1>
                 </div>
 
                 <div id="vis2"></div>
                 <script>
                 // Assign the specification to a local variable vlSpec.
                 var vlSpec = {
-                  "name": "rma10",
-                  "width": 220, "height": 170,
-                  "data": {"url": "http://tensor-compiler.org/performance-results/rma10.csv"},
+                  "name": "cant",
+                  "width": 210, "height": 170,
+                  "data": {"url": "http://tensor-compiler.org/performance-results/cant.csv"},
                   "mark": "line",
                   "encoding": {
                     "x": {
                       "field": "date",
                       "type": "temporal",
-                      "axis": {"domain": false, "format": "%b / %d", "labelAngle": 0, "tickSize": 5}
+                      "axis": {"domain": false, "format": "%b / %d", "labelAngle": 0, "tickSize": 5, "labelOverlap": true}
                     },
                     "y": {
+                      "aggregate": "mean",
                       "field": "mean",
                       "type": "quantitative",
                       "axis": {"title": "execution time (ms)"}
@@ -166,24 +167,25 @@
                 <br/>
 
                 <div class="mdl-card__title mdl-card--expand">
-                  <h1 class="mdl-card__title-text">facebook</h1>
+                  <h1 class="mdl-card__title-text">cop20k</h1>
                 </div>
 
                 <div id="vis3"></div>
                 <script>
                 // Assign the specification to a local variable vlSpec.
                 var vlSpec = {
-                  "name": "facebook",
-                  "width": 220, "height": 170,
-                  "data": {"url": "http://tensor-compiler.org/performance-results/facebook.csv"},
+                  "name": "cop20k",
+                  "width": 210, "height": 170,
+                  "data": {"url": "http://tensor-compiler.org/performance-results/cop20k_A.csv"},
                   "mark": "line",
                   "encoding": {
                     "x": {
                       "field": "date",
                       "type": "temporal",
-                      "axis": {"domain": false, "format": "%b / %d", "labelAngle": 0, "tickSize": 5}
+                      "axis": {"domain": false, "format": "%b / %d", "labelAngle": 0, "tickSize": 5, "labelOverlap": true}
                     },
                     "y": {
+                      "aggregate": "mean",
                       "field": "mean",
                       "type": "quantitative",
                       "axis": {"title": "execution time (ms)"}
@@ -199,6 +201,226 @@
 
                 // Embed the visualization in the container with id `vis`
                 vega.embed("#vis3", vlSpec, opt, function(error, result) {
+                  // Callback receiving the View instance and parsed Vega spec
+                  // result.view is the View, which resides under the '#vis' element
+                });
+                </script>
+
+
+                <div class="mdl-card__actions mdl-card--border">
+                  <p>
+                    "a(i) = B(i,j) * c(j)" -f=a:d -f=B:ds -f=c:d
+                  </p>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="mdl-cell mdl-cell--3-col">
+              <!-- Square card -->
+              <div class="demo-card-square mdl-card mdl-shadow--2dp">
+                <br/>
+
+                <div class="mdl-card__title mdl-card--expand">
+                  <h1 class="mdl-card__title-text">scircuit</h1>
+                </div>
+
+                <div id="vis4"></div>
+                <script>
+                // Assign the specification to a local variable vlSpec.
+                var vlSpec = {
+                  "name": "mac-econ",
+                  "width": 210, "height": 170,
+                  "data": {"url": "http://tensor-compiler.org/performance-results/scircuit.csv"},
+                  "mark": "line",
+                  "encoding": {
+                    "x": {
+                      "field": "date",
+                      "type": "temporal",
+                      "axis": {"domain": false, "format": "%b / %d", "labelAngle": 0, "tickSize": 5, "labelOverlap": true}
+                    },
+                    "y": {
+                      "aggregate": "mean",
+                      "field": "mean",
+                      "type": "quantitative",
+                      "axis": {"title": "execution time (ms)"}
+                    }
+                  }
+                };
+
+                // optional argument passed to Vega-Embed to specify vega-lite spec. More info at https://github.com/vega/vega-embed
+                var opt = {
+                  "mode": "vega-lite",
+                  "actions": false
+                };
+
+                // Embed the visualization in the container with id `vis`
+                vega.embed("#vis4", vlSpec, opt, function(error, result) {
+                  // Callback receiving the View instance and parsed Vega spec
+                  // result.view is the View, which resides under the '#vis' element
+                });
+                </script>
+
+
+                <div class="mdl-card__actions mdl-card--border">
+                  <p>
+                    "a(i) = B(i,j) * c(j)" -f=a:d -f=B:ds -f=c:d
+                  </p>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="mdl-cell mdl-cell--3-col">
+              <!-- Square card -->
+              <div class="demo-card-square mdl-card mdl-shadow--2dp">
+                <br/>
+
+                <div class="mdl-card__title mdl-card--expand">
+                  <h1 class="mdl-card__title-text">mac-econ</h1>
+                </div>
+
+                <div id="vis5"></div>
+                <script>
+                // Assign the specification to a local variable vlSpec.
+                var vlSpec = {
+                  "name": "mac-econ",
+                  "width": 210, "height": 170,
+                  "data": {"url": "http://tensor-compiler.org/performance-results/mac_econ.csv"},
+                  "mark": "line",
+                  "encoding": {
+                    "x": {
+                      "field": "date",
+                      "type": "temporal",
+                      "axis": {"domain": false, "format": "%b / %d", "labelAngle": 0, "tickSize": 5, "labelOverlap": true}
+                    },
+                    "y": {
+                      "aggregate": "mean",
+                      "field": "mean",
+                      "type": "quantitative",
+                      "axis": {"title": "execution time (ms)"}
+                    }
+                  }
+                };
+
+                // optional argument passed to Vega-Embed to specify vega-lite spec. More info at https://github.com/vega/vega-embed
+                var opt = {
+                  "mode": "vega-lite",
+                  "actions": false
+                };
+
+                // Embed the visualization in the container with id `vis`
+                vega.embed("#vis5", vlSpec, opt, function(error, result) {
+                  // Callback receiving the View instance and parsed Vega spec
+                  // result.view is the View, which resides under the '#vis' element
+                });
+                </script>
+
+
+                <div class="mdl-card__actions mdl-card--border">
+                  <p>
+                    "a(i) = B(i,j) * c(j)" -f=a:d -f=B:ds -f=c:d
+                  </p>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="mdl-cell mdl-cell--3-col">
+              <!-- Square card -->
+              <div class="demo-card-square mdl-card mdl-shadow--2dp">
+                <br/>
+
+                <div class="mdl-card__title mdl-card--expand">
+                  <h1 class="mdl-card__title-text">pwtk</h1>
+                </div>
+
+                <div id="vis6"></div>
+                <script>
+                // Assign the specification to a local variable vlSpec.
+                var vlSpec = {
+                  "name": "mac-econ",
+                  "width": 210, "height": 170,
+                  "data": {"url": "http://tensor-compiler.org/performance-results/pwtk.csv"},
+                  "mark": "line",
+                  "encoding": {
+                    "x": {
+                      "field": "date",
+                      "type": "temporal",
+                      "axis": {"domain": false, "format": "%b / %d", "labelAngle": 0, "tickSize": 5, "labelOverlap": true}
+                    },
+                    "y": {
+                      "aggregate": "mean",
+                      "field": "mean",
+                      "type": "quantitative",
+                      "axis": {"title": "execution time (ms)"}
+                    }
+                  }
+                };
+
+                // optional argument passed to Vega-Embed to specify vega-lite spec. More info at https://github.com/vega/vega-embed
+                var opt = {
+                  "mode": "vega-lite",
+                  "actions": false
+                };
+
+                // Embed the visualization in the container with id `vis`
+                vega.embed("#vis6", vlSpec, opt, function(error, result) {
+                  // Callback receiving the View instance and parsed Vega spec
+                  // result.view is the View, which resides under the '#vis' element
+                });
+                </script>
+
+
+                <div class="mdl-card__actions mdl-card--border">
+                  <p>
+                    "a(i) = B(i,j) * c(j)" -f=a:d -f=B:ds -f=c:d
+                  </p>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="mdl-cell mdl-cell--3-col">
+              <!-- Square card -->
+              <div class="demo-card-square mdl-card mdl-shadow--2dp">
+                <br/>
+
+                <div class="mdl-card__title mdl-card--expand">
+                  <h1 class="mdl-card__title-text">nell-1</h1>
+                </div>
+
+                <div id="vis7"></div>
+                <script>
+                // Assign the specification to a local variable vlSpec.
+                var vlSpec = {
+                  "name": "nell-1",
+                  "width": 210, "height": 170,
+                  "data": {"url": "http://tensor-compiler.org/performance-results/nell-1.csv"},
+                  "mark": "line",
+                  "encoding": {
+                    "x": {
+                      "field": "date",
+                      "type": "temporal",
+                      "axis": {"domain": false, "format": "%b / %d", "labelAngle": 0, "tickSize": 5, "labelOverlap": true}
+                    },
+                    "y": {
+                      "aggregate": "mean",
+                      "field": "mean",
+                      "type": "quantitative",
+                      "axis": {"title": "execution time (ms)"}
+                    }
+                  }
+                };
+
+                // optional argument passed to Vega-Embed to specify vega-lite spec. More info at https://github.com/vega/vega-embed
+                var opt = {
+                  "mode": "vega-lite",
+                  "actions": false
+                };
+
+                // Embed the visualization in the container with id `vis`
+                vega.embed("#vis7", vlSpec, opt, function(error, result) {
                 });
                 </script>
 
@@ -221,21 +443,22 @@
                   <h1 class="mdl-card__title-text">nell-2</h1>
                 </div>
 
-                <div id="vis4"></div>
+                <div id="vis8"></div>
                 <script>
                 // Assign the specification to a local variable vlSpec.
                 var vlSpec = {
                   "name": "nell-2",
-                  "width": 220, "height": 170,
+                  "width": 210, "height": 170,
                   "data": {"url": "http://tensor-compiler.org/performance-results/nell-2.csv"},
                   "mark": "line",
                   "encoding": {
                     "x": {
                       "field": "date",
                       "type": "temporal",
-                      "axis": {"domain": false, "format": "%b / %d", "labelAngle": 0, "tickSize": 5}
+                      "axis": {"domain": false, "format": "%b / %d", "labelAngle": 0, "tickSize": 5, "labelOverlap": true}
                     },
                     "y": {
+                      "aggregate": "mean",
                       "field": "mean",
                       "type": "quantitative",
                       "axis": {"title": "execution time (ms)"}
@@ -250,7 +473,60 @@
                 };
 
                 // Embed the visualization in the container with id `vis`
-                vega.embed("#vis4", vlSpec, opt, function(error, result) {
+                vega.embed("#vis8", vlSpec, opt, function(error, result) {
+                });
+                </script>
+
+
+                <div class="mdl-card__actions mdl-card--border">
+                  <p>
+                    "A(i,j) = B(i,k,l) * C(k,j) * D(l,j)" -f=B:sss
+                  </p>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="mdl-cell mdl-cell--3-col">
+              <!-- Square card -->
+              <div class="demo-card-square mdl-card mdl-shadow--2dp">
+                <br/>
+
+                <div class="mdl-card__title mdl-card--expand">
+                  <h1 class="mdl-card__title-text">facebook</h1>
+                </div>
+
+                <div id="vis9"></div>
+                <script>
+                // Assign the specification to a local variable vlSpec.
+                var vlSpec = {
+                  "name": "facebook",
+                  "width": 210, "height": 170,
+                  "data": {"url": "http://tensor-compiler.org/performance-results/facebook.csv"},
+                  "mark": "line",
+                  "encoding": {
+                    "x": {
+                      "field": "date",
+                      "type": "temporal",
+                      "axis": {"domain": false, "format": "%b / %d", "labelAngle": 0, "tickSize": 5, "labelOverlap": true}
+                    },
+                    "y": {
+                      "aggregate": "mean",
+                      "field": "mean",
+                      "type": "quantitative",
+                      "axis": {"title": "execution time (ms)"}
+                    }
+                  }
+                };
+
+                // optional argument passed to Vega-Embed to specify vega-lite spec. More info at https://github.com/vega/vega-embed
+                var opt = {
+                  "mode": "vega-lite",
+                  "actions": false
+                };
+
+                // Embed the visualization in the container with id `vis`
+                vega.embed("#vis9", vlSpec, opt, function(error, result) {
                 });
                 </script>
 
