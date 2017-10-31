@@ -86,6 +86,12 @@ a{
 /*  color:white;
 */}
 
+.mit-news{
+  background: url('../images/mit_tensor_algebra.jpg') no-repeat #fff;
+  background-size: 300px;
+  background-position: 50% 10%;
+}
+
 .scientific-computing{
   background: url('../images/scientific_computing_thumbnail.png') no-repeat #fff;
   background-size: 260px;
