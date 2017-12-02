@@ -30,20 +30,21 @@ int main(int argc, char* argv[]) {
   
   // Load a sparse matrix from file (stored in the Matrix Market format) and 
   // store it as a compressed sparse row matrix. Matrices correspond to order-2 
-  // tensors in taco.
-  Tensor<double> A = read("../data/pwtk.mtx", csr);
+  // tensors in taco. The matrix in this example can be downloaded from:
+  // https://www.cise.ufl.edu/research/sparse/MM/Boeing/pwtk.tar.gz
+  Tensor<double> A = read("pwtk.mtx", csr);
 
   // Generate a random dense vector and store it in the dense vector format. 
   // Vectors correspond to order-1 tensors in taco.
-  Tensor<double> x({A.getDimensions()[1]}, dv);
-  for (int i = 0; i < x.getDimensions()[0]; ++i) {
+  Tensor<double> x({A.getDimension(1)}, dv);
+  for (int i = 0; i < x.getDimension(0)]; ++i) {
     x.insert({i}, unif(gen));
   }
   x.pack();
 
   // Generate another random dense vetor and store it in the dense vector format..
-  Tensor<double> z({A.getDimensions()[0]}, dv);
-  for (int i = 0; i < z.getDimensions()[0]; ++i) {
+  Tensor<double> z({A.getDimension(0)}, dv);
+  for (int i = 0; i < z.getDimension(0)]; ++i) {
     z.insert({i}, unif(gen));
   }
   z.pack();
@@ -55,7 +56,7 @@ int main(int argc, char* argv[]) {
 
   // Declare the output matrix to be a sparse matrix with the same dimensions as 
   // input matrix B, to be also stored as a doubly compressed sparse row matrix.
-  Tensor<double> y({A.getDimensions()[0]}, dv);
+  Tensor<double> y({A.getDimension(0)}, dv);
 
   // Define the SpMV computation using index notation.
   IndexVar i, j;

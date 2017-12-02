@@ -33,22 +33,23 @@ int main(int argc, char* argv[]) {
   
   // Load a sparse matrix from file (stored in the Matrix Market format) and 
   // store it as a doubly compressed sparse row matrix. Matrices correspond to
-  // order-2 tensors in taco.
-  Tensor<double> B = read("../data/webbase.mtx", dcsr);
+  // order-2 tensors in taco. The matrix in this example can be download from:
+  // https://www.cise.ufl.edu/research/sparse/MM/Williams/webbase-1M.tar.gz
+  Tensor<double> B = read("webbase-1M.mtx", dcsr);
 
   // Generate a random dense matrix and store it in row-major (dense) format.
-  Tensor<double> C({B.getDimensions()[0], 1000}, rm);
-  for (int i = 0; i < C.getDimensions()[0]; ++i) {
-    for (int j = 0; j < C.getDimensions()[1]; ++j) {
+  Tensor<double> C({B.getDimension(0), 1000}, rm);
+  for (int i = 0; i < C.getDimension(0); ++i) {
+    for (int j = 0; j < C.getDimension(1); ++j) {
       C.insert({i,j}, unif(gen));
     }
   }
   C.pack();
 
   // Generate another random dense matrix and store it in column-major format.
-  Tensor<double> D({1000, B.getDimensions()[1]}, cm);
-  for (int i = 0; i < D.getDimensions()[0]; ++i) {
-    for (int j = 0; j < D.getDimensions()[1]; ++j) {
+  Tensor<double> D({1000, B.getDimension(1)}, cm);
+  for (int i = 0; i < D.getDimension(0); ++i) {
+    for (int j = 0; j < D.getDimension(1); ++j) {
       D.insert({i,j}, unif(gen));
     }
   }

@@ -3,36 +3,30 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="google-site-verification" content="f5tUjlFsAzH7dWLs_U2mdlivbrr_jgV4Gq7wClHDUJ8" />
+  
+  <meta name="author" content="Apurva Shrivastava">
+  <link rel="shortcut icon" href="../favicon.ico">
   
   <title>Machine Learning: SDDMM - Documentation - The Tensor Algebra Compiler (taco)</title>
-  
-
-  <link rel="shortcut icon" href="favicon.ico">
-  
-
-  
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
   <link rel="stylesheet" href="../css/highlight.css">
-  <link rel="canonical" href="None" />
   <link href="../extra.css" rel="stylesheet">
-
   
   <script>
     // Current page data
     var mkdocs_page_name = "Machine Learning: SDDMM";
+    var mkdocs_page_input_path = "machine_learning.md";
+    var mkdocs_page_url = "/machine_learning/";
   </script>
   
   <script src="../js/jquery-2.1.1.min.js"></script>
   <script src="../js/modernizr-2.8.3.min.js"></script>
-  <script type="text/javascript" src="../js/highlight.pack.js"></script>
-  <script src="../js/theme.js"></script> 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
   
 </head>
 
@@ -43,7 +37,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
       <div class="wy-side-nav-search">
-        <a href="http://tensor-compiler.org" class="icon icon-home"> The Tensor Algebra Compiler (taco)</a>
+        <a href="http://tensor-compiler.org" class="icon icon-home"> Tensor Algebra Compiler (taco)</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -52,69 +46,50 @@
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        <ul class="current">
+	<ul class="current">
+	  
           
-            <li>
-    <li class="toctree-l1 ">
-        <a class="" href="..">Home</a>
-        
-    </li>
-<li>
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Home</a>
+	    </li>
           
-            <li>
+            <li class="toctree-l1">
+		
+    <span class="caption-text">C++ Library</span>
     <ul class="subnav">
-    <li><span>C++ Library</span></li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="../tensors/">Defining Tensors</a>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="../computations/">Computing on Tensors</a>
-        
-    </li>
-
-        
+                <li class="">
+                    
+    <a class="" href="../tensors/">Defining Tensors</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../computations/">Computing on Tensors</a>
+                </li>
     </ul>
-<li>
+	    </li>
           
-            <li>
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Example Applications</span>
     <ul class="subnav">
-    <li><span>Example Applications</span></li>
-
-        
+                <li class="">
+                    
+    <a class="" href="../scientific_computing/">Scientific Computing: SpMV</a>
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="./">Machine Learning: SDDMM</a>
+    <ul class="subnav">
             
-    <li class="toctree-l1 ">
-        <a class="" href="../scientific_computing/">Scientific Computing: SpMV</a>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 current">
-        <a class="current" href="./">Machine Learning: SDDMM</a>
-        
-            <ul>
-            
-            </ul>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 ">
-        <a class="" href="../data_analytics/">Data Analytics: MTTKRP</a>
-        
-    </li>
-
-        
     </ul>
-<li>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../data_analytics/">Data Analytics: MTTKRP</a>
+                </li>
+    </ul>
+	    </li>
           
         </ul>
       </div>
@@ -126,7 +101,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="http://tensor-compiler.org"> The Tensor Algebra Compiler (taco)</a>
+        <a href="http://tensor-compiler.org"> Tensor Algebra Compiler (taco)</a>
       </nav>
 
       
@@ -183,22 +158,23 @@ int main(int argc, char* argv[]) {
 
   // Load a sparse matrix from file (stored in the Matrix Market format) and 
   // store it as a doubly compressed sparse row matrix. Matrices correspond to
-  // order-2 tensors in taco.
-  Tensor&lt;double&gt; B = read(&quot;../data/webbase.mtx&quot;, dcsr);
+  // order-2 tensors in taco. The matrix in this example can be download from:
+  // https://www.cise.ufl.edu/research/sparse/MM/Williams/webbase-1M.tar.gz
+  Tensor&lt;double&gt; B = read(&quot;webbase-1M.mtx&quot;, dcsr);
 
   // Generate a random dense matrix and store it in row-major (dense) format.
-  Tensor&lt;double&gt; C({B.getDimensions()[0], 1000}, rm);
-  for (int i = 0; i &lt; C.getDimensions()[0]; ++i) {
-    for (int j = 0; j &lt; C.getDimensions()[1]; ++j) {
+  Tensor&lt;double&gt; C({B.getDimension(0), 1000}, rm);
+  for (int i = 0; i &lt; C.getDimension(0); ++i) {
+    for (int j = 0; j &lt; C.getDimension(1); ++j) {
       C.insert({i,j}, unif(gen));
     }
   }
   C.pack();
 
   // Generate another random dense matrix and store it in column-major format.
-  Tensor&lt;double&gt; D({1000, B.getDimensions()[1]}, cm);
-  for (int i = 0; i &lt; D.getDimensions()[0]; ++i) {
-    for (int j = 0; j &lt; D.getDimensions()[1]; ++j) {
+  Tensor&lt;double&gt; D({1000, B.getDimension(1)}, cm);
+  for (int i = 0; i &lt; D.getDimension(0); ++i) {
+    for (int j = 0; j &lt; D.getDimension(1); ++j) {
       D.insert({i,j}, unif(gen));
     }
   }
@@ -253,29 +229,37 @@ for (int B1_pos = B.d1.pos[0]; B1_pos &lt; B.d1.pos[(0 + 1)]; B1_pos++) {
             </div>
           </div>
           <footer>
-  <a href="https://github.com/tensor-compiler/taco">
-    <button class="buy-now-red" style="width: 100%">Try taco now</button>
-  </a>
+  <a href="https://github.com/tensor-compiler/taco" class="btn btn-danger" style="width: 100%">Try taco now</a>
+  <br><br>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../data_analytics/" class="btn btn-neutral float-right" title="Data Analytics: MTTKRP"/>Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../data_analytics/" class="btn btn-neutral float-right" title="Data Analytics: MTTKRP">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
         <a href="../scientific_computing/" class="btn btn-neutral" title="Scientific Computing: SpMV"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-      ga('create', 'UA-93058524-1', 'auto');
-      ga('send', 'pageview');
-    </script>
   
-<hr/>
-	  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-93058524-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+
+  <small>Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.</small>
+</footer>
+      
         </div>
       </div>
 
@@ -283,7 +267,7 @@ for (int B1_pos = B.d1.pos[0]; B1_pos &lt; B.d1.pos[(0 + 1)]; B1_pos++) {
 
   </div>
 
-<div class="rst-versions" role="note" style="cursor: pointer">
+  <div class="rst-versions" role="note" style="cursor: pointer">
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
@@ -294,6 +278,11 @@ for (int B1_pos = B.d1.pos[0]; B1_pos &lt; B.d1.pos[(0 + 1)]; B1_pos++) {
       
     </span>
 </div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="../search/require.js"></script>
+      <script src="../search/search.js"></script>
 
 </body>
 </html>

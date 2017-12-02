@@ -30,23 +30,24 @@ int main(int argc, char* argv[]) {
   Format  rm({Dense,Dense});
  
   // Load a sparse order-3 tensor from file (stored in the FROSTT format) and 
-  // store it as a compressed sparse fiber tensor.
-  Tensor<double> B = read("../data/facebook.tns", csf);
+  // store it as a compressed sparse fiber tensor. The tensor in this example 
+  // can be download from: http://frostt.io/tensors/nell-2/
+  Tensor<double> B = read("nell-2.tns", csf);
 
   // Generate a random dense matrix and store it in row-major (dense) format. 
   // Matrices correspond to order-2 tensors in taco.
-  Tensor<double> C({B.getDimensions()[1], 25}, rm);
-  for (int i = 0; i < C.getDimensions()[0]; ++i) {
-    for (int j = 0; j < C.getDimensions()[1]; ++j) {
+  Tensor<double> C({B.getDimension(1), 25}, rm);
+  for (int i = 0; i < C.getDimension(0); ++i) {
+    for (int j = 0; j < C.getDimension(1); ++j) {
       C.insert({i,j}, unif(gen));
     }
   }
   C.pack();
 
   // Generate another random dense matrix and store it in row-major format.
-  Tensor<double> D({B.getDimensions()[2], 25}, rm);
-  for (int i = 0; i < D.getDimensions()[0]; ++i) {
-    for (int j = 0; j < D.getDimensions()[1]; ++j) {
+  Tensor<double> D({B.getDimension(2), 25}, rm);
+  for (int i = 0; i < D.getDimension(0); ++i) {
+    for (int j = 0; j < D.getDimension(1); ++j) {
       D.insert({i,j}, unif(gen));
     }
   }
@@ -55,7 +56,7 @@ int main(int argc, char* argv[]) {
   // Declare the output matrix to be a dense matrix with 25 columns and the same 
   // number of rows as the number of slices along the first dimension of input 
   // tensor B, to be also stored as a row-major dense matrix.
-  Tensor<double> A({B.getDimensions()[0], 25}, rm);
+  Tensor<double> A({B.getDimension(0), 25}, rm);
 
   // Define the MTTKRP computation using index notation.
   IndexVar i, j, k, l;
