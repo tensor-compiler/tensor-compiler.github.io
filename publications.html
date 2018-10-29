@@ -130,12 +130,12 @@
                   </div>
                 </li>
                 <li>
-                  <div class="collapsible-header"><i class="material-icons">library_books</i>Unified Sparse Formats for Tensor Algebra Compilers &nbsp;<span class="mdl-typography--caption-color-contrast right">Stephen Chou, Fredrik Kjolstad, and Saman Amarasinghe</span></div>
+                  <div class="collapsible-header"><i class="material-icons">library_books</i>Format Abstraction for Sparse Tensor Algebra Compilers &nbsp;<span class="mdl-typography--caption-color-contrast right">Stephen Chou, Fredrik Kjolstad, and Saman Amarasinghe</span></div>
                   <div class="collapsible-body">
                     <span>
                       <div class="mdl-grid" style="padding: 0px">
                       <div class="mdl-cell mdl-cell--12-col" style="margin-top: 0px; margin-bottom: 0px">
-                      <a href="https://arxiv.org/pdf/1804.10112.pdf"><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent getpdf">Download Paper</button></a></div>
+                      <a href="chou-oopsla18-taco-formats.pdf"><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent getpdf">Download Paper</button></a></div>
                       <h5>Abstract</h5>
                         <div class="body-text">
   This paper shows how to build a sparse tensor algebra compiler that is
@@ -145,35 +145,40 @@
   We then describe six implementations of the interface that compose to form
   the dense, CSR/CSF, COO, DIA, ELL, and HASH tensor formats and countless
   variants thereof.  With these implementations at hand, our code generator can
-  generate code for any tensor algebra expression on any combination of the
-  aforementioned formats.
+  generate code to compute any tensor algebra expression on any combination of
+  the aforementioned formats.
 <br><br>
-  To demonstrate our modular code generator design, we have implemented it in
-  the open-source taco tensor algebra compiler.  Our evaluation shows that we
-  get better performance by supporting more formats specialized to different
-  tensor structures, and our plugins makes it easy to add new formats.  For
-  example, when data is provided in the COO format, computing a single
-  matrix-vector multiplication with COO is up to 3.6x faster than with
-  CSR.  Furthermore, DIA is specialized to tensor convolutions and stencil
-  operations and therefore performs up to 22% faster than CSR for such
-  operations.  To further demonstrate the importance of support for many
-  formats, we show that the best vector format for matrix-vector multiplication
-  varies with input sparsities, from hash maps to sparse vectors to dense
-  vectors.  Finally, we show that the performance of generated code for these
-  formats is competitive with hand-optimized implementations.</div>
+  To demonstrate our technique, we have implemented it in the taco tensor
+  algebra compiler.  Our modular code generator design makes it simple to add
+  support for new tensor formats, and the performance of the generated code is
+  competitive with hand-optimized implementations.  Furthermore, by
+  extending taco to support a wider range of formats specialized for
+  different application and data characteristics, we can improve end-user 
+  application performance.  For example, if input data is provided in the COO
+  format, our technique allows computing a single matrix-vector multiplication
+  directly with the data in COO, which is up to 3.6&times; faster than by
+  first converting the data to CSR.</div>
                       <div>
                       <h5>BibTex</h5>
-                        <pre class="bibtex" ><code>@article{chou:2018:fmtaco,
+                        <pre class="bibtex" ><code>@article{chou:2018:formats,
  author = {Chou, Stephen and Kjolstad, Fredrik and Amarasinghe, Saman},
- title = {Unified Sparse Formats for Tensor Algebra Compilers},
- journal = {ArXiv e-prints},
- archivePrefix = "arXiv",
- eprint = {1804.10112},
- primaryClass = "cs.MS",
- keywords = {Computer Science - Mathematical Software, Computer Science - Programming Languages},
- year = 2018,
- month = apr,
- url = {https://arxiv.org/abs/1804.10112}
+ title = {Format Abstraction for Sparse Tensor Algebra Compilers},
+ journal = {Proc. ACM Program. Lang.},
+ issue_date = {November 2018},
+ volume = {2},
+ number = {OOPSLA},
+ month = oct,
+ year = {2018},
+ issn = {2475-1421},
+ pages = {123:1--123:30},
+ articleno = {123},
+ numpages = {30},
+ url = {http://doi.acm.org/10.1145/3276493},
+ doi = {10.1145/3276493},
+ acmid = {3276493},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {modular code generation, sparse tensor algebra compilation, tensor formats},
 }</code></pre>
                       </div>
                     </span>
