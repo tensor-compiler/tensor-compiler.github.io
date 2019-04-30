@@ -185,14 +185,29 @@
                   </div>
                 </li>
                 <li>
-                  <div class="collapsible-header"><i class="material-icons">library_books</i>Sparse Tensor Algebra Optimizations with Workspaces &nbsp;<span class="mdl-typography--caption-color-contrast right">Fredrik Kjolstad, Peter Ahrens, Shoaib Kamil, and Saman Amarasinghe</span></div>
+                  <div class="collapsible-header"><i class="material-icons">library_books</i>Tensor Algebra Compilation with Workspaces &nbsp;<span class="mdl-typography--caption-color-contrast right">Fredrik Kjolstad, Peter Ahrens, Shoaib Kamil, and Saman Amarasinghe</span></div>
                   <div class="collapsible-body">
                     <span>
                       <div class="mdl-grid" style="padding: 0px">
                       <div class="mdl-cell mdl-cell--12-col" style="margin-top: 0px; margin-bottom: 0px">
-                      <a href="https://arxiv.org/pdf/1802.10574.pdf"><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent getpdf">Download Paper</button></a></div>
+                      <a href="taco-workspaces.pdf"><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent getpdf">Download Paper</button></a></div>
                       <h5>Abstract</h5>
                         <div class="body-text">
+This paper shows how to extend sparse tensor algebra compilers to introduce
+temporary tensors called workspaces to avoid inefficient sparse data structures
+accesses.  We develop an intermediate representation (IR) for tensor operations
+called concrete index notation that specifies when sub-computations occur and
+where they are stored.  We then describe the workspace transformation in this
+IR, how to programmatically invoke it, and how the IR is compiled to sparse
+code.  Finally, we show how the transformation can be used to optimize sparse
+tensor kernels, including sparse matrix multiplication, sparse tensor addition,
+and the matricized tensor times Khatri-Rao product (MTTKRP).
+<br><br>
+Our results show that the workspace transformation brings the performance of
+these kernels on par with hand-optimized implementations. For example, we
+improve the performance of MTTKRP with dense output by up to 35\%, and enable
+generating sparse matrix multiplication and MTTKRP with sparse output, neither
+of which were supported by prior tensor algebra compilers.
 This paper shows how to optimize sparse tensor algebraic expressions by
 introducing temporary tensors, called workspaces, into the resulting loop
 nests.  We develop a new intermediate language for tensor operations called
@@ -200,30 +215,24 @@ concrete index notation that extends tensor index notation.  Concrete index
 notation expresses when and where sub-computations occur and what tensor they
 are stored into.  We then describe the workspace optimization in this language,
 and how to compile it to sparse code by building on prior work in the
-literature.
-<br><br>
-We demonstrate the importance of the optimization on several important sparse
-tensor kernels, including sparse matrix-matrix multiplication (SpMM), sparse
-tensor addition (SpAdd), and the matricized tensor times Khatri-Rao product
-(MTTKRP) used to factorize tensors.  Our results show improvements over prior
-work on tensor algebra compilation and brings the performance of these kernels
-on par with state-of-the-art hand-optimized implementations.  For example, SpMM
-was not supported by prior tensor algebra compilers, the performance of MTTKRP
-on the nell-2 data set improves by 35%, and MTTKRP can for the first time have
-sparse results.</div>
+literature.</div>
                       <div>
                       <h5>BibTex</h5>
                         <pre class="bibtex" ><code>@article{kjolstad:2018:workspaces,
  author = {Kjolstad, Fredrik and Ahrens, Peter and Kamil, Shoaib and Amarasinghe, Saman},
- title = {Sparse Tensor Algebra Optimizations with Workspaces},
- journal = {ArXiv e-prints},
- archivePrefix = "arXiv",
- eprint = {1802.10574},
- primaryClass = "cs.MS",
- keywords = {Computer Science - Mathematical Software, Computer Science - Programming Languages},
- year = 2018,
- month = apr,
- url = {https://arxiv.org/abs/1802.10574}
+ title = {Tensor Algebra Compilation with Workspaces},
+ booktitle = {Proceedings of the 2019 IEEE/ACM International Symposium on Code Generation and Optimization},
+ series = {CGO 2019},
+ year = {2019},
+ isbn = {978-1-7281-1436-1},
+ location = {Washington, DC, USA},
+ pages = {180--192},
+ numpages = {13},
+ url = {http://dl.acm.org/citation.cfm?id=3314872.3314894},
+ acmid = {3314894},
+ publisher = {IEEE Press},
+ address = {Piscataway, NJ, USA},
+ keywords = {code optimization, concrete index notation, sparse tensor algebra, temporaries, workspaces},
 }</code></pre>
                       </div>
                     </span>
