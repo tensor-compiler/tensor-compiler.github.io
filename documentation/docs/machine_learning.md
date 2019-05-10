@@ -79,6 +79,41 @@ int main(int argc, char* argv[]) {
 }
 ```
 
+We can also express this using the Python API:
+```python
+import pytaco as pt
+from pytaco import dense, compressed, format
+import numpy as np
+
+# Predeclare the storage formats that the inputs and output will be stored as.
+# To define a format, you must specify whether each dimension is dense or sparse 
+# and (optionally) the order in which dimensions should be stored. The formats 
+# declared below correspond to doubly compressed sparse row (dcsr), row-major 
+# dense (rm), and column-major dense (dm).
+dcsr = format([compressed, compressed])
+rm   = format([dense, dense])
+cm   = format([dense, dense], [1, 0])
+
+
+# The matrix in this example can be download from:
+# https://www.cise.ufl.edu/research/sparse/MM/Williams/webbase-1M.tar.gz
+B = pt.read("webbase-1M.mtx", dcsr)
+
+# Use numpy to create random matrices
+x = pt.from_numpy_array(np.random.uniform( size=(B.shape[0], 1000) ) )
+z = pt.from_numpy_array(np.random.uniform( size=(1000, B.shape[1]) ), out_format=cm )
+
+# Declare output matrix as doubly compressed sparse row
+A = pt.tensor(B.shape, dcsr)
+
+# Create index vars
+i, j, k = pt.get_index_vars(3)
+A[i, j] = B[i, j] * C[i, k] * D[k, j]
+
+# store tensor
+pt.write("A.mtx", A)
+```
+
 Under the hood, when you run the above C++ program, taco generates the imperative code shown below to compute the SDDMM. taco is able to do this efficiently by only computing entries of the intermediate matrix product that are actually needed to compute the output tensor `A`.
 
 ```c++

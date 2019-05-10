@@ -65,3 +65,9 @@ A.compute();   // Invoke the compute kernel to perform the actual computation
 ```
 
 This can be useful if you want to perform the same computation multiple times, in which case it suffices to invoke `compile` once before the first time the computation is performed.
+
+# Delayed Execuation
+
+It is also possible to skip using the compiler functions entirely. Once you attempt to modify or view the output tensor, taco will automatically invoke the compiler in order to generate the data. 
+
+It should be noted that in order to accurately time a computation, it is necessary to invoke the compiler functions directly since relying on the delayed execution mechanism can cause a lot of prior computations to be included in the timing.

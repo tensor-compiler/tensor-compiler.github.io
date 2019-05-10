@@ -12,6 +12,9 @@ pages:
     - C++ Library:
         - 'Defining Tensors': 'tensors.md'
         - 'Computing on Tensors': 'computations.md'
+    - Python Library:
+        - 'Defining Tensors': 'pytensors.md'
+        - 'Computing on Tensors': 'pycomputations.md'
     - Example Applications:
         - 'Scientific Computing: SpMV': 'scientific_computing.md'
         - 'Machine Learning: SDDMM': 'machine_learning.md'

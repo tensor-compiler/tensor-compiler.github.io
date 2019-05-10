@@ -78,6 +78,36 @@ int main(int argc, char* argv[]) {
 }
 ```
 
+We can also express this using the Python API.
+
+```python
+import pytaco as pt
+import numpy as np
+from pytaco import compressed, dense, format
+
+# Declare tensor formats
+csf = format([compressed, compressed, compressed])
+rm  = format([dense, dense])
+
+# Load a sparse order-3 tensor from file (stored in the FROSTT format) and 
+# store it as a compressed sparse fiber tensor. The tensor in this example 
+# can be download from: http://frostt.io/tensors/nell-2/
+B = pt.read("nell-2.tns", csf);
+
+# Use numpy to create random matrices
+C = pt.from_numpy_array(np.random.uniform( size=(B.shape[1], 25) ) )
+D = pt.from_numpy_array(np.random.uniform( size=(B.shape[2], 25) ) )
+
+# Create output tensor
+A = pt.tensor([B.shape[0], 25], rm)
+
+# Create index vars and define the MTTKRP op
+i, j, k, l = get_index_vars(4)
+A[i, j] = B[i, k, l] * D[l, j] * C[k, j]
+
+pt.write("A.tns", A)
+```
+
 Under the hood, when you run the above C++ program, taco generates the imperative code shown below to compute the MTTKRP. taco is able to evaluate this compound operation efficiently with a single kernel that avoids materializing the intermediate Khatri-Rao product.
 
 ```c++
