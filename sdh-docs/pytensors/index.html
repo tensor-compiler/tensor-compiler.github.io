@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="Apurva Shrivastava">
+  <link rel="shortcut icon" href="../favicon.ico">
+  
+  <title>Defining Tensors - Documentation - The Tensor Algebra Compiler (taco)</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  <link href="../extra.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Defining Tensors";
+    var mkdocs_page_input_path = "pytensors.md";
+    var mkdocs_page_url = "/pytensors/index.html";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="http://tensor-compiler.org" class="icon icon-home"> Tensor Algebra Compiler (taco)</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../index.html">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Python Library</span>
+    <ul class="subnav">
+                <li class=" current">
+                    
+    <a class="current" href="index.html">Defining Tensors</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#declaring-tensors">Declaring Tensors</a></li>
+    
+
+    <li class="toctree-l3"><a href="#defining-tensor-formats">Defining Tensor Formats</a></li>
+    
+
+    <li class="toctree-l3"><a href="#tensor-datatypes">Tensor Datatypes</a></li>
+    
+
+    <li class="toctree-l3"><a href="#initializing-tensors">Initializing Tensors</a></li>
+    
+
+    <li class="toctree-l3"><a href="#loading-tensors-from-file">Loading Tensors from File</a></li>
+    
+
+    <li class="toctree-l3"><a href="#writing-tensors-to-files">Writing Tensors to Files</a></li>
+    
+
+    <li class="toctree-l3"><a href="#io-with-numpy-or-scipy">I/O with Numpy or Scipy</a></li>
+    
+
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../pycomputations/index.html">Computing on Tensors</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">C++ Library</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../tensors/index.html">Defining Tensors</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../computations/index.html">Computing on Tensors</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Example Applications</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../scientific_computing/index.html">Scientific Computing: SpMV</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../machine_learning/index.html">Machine Learning: SDDMM</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../data_analytics/index.html">Data Analytics: MTTKRP</a>
+                </li>
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="http://tensor-compiler.org"> Tensor Algebra Compiler (taco)</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Python Library &raquo;</li>
+        
+      
+    
+    <li>Defining Tensors</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="declaring-tensors">Declaring Tensors</h1>
+<p><code>pytaco.Tensor</code> objects correspond to mathematical tensors. You can can declare a new tensor by specifying its name, a vector with the size of each dimension and the <a href="index.html#defining-tensor-formats">storage format</a> that will be used to store the tensor and a <a href="index.html#tensor-datatypes">datatype</a>:</p>
+<pre><code class="python"># Import the pytaco library
+import pytaco as pt
+# Import the storage formats to save some typing
+from pytaco import dense, compressed
+
+# Declare a new tensor &quot;A&quot; of double-precision floats with dimensions 
+# 512 x 64 x 2048, stored as a dense-sparse-sparse tensor
+A = pt.tensor(&quot;A&quot;, [512, 64, 2048], pt.format([dense, compressed, compressed]), pt.float64)
+</code></pre>
+
+<p>The name of the tensor can be omitted, in which case taco will assign an arbitrary name to the tensor:</p>
+<pre><code class="python">import pytaco as pt
+from pytaco import dense, compressed
+
+# Declare a tensor with the same dimensions, storage format and type as before
+A = pt.tensor([512, 64, 2048], pt.format([dense, compressed, compressed]), pt.float64)
+</code></pre>
+
+<p>The <a href="index.html#tensor-datatypes">datatype</a> can also be omitted in which case taco will default to using <code>pt.float32</code>:</p>
+<pre><code class="python">import pytaco as pt
+from pytaco import dense, compressed
+
+# Declare a tensor with the same dimensions and storage format as before
+A = pt.tensor([512, 64, 2048], pt.format([dense, compressed, compressed]))
+</code></pre>
+
+<p>A single format can be given to create a tensor where all dimensions have that format:</p>
+<pre><code class="python">import pytaco as pt
+from pytaco import dense, compressed
+
+# Declare a dense tensor
+A = pt.tensor([512, 64, 2048], dense)
+
+# Declare a compressed tensor
+B = pt.tensor([512, 64, 2048], compressed)
+</code></pre>
+
+<p>Scalars, which are treated as order-0 tensors, can be declared and initialized with some arbitrary value as demonstrated below:</p>
+<pre><code class="python">import pytaco as pt
+from pytaco import dense, compressed
+
+# Declare a scalar
+aplha = pt.tensor(42.0)
+</code></pre>
+
+<h1 id="defining-tensor-formats">Defining Tensor Formats</h1>
+<p>Conceptually, you can think of a tensor as a tree with each level (excluding the root) corresponding to a dimension of the tensor. Each path from the root to a leaf node represents a tensor coordinate and its corresponding value. Which dimension each level of the tree corresponds to is determined by the order in which dimensions of the tensor are stored.</p>
+<p>taco uses a novel scheme that can describe different storage formats for any tensor by specifying the order in which tensor dimensions are stored and whether each dimension is sparse or dense. A sparse dimension stores only the subset of the dimension that contains non-zero values and is conceptually similar to the index arrays used in the compressed sparse row (CSR) matrix format, while a dense dimension stores both zeros and non-zeros. As demonstrated below, this scheme is flexibile enough to express many commonly-used matrix storage formats.</p>
+<p>You can define a new tensor storage format by creating a <code>pytaco.format</code> object. The constructor for <code>pytaco.format</code> takes as arguments a list specifying the type of each dimension and (optionally) a list specifying the order in which dimensions are to be stored, as seen below:</p>
+<pre><code class="python">import pytaco as pt
+from pytaco import dense, compressed, format
+dm   = format([dense, dense])                   # (Row-major) dense matrix
+csr  = format([dense, compressed])              # Compressed sparse row matrix
+csc  = format([dense, compressed], [1, 0])      # Compressed sparse column matrix
+dcsr = format([compressed, compressed], [1, 0]) # Doubly compressed sparse column matrix
+</code></pre>
+
+<p><code>pytaco</code> provides common formats (csr, csc and csf) by default and can be used by simply typing <code>pt.csr</code>, <code>pt.csc</code> or <code>pt.csf</code>.</p>
+<h1 id="tensor-datatypes">Tensor Datatypes</h1>
+<p>Tensors can be of 10 different datatypes. The following are the possible tensor datatypes:</p>
+<p>Signed Integers:</p>
+<p><code>pytaco.int8</code></p>
+<p><code>pytaco.int16</code></p>
+<p><code>pytaco.int32</code></p>
+<p><code>pytaco.int64</code></p>
+<p>Unsigned Integers:</p>
+<p><code>pytaco.uint8</code></p>
+<p><code>pytaco.uint16</code></p>
+<p><code>pytaco.uint32</code></p>
+<p><code>pytaco.uint64</code></p>
+<p>Floating point precision: </p>
+<p><code>pytaco.float32</code> </p>
+<p><code>pytaco.float</code></p>
+<p>Double precision: </p>
+<p><code>pytaco.float64</code> </p>
+<p><code>pytaco.double</code></p>
+<h1 id="initializing-tensors">Initializing Tensors</h1>
+<p>Tensors can be made by using python indexing syntax. For example, one may write the following:</p>
+<pre><code class="python">import pytaco as pt
+from pytaco import dense, compressed
+
+# Declare a dense tensor
+A = pt.tensor([512, 64, 2048], compressed)
+
+# Set location (0, 1, 0) in A to 42.0
+A[0, 1, 0] = 42.0
+</code></pre>
+
+<p>The insert operator adds the inserted non-zeros to a temporary buffer. Before a tensor can actually be used in a computation, it is automatcally packed. </p>
+<p>For most cases, this is not necessary but you may also invoke the <code>pack</code> method to compress the tensor into the storage format that was specified after all values have been inserted.</p>
+<p>NOTE: Multidimensional indexing (as used with lists) are NOT supported. For example, the following is invalid code:</p>
+<pre><code class="python">import pytaco as pt
+from pytaco import dense, compressed
+
+# Declare a dense tensor
+A = pt.tensor([512, 64, 2048], compressed)
+
+# INVALID STATEMENT
+A[0][1][0] = 42.0
+</code></pre>
+
+<h1 id="loading-tensors-from-file">Loading Tensors from File</h1>
+<p>Rather than manually invoking building a tensor, you can load tensors directly from file by calling <code>pytaco.read</code> as demonstrated below:</p>
+<pre><code class="python">import pytaco as pt
+from pytaco import dense, compressed, format
+
+# Load a dense-sparse-sparse tensor from file A.tns
+A = pt.read(&quot;A.tns&quot;, format([dense, compressed, compressed]))
+</code></pre>
+
+<p>By default, <code>pytaco.read</code> returns a packed tensor. You can optionally pass a Boolean flag as an argument to indicate whether the returned tensor should be packed or not: </p>
+<pre><code class="python">import pytaco as pt
+from pytaco import dense, compressed, format
+
+# Load an unpacked tensor from file A.tns
+A = pt.read(&quot;A.tns&quot;, format([dense, compressed, compressed]), false)
+</code></pre>
+
+<p>NOTE: the tensor will be packed anyway before any computation is actually performed.</p>
+<p>Currently, taco supports loading from the following matrix and tensor file formats:</p>
+<ul>
+<li><a href="http://math.nist.gov/MatrixMarket/formats.html#MMformat">Matrix Market (Coordinate) Format (.mtx)</a></li>
+<li><a href="https://www.cise.ufl.edu/research/sparse/matrices/DOC/rb.pdf">Rutherford-Boeing Format (.rb)</a></li>
+<li><a href="http://frostt.io/tensors/file-formats.html">FROSTT Format (.tns)</a></li>
+</ul>
+<h1 id="writing-tensors-to-files">Writing Tensors to Files</h1>
+<p>You can also write a (packed) tensor directly to file by calling <code>pytaco.write</code>, as demonstrated below:</p>
+<pre><code class="python">import pytaco as pt
+
+A = pt.tensor([512, 64, 2048], compressed)
+A[0, 1, 0] = 42.0
+A[1, 1, 1] = 77
+pt.write(&quot;A.tns&quot;, A);  # Write tensor A to file A.tns
+</code></pre>
+
+<p><code>pytaco.write</code> supports the same set of matrix and tensor file formats as <code>pytaco.read</code>.</p>
+<h1 id="io-with-numpy-or-scipy">I/O with Numpy or Scipy</h1>
+<p>Tensors can be initialized with either numpy arrays or scipy sparse CSC or CSR matrices. As such, we can use the I/O from numpy and scipy and feed the data into pytaco by initializing a tensor.</p>
+<pre><code class="python">import pytaco as pt
+import numpy as np
+import scipy.sparse
+
+# Assuming matrix is CSR
+sparse_matrix = scipy.sparse.load_npz('sparse_matrix.npz')
+
+# Pass data into taco for use
+taco_tensor = pt.from_scipy_csr(sparse_matrix)
+
+# We can also load a numpy array
+np_array = np.load('arr.npy')
+
+# And initialize a tensor from this array
+dense_tensor = pt.from_numpy_array(np_array)
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  <a href="https://github.com/tensor-compiler/taco" class="btn btn-danger" style="width: 100%">Try taco now</a>
+  <br><br>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../pycomputations/index.html" class="btn btn-neutral float-right" title="Computing on Tensors">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../index.html" class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-93058524-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+
+  <small>Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.</small>
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../index.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../pycomputations/index.html" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="../search/require.js"></script>
+      <script src="../search/search.js"></script>
+
+</body>
+</html>

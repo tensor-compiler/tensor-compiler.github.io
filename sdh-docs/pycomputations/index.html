@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="Apurva Shrivastava">
+  <link rel="shortcut icon" href="../favicon.ico">
+  
+  <title>Computing on Tensors - Documentation - The Tensor Algebra Compiler (taco)</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  <link href="../extra.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Computing on Tensors";
+    var mkdocs_page_input_path = "pycomputations.md";
+    var mkdocs_page_url = "/pycomputations/index.html";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="http://tensor-compiler.org" class="icon icon-home"> Tensor Algebra Compiler (taco)</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../index.html">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Python Library</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../pytensors/index.html">Defining Tensors</a>
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="index.html">Computing on Tensors</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#specifying-tensor-algebra-computations">Specifying Tensor Algebra Computations</a></li>
+    
+
+    <li class="toctree-l3"><a href="#indexvars">IndexVars</a></li>
+    
+
+    <li class="toctree-l3"><a href="#broadcasting">Broadcasting</a></li>
+    
+
+    <li class="toctree-l3"><a href="#functional-style-interface">Functional-style Interface</a></li>
+    
+
+    <li class="toctree-l3"><a href="#limitations">Limitations</a></li>
+    
+
+    </ul>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">C++ Library</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../tensors/index.html">Defining Tensors</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../computations/index.html">Computing on Tensors</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Example Applications</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../scientific_computing/index.html">Scientific Computing: SpMV</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../machine_learning/index.html">Machine Learning: SDDMM</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../data_analytics/index.html">Data Analytics: MTTKRP</a>
+                </li>
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="http://tensor-compiler.org"> Tensor Algebra Compiler (taco)</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Python Library &raquo;</li>
+        
+      
+    
+    <li>Computing on Tensors</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="specifying-tensor-algebra-computations">Specifying Tensor Algebra Computations</h1>
+<p>Tensor algebra computations can be expressed in taco with tensor index notation, which on a high level describes how each element in the output tensor can be computed from elements in the input tensors.  <a href="../computations/index.html">Tensor index notation</a> is described in detail in the description of the C++ library. Here, we focus on the syntax for python.</p>
+<p>The syntax is very similar to C++ except that we use square brackets <code>[]</code> to access tensors instead of parenthesis. For instance, to express <a href="../tensors#Computing-on-Tensors">matrix addition</a> in Python, we simply need to write:</p>
+<pre><code class="python">A[i, j] = B[i, j] + C[i, j]
+</code></pre>
+
+<p>where <code>A</code>, <code>B</code>, and <code>C</code> denote order-2 tensors (i.e. matrices) while <code>i</code> and <code>j</code> are index variables that represent abstract indices into the corresponding dimensions of the tensors as in the C++ API.</p>
+<p>It is important to note that due to the complications that arise from assembling sparse structures, we cannot have a tensor appear both on the left hand side and the right hand side of an expression.</p>
+<h1 id="indexvars">IndexVars</h1>
+<p>As in the C++ API, index vars are needed to form index expressions. Tensors can be accessed with either a <code>pytaco.indexVar</code> to express computations or integers to read or write to a location in a tensor. So for instance, before specifying the above we could write:</p>
+<pre><code class="python">import pytaco as pt
+
+# First method to make index vars
+i, j = pt.indexVar(), pt.indexVar()
+</code></pre>
+
+<p>We can also give names to indexVars as shown below:</p>
+<pre><code class="python">import pytaco as pt
+
+# Named indexVars
+i, j = pt.indexVar(&quot;i&quot;), pt.indexVar(&quot;j&quot;)
+</code></pre>
+
+<p>To make this less cumbersome, we also provide a function <code>pytaco.get_index_vars</code> to generate a list of n different index vars that can be used in tensor expressions.</p>
+<pre><code class="python">import pytaco as pt
+i, j = pt.get_index_vars(2)
+</code></pre>
+
+<p>NOTE: When using scalars to express computations we must still use the square brackets to index the tensor. Since scalars are order-0 tensors, <code>None</code> must be passed into the index to specify that no <code>indexVar</code>s are used:</p>
+<pre><code class="python">import pytaco as pt
+i, j = pt.get_index_vars(2)
+
+# Make a scalar value
+A = pt.tensor(0)
+# Make a compressed tensor of size 3x3
+B = pt.tensor([3,3])
+
+# Make some assignments
+B[0, 0] = 1
+B[1, 0] = 10
+
+# We can sum the elements in B as follows. Notice we need to use None to tell 
+# taco that A is a scalar.
+A[None] = B[i, j]
+</code></pre>
+
+<h1 id="broadcasting">Broadcasting</h1>
+<p>When using <code>indexVar</code>s, we must ensure that dimensions with the same <code>indexVar</code> are of the same size. Operations can be broadcast along outer dimensions assuming the inner dimensions are of the same size. For example:</p>
+<pre><code class="python">import pytaco as pt
+i, j, k = pt.get_index_vars(3)
+
+# Make a compressed tensor of size 3x3
+A = pt.tensor([3,3])
+B = pt.tensor([3,3])
+
+# Make a dense vector
+C = pt.tensor([3], pt.dense)
+
+# Make some assignments
+C[0] = 1
+B[0, 0] = 1
+
+# We can add C to each row of B as follows:
+A[i, j] =  B[i, j] + C[j]
+</code></pre>
+
+<p>The following, however, is not valid since the dimension of index j is of a different size for the different tensors:</p>
+<pre><code class="python">import pytaco as pt
+i, j, k = pt.get_index_vars(3)
+
+# Make a compressed tensor of size 3x3
+A = pt.tensor([3,3])
+B = pt.tensor([3,3])
+
+# Make a dense vector
+C = pt.tensor([3,1], pt.dense)
+
+# Make some assignments
+C[1, 0] = 1
+B[0, 0] = 1
+
+# We can add C to each row of B as follows:
+A[i, j] =  B[i, j] + C[i, j]
+</code></pre>
+
+<p>Taco currently does not support numpy-style broadcasting of singleton dimensions as evidenced by the snippet above. </p>
+<h1 id="functional-style-interface">Functional-style Interface</h1>
+<p>Taco supports einsum notation through the interface <code>pytaco.einsum</code> along with its own default parser available through <code>pytaco.parser</code>.</p>
+<p>The <a href="https://rockt.github.io/2018/04/30/einsum">einsum</a> function takes an einsum string as input along with a variable number of tensors. The einsum interface follows the following format:</p>
+<p><code>pytaco.einsum(subscripts, *operands, out_format, dtype=float)</code></p>
+<p>The <code>pytaco.parser</code> string follows syntax exactly like the <a href="../computations/index.html">C++ API index notation</a>. Notice that this differs from the python notation in that parenthesis are used instead of square brackets and we do not need to index scalars. The parser has the following spec:</p>
+<p><code>pytaco.parser(string, *operands, out_format, dtype=float)</code></p>
+<p>In addition, we also allow the following convenience functions:</p>
+<p>General element-wise functions:</p>
+<p><code>pt.add(a, b, out_format=pt.compressed, dtype=pt.float32)</code></p>
+<p><code>pt.sub(a, b, out_format=pt.compressed, dtype=pt.float32)</code></p>
+<p><code>pt.mul(a, b, out_format=pt.compressed, dtype=pt.float32)</code></p>
+<p><code>pt.div(a, b, out_format=pt.compressed, dtype=pt.float32)</code></p>
+<p><code>pt.floordiv(a, b, out_format=pt.compressed, dtype=pt.float32)</code></p>
+<p>Matrix multiply for order-2 tensors:</p>
+<p><code>pt.matmul(a, b, out_format=pt.compressed, dtype=pt.float32)</code></p>
+<p>Reduction functions for tensors along given axes. One can specify the axis they would like to reduce across or a list of axes to reduce:</p>
+<p><code>pt.reduce_sum(a, axis=None, out_format=pt.dense, dtype=pt.float32)</code></p>
+<p><code>pt.reduce_mul(a, axis=None, out_format=pt.dense, dtype=pt.float32)</code></p>
+<p>Examples:</p>
+<pre><code class="python">import pytaco as pt
+i, j, k = pt.get_index_vars(3)
+
+# Make a compressed tensor of size 3x3
+A = pt.tensor([3,3])
+B = pt.tensor([3,3])
+
+# Make some assignments
+A[0, 0] = 9
+A[1, 0] = 1
+A[2, 0] = 2
+B[0, 0] = 1
+
+# Element-wise addition
+C = pt.add(A, B)
+
+# Element-wise multiplication
+D = pt.mul(A, B)
+
+# Matrix-multiplication
+E = pt.matmul(A, B)
+
+# Sum over all elements in A
+F = pt.reduce_sum(A)
+
+# Sum the columns of A
+G = pt.reduce_sum(A, axis=1)
+</code></pre>
+
+<p>Numpy arrays can also be passed where tensors are expected in the functional interface.</p>
+<h1 id="limitations">Limitations</h1>
+<p>For all forms of index expressions, we do not support indexing a tensor with the same index variable. For example expressions such as <code>A[i,i]</code> are disallowed.</p>
+<p>Transposes are not allowed during computations. The user will need to explicitly transpose a tensor themselves using <code>pt.tensor.transpose(new_ordering)</code> before doing the computation.</p>
+              
+            </div>
+          </div>
+          <footer>
+  <a href="https://github.com/tensor-compiler/taco" class="btn btn-danger" style="width: 100%">Try taco now</a>
+  <br><br>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../tensors/index.html" class="btn btn-neutral float-right" title="Defining Tensors">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../pytensors/index.html" class="btn btn-neutral" title="Defining Tensors"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-93058524-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+
+  <small>Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.</small>
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../pytensors/index.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../tensors/index.html" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="../search/require.js"></script>
+      <script src="../search/search.js"></script>
+
+</body>
+</html>

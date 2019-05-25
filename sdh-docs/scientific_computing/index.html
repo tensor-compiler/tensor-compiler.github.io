@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="Apurva Shrivastava">
+  <link rel="shortcut icon" href="../favicon.ico">
+  
+  <title>Scientific Computing: SpMV - Documentation - The Tensor Algebra Compiler (taco)</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  <link href="../extra.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Scientific Computing: SpMV";
+    var mkdocs_page_input_path = "scientific_computing.md";
+    var mkdocs_page_url = "/scientific_computing/index.html";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="http://tensor-compiler.org" class="icon icon-home"> Tensor Algebra Compiler (taco)</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../index.html">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Python Library</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../pytensors/index.html">Defining Tensors</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../pycomputations/index.html">Computing on Tensors</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">C++ Library</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../tensors/index.html">Defining Tensors</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../computations/index.html">Computing on Tensors</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Example Applications</span>
+    <ul class="subnav">
+                <li class=" current">
+                    
+    <a class="current" href="index.html">Scientific Computing: SpMV</a>
+    <ul class="subnav">
+            
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../machine_learning/index.html">Machine Learning: SDDMM</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../data_analytics/index.html">Data Analytics: MTTKRP</a>
+                </li>
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="http://tensor-compiler.org"> Tensor Algebra Compiler (taco)</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Example Applications &raquo;</li>
+        
+      
+    
+    <li>Scientific Computing: SpMV</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p>Sparse matrix-vector multiplication (SpMV) is a bottleneck operation in many scientific and engineering computations. Mathematically, the operation demonstrated in this example can be expressed as <script type="math/tex">y = \alpha Ax + \beta z</script>, where <script type="math/tex">x</script>, <script type="math/tex">y</script>, and <script type="math/tex">z</script> are dense vectors, <script type="math/tex">A</script> is a sparse matrix, and <script type="math/tex">\alpha</script> and <script type="math/tex">\beta</script> are scalar values. This operation can also be expressed in <a href="../computations/index.html#specifying-tensor-algebra-computations">index notation</a> as </p>
+<pre><code class="c++">y(i) = alpha * A(i,j) * x(j) + beta * z(i)
+</code></pre>
+
+<p>You can use the taco Python library to easily and efficiently compute the SpMV as demonstrated here:</p>
+<pre><code class="python">import pytaco as pt
+from pytaco import compressed, dense
+import numpy as np
+
+# Declare the storage formats as explained in the C++ sample
+csr = pt.format([dense, compressed])
+dv  = pt.format([dense])
+
+# Load a sparse matrix stored in the matrix market format) and store it as a csr matrix. 
+# The matrix  # in this example can be downloaded from:
+# https://www.cise.ufl.edu/research/sparse/MM/Boeing/pwtk.tar.gz
+A = pt.read(&quot;pwtk.mtx&quot;, csr)
+
+# Generate two random vectors using numpy and pass them into taco
+x = pt.from_numpy_array(np.random.uniform(size=A.shape[0]))
+z = pt.from_numpy_array(np.random.uniform(size=A.shape[0]))
+
+# Declare output vector as dense
+y = pt.tensor([A.shape[0]], dv)
+
+# Create index vars
+i, j = pt.get_index_vars(2)
+
+# Define the SpMV computation
+y[i] = 42 * A[i, j] * x[j] + 33 * z[i]
+
+# Store the output
+pt.write(&quot;y.tns&quot;, y)
+</code></pre>
+
+<p>Under the hood, when you run the above Python program, taco generates the imperative code shown below to compute the SpMV. taco is able to evaluate this compound operation efficiently with a single kernel that avoids materializing the intermediate matrix-vector product.</p>
+<pre><code class="c++">for (int iA = 0; iA &lt; 217918; iA++) {
+  double tj = 0;
+  for (int A2_pos = A.d2.pos[iA]; A2_pos &lt; A.d2.pos[(iA + 1)]; A2_pos++) {
+    int jA = A.d2.idx[A2_pos];
+    tj += A.vals[A2_pos] * x.vals[jA];
+  }
+  y.vals[iA] = (alpha.vals[0] * tj) + (beta.vals[0] * z.vals[iA]);
+}
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  <a href="https://github.com/tensor-compiler/taco" class="btn btn-danger" style="width: 100%">Try taco now</a>
+  <br><br>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../machine_learning/index.html" class="btn btn-neutral float-right" title="Machine Learning: SDDMM">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../computations/index.html" class="btn btn-neutral" title="Computing on Tensors"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-93058524-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+
+  <small>Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.</small>
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../computations/index.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../machine_learning/index.html" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="../search/require.js"></script>
+      <script src="../search/search.js"></script>
+
+</body>
+</html>

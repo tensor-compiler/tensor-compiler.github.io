@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+    
+    <url>
+     <loc>/index.html</loc>
+     <lastmod>2019-05-24</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    
+
+    
+        
+    <url>
+     <loc>/pytensors/index.html</loc>
+     <lastmod>2019-05-24</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>/pycomputations/index.html</loc>
+     <lastmod>2019-05-24</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    
+
+    
+        
+    <url>
+     <loc>/tensors/index.html</loc>
+     <lastmod>2019-05-24</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>/computations/index.html</loc>
+     <lastmod>2019-05-24</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    
+
+    
+        
+    <url>
+     <loc>/scientific_computing/index.html</loc>
+     <lastmod>2019-05-24</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>/machine_learning/index.html</loc>
+     <lastmod>2019-05-24</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>/data_analytics/index.html</loc>
+     <lastmod>2019-05-24</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    
+
+</urlset>
