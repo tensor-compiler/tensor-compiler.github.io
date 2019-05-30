@@ -8,7 +8,7 @@ $$A = B \circ CD,$$
 where \(A\) and \(B\) are sparse matrices, \(C\) and \(D\) are dense matrices,
 and \(\circ\) denotes component-wise multiplication. This operation can also be
 expressed in [index
-notation](computations.md#specifying-tensor-algebra-computations) as 
+notation](pycomputations.md#specifying-tensor-algebra-computations) as 
 
 $$A_{ij} = B_{ij} \cdot C_{ik} \cdot C_{kj}.$$
 

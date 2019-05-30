@@ -6,7 +6,7 @@ $$y = Ax + z,$$
 
 where \(A\) is a sparse matrix and \(x\), \(y\), and \(z\)
 are dense vectors. The computation can also be expressed in [index
-notation](computations.md#specifying-tensor-algebra-computations) as 
+notation](pycomputations.md#specifying-tensor-algebra-computations) as 
 
 $$y_i = A_{ij} \cdot x_j + z_i.$$
 

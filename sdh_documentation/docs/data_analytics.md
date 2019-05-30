@@ -9,7 +9,7 @@ $$A = B_{(1)} (D \odot C),$$
 where \(A\), \(C\), and \(D\) are typically dense matrices, \(B\) is a
 three-dimensional tensor (matricizied along the first mode), and \(\odot\)
 denotes the Khatri-Rao product. This operation can also be expressed in [index
-notation](computations.md#specifying-tensor-algebra-computations) as 
+notation](pycomputations.md#specifying-tensor-algebra-computations) as 
 
 $$A_{ij} = B_{ikl} \cdot D_{lj} \cdot C_{kj}.$$
 

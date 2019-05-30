@@ -48,12 +48,12 @@ letting us measure only the performance of the computation itself.
     TACO's computational performance, since timing those functions will
     include the time it takes to generate code for performing the computation.
 
-**The time it takes to construct the initial input tensors should also not be
+**The time it takes to construct the initial operand tensors should also not be
 measured**, since again this overhead can often be amortized in practice.  By
 default, `pytaco.read` and functions for converting NumPy arrays and SciPy
 matrices to TACO tensors return fully constructed tensors.  If you add nonzero
-elements to an input tensor by calling `insert` though, then `pack` must also
-be explicitly invoked before any benchmarking is done:
+elements to an operand tensor by invoking its `insert` method though, then
+`pack` must also be explicitly invoked before any benchmarking is done:
 
 ```python
 import pytaco as pt
