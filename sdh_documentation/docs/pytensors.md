@@ -76,7 +76,7 @@ As demonstrated above, you can define a new tensor storage format by creating a
 `pytaco.format` object.  This requires specifying whether each tensor dimension
 is dense or sparse as well as (optionally) the order in which dimensions should
 be stored.  TACO also predefines some common tensor formats (including 
-```pt.csr```, ```pt.csc``` and ```pt.csf```) that you can use out of the box.
+```pt.csr``` and ```pt.csc```) that you can use out of the box.
 
 # Initializing Tensors
 
@@ -120,7 +120,7 @@ A.pack()
 You can then iterate over the nonzero elements of the tensor as follows:
 
 ```python
-for elem in A:
+for coordinate, elem in A:
   print(elem)
 ```
 

@@ -81,8 +81,9 @@ and demonstrates how matrix-vector multiplication can be expressed in index
 notation.  Both forms are supported by TACO:
 
 ```python
+i, j = pytaco.get_index_vars(2)
 y[i] = A[i,j] * x[j]
-y[i] = sum(j, A[i,j] * x[j])
+y[i] = pytaco.sum(j, A[i,j] * x[j])
 ```
 
 Reductions that are not explicitly expressed are assumed to be over the
@@ -135,6 +136,7 @@ stores the result in matrix `A`:
 A = pt.tensor([3,3], pt.format([dense, dense]))
 B = pt.tensor([3,3], pt.format([dense, dense]))
 C = pt.tensor([3,3], pt.format([dense, dense]))
+i, j = pt.get_index_vars(2)
 
 A[i,j] = B[i,j] + C[j,i]
 ```
@@ -153,6 +155,7 @@ before `i`:
 A = pt.tensor([3,3], pt.format([dense, compressed]))
 B = pt.tensor([3,3], pt.format([dense, compressed]))
 C = pt.tensor([3,3], pt.format([dense, compressed]))
+i, j = pt.get_index_vars(2)
 
 A[i,j] = B[i,j] + C[j,i]
 ```
@@ -165,6 +168,7 @@ addition with the already-transposed temporary:
 A = pt.tensor([3,3], pt.format([dense, compressed]))
 B = pt.tensor([3,3], pt.format([dense, compressed]))
 C = pt.tensor([3,3], pt.format([dense, compressed]))
+i, j = pt.get_index_vars(2)
 
 Ct = C.transpose([1, 0])  # Ct is also stored in the CSR format
 A[i,j] = B[i,j] + Ct[i,j]
@@ -179,6 +183,7 @@ order, requires `j` to be accessed before `i`:
 A = pt.tensor([3,3], pt.format([dense, compressed]))
 B = pt.tensor([3,3], pt.format([dense, compressed]))
 C = pt.tensor([3,3], pt.format([dense, compressed], [1, 0]))
+i, j = pt.get_index_vars(2)
 
 A[i,j] = B[i,j] + C[i,j]
 ```
@@ -191,6 +196,7 @@ addition:
 A = pt.tensor([3,3], pt.format([dense, compressed]))
 B = pt.tensor([3,3], pt.format([dense, compressed]))
 C = pt.tensor([3,3], pt.format([dense, compressed], [1, 0]))
+i, j = pt.get_index_vars(2)
 
 Cp = C.transpose([0, 1], pt.format([dense, compressed]))  # Store a copy of C in the CSR format
 A[i,j] = B[i,j] + Cp[i,j]
