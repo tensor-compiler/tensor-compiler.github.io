@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Tensors &mdash; PyTaco  documentation</title>
+  <title>Tensors &mdash; Taco  documentation</title>
   
 
   
@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Tensor Functions" href="tensor_info.html" />
+    <link rel="next" title="Tensor Compute Functions" href="tensor_info.html" />
     <link rel="prev" title="pytaco.get_index_vars" href="functions/pytaco.get_index_vars.html" /> 
 </head>
 
@@ -50,7 +50,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> PyTaco
+            <a href="../index.html" class="icon icon-home"> Taco
           
 
           
@@ -89,7 +89,8 @@
 <li class="toctree-l1"><a class="reference internal" href="index_expressions.html">Index Expressions</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Tensors</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="tensor_class.html">Tensor Class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tensor_info.html">Tensor Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tensor_info.html">Tensor Compute Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tensor_info.html#tensor-manipulation-functions">Tensor Manipulation functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="parsers.html">Evaluate String Expressions</a></li>
@@ -107,7 +108,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">PyTaco</a>
+          <a href="../index.html">Taco</a>
         
       </nav>
 
@@ -162,9 +163,8 @@
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="tensor_class.html">Tensor Class</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tensor_info.html">Tensor Functions</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="tensor_info.html">Tensor Compute Functions</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="functions/pytaco.tensor_abs.html">pytaco.tensor_abs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="functions/pytaco.tensor_pow.html">pytaco.tensor_pow</a></li>
 <li class="toctree-l2"><a class="reference internal" href="functions/pytaco.tensor_square.html">pytaco.tensor_square</a></li>
 <li class="toctree-l2"><a class="reference internal" href="functions/pytaco.tensor_cube.html">pytaco.tensor_cube</a></li>
 <li class="toctree-l2"><a class="reference internal" href="functions/pytaco.tensor_sqrt.html">pytaco.tensor_sqrt</a></li>
@@ -186,6 +186,12 @@
 <li class="toctree-l2"><a class="reference internal" href="functions/pytaco.tensor_acosh.html">pytaco.tensor_acosh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="functions/pytaco.tensor_atanh.html">pytaco.tensor_atanh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="functions/pytaco.tensor_logical_not.html">pytaco.tensor_logical_not</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functions/pytaco.tensor_sum.html">pytaco.tensor_sum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functions/pytaco.tensor_add.html">pytaco.tensor_add</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functions/pytaco.tensor_mul.html">pytaco.tensor_mul</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functions/pytaco.tensor_div.html">pytaco.tensor_div</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functions/pytaco.tensor_sub.html">pytaco.tensor_sub</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functions/pytaco.tensor_pow.html">pytaco.tensor_pow</a></li>
 <li class="toctree-l2"><a class="reference internal" href="functions/pytaco.tensor_gt.html">pytaco.tensor_gt</a></li>
 <li class="toctree-l2"><a class="reference internal" href="functions/pytaco.tensor_lt.html">pytaco.tensor_lt</a></li>
 <li class="toctree-l2"><a class="reference internal" href="functions/pytaco.tensor_ge.html">pytaco.tensor_ge</a></li>
@@ -195,12 +201,19 @@
 <li class="toctree-l2"><a class="reference internal" href="functions/pytaco.tensor_max.html">pytaco.tensor_max</a></li>
 <li class="toctree-l2"><a class="reference internal" href="functions/pytaco.tensor_min.html">pytaco.tensor_min</a></li>
 <li class="toctree-l2"><a class="reference internal" href="functions/pytaco.tensor_heaviside.html">pytaco.tensor_heaviside</a></li>
-<li class="toctree-l2"><a class="reference internal" href="functions/pytaco.tensor_sum.html">pytaco.tensor_sum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functions/pytaco.as_type.html">pytaco.as_type</a></li>
 <li class="toctree-l2"><a class="reference internal" href="functions/pytaco.matmul.html">pytaco.matmul</a></li>
 <li class="toctree-l2"><a class="reference internal" href="functions/pytaco.inner.html">pytaco.inner</a></li>
 <li class="toctree-l2"><a class="reference internal" href="functions/pytaco.dot.html">pytaco.dot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="functions/pytaco.outer.html">pytaco.outer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="functions/pytaco.tensordot.html">pytaco.tensordot</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tensor_info.html#tensor-manipulation-functions">Tensor Manipulation functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="functions/pytaco.tensor.insert.html">pytaco.tensor.insert</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functions/pytaco.tensor.pack.html">pytaco.tensor.pack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functions/pytaco.tensor.compile.html">pytaco.tensor.compile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functions/pytaco.remove_explicit_zeros.html">pytaco.remove_explicit_zeros</a></li>
 </ul>
 </li>
 </ul>
@@ -215,7 +228,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="tensor_info.html" class="btn btn-neutral float-right" title="Tensor Functions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="tensor_info.html" class="btn btn-neutral float-right" title="Tensor Compute Functions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="functions/pytaco.get_index_vars.html" class="btn btn-neutral float-left" title="pytaco.get_index_vars" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index Expression Objects &mdash; PyTaco  documentation</title>
+  <title>Index Expression Objects &mdash; Taco  documentation</title>
   
 
   
@@ -50,7 +50,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> PyTaco
+            <a href="../index.html" class="icon icon-home"> Taco
           
 
           
@@ -109,7 +109,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">PyTaco</a>
+          <a href="../index.html">Taco</a>
         
       </nav>
 
@@ -170,6 +170,9 @@
 <p>This direct invocation is only used to convert python ints and floats to index expressions. In all other cases, index
 expression will be formed by accessing a tensor using <a class="reference internal" href="index_vars.html#pytaco.index_var" title="pytaco.index_var"><code class="xref py py-class docutils literal notranslate"><span class="pre">index_var</span></code></a> s and different operations on that
 access as seen in the <a class="reference internal" href="expr_funcs.html#expr-funcs"><span class="std std-ref">Index Expression Functions</span></a> section.</p>
+<p>Note that in general, actually performing computations using index expressions require users to specify an output tensor
+with the correct shape. Dimensions indexed by the same <a class="reference internal" href="index_vars.html#pytaco.index_var" title="pytaco.index_var"><code class="xref py py-class docutils literal notranslate"><span class="pre">index_var</span></code></a> must have the same shape. As a result,
+determining the output shape is easy once the expression has been written. See the examples section.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -181,6 +184,8 @@ access as seen in the <a class="reference internal" href="expr_funcs.html#expr-f
 <p class="rubric">Notes</p>
 <p>Construction index expressions in this way can largely be ignored since taco will implicitly convert python scalars to index
 expressions.</p>
+<p>Creating index expressions from 0 order tensors must be done by indexing the 0 order tensor with <code class="docutils literal notranslate"><span class="pre">None</span></code>. This tells
+taco that there are no dimensions to access.</p>
 <p class="rubric">Examples</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pytaco</span> <span class="k">as</span> <span class="nn">pt</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">pt</span><span class="o">.</span><span class="n">index_expression</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
@@ -193,6 +198,20 @@ expressions.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span> <span class="c1"># All values set to 10 since 10 implied to be index expr</span>
 </pre></div>
 </div>
+<p>Scalar access</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">scalar_expr</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Determining output shape. An example using matrix multiply.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>We can represent matrix multiply as <code class="docutils literal notranslate"><span class="pre">C[i,</span> <span class="pre">j]</span> <span class="pre">=</span> <span class="pre">A[i,</span> <span class="pre">k]</span> <span class="pre">*</span> <span class="pre">B[k,</span> <span class="pre">j]</span></code>. Since we have the representation of the computation
+and we know that dimensions indexed by the same index variable must have the same shape, we can construct C by letting
+its first dimension have size <code class="docutils literal notranslate"><span class="pre">A.shape[0]</span></code> since both dimensions are indexed by i and letting its second dimension
+have size B.shape[1] since <code class="docutils literal notranslate"><span class="pre">j</span></code> indexes both of those dimensions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Attributes</dt>
 <dd class="field-odd"><dl class="simple">

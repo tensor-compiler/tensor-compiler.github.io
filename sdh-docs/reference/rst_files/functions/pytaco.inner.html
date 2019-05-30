@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pytaco.inner &mdash; PyTaco  documentation</title>
+  <title>pytaco.inner &mdash; Taco  documentation</title>
   
 
   
@@ -50,7 +50,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home"> PyTaco
+            <a href="../../index.html" class="icon icon-home"> Taco
           
 
           
@@ -89,9 +89,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../index_expressions.html">Index Expressions</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../tensors.html">Tensors</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../tensor_class.html">Tensor Class</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../tensor_info.html">Tensor Functions</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../tensor_info.html">Tensor Compute Functions</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="pytaco.tensor_abs.html">pytaco.tensor_abs</a></li>
-<li class="toctree-l3"><a class="reference internal" href="pytaco.tensor_pow.html">pytaco.tensor_pow</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pytaco.tensor_square.html">pytaco.tensor_square</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pytaco.tensor_cube.html">pytaco.tensor_cube</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pytaco.tensor_sqrt.html">pytaco.tensor_sqrt</a></li>
@@ -113,6 +112,12 @@
 <li class="toctree-l3"><a class="reference internal" href="pytaco.tensor_acosh.html">pytaco.tensor_acosh</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pytaco.tensor_atanh.html">pytaco.tensor_atanh</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pytaco.tensor_logical_not.html">pytaco.tensor_logical_not</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pytaco.tensor_sum.html">pytaco.tensor_sum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pytaco.tensor_add.html">pytaco.tensor_add</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pytaco.tensor_mul.html">pytaco.tensor_mul</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pytaco.tensor_div.html">pytaco.tensor_div</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pytaco.tensor_sub.html">pytaco.tensor_sub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pytaco.tensor_pow.html">pytaco.tensor_pow</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pytaco.tensor_gt.html">pytaco.tensor_gt</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pytaco.tensor_lt.html">pytaco.tensor_lt</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pytaco.tensor_ge.html">pytaco.tensor_ge</a></li>
@@ -122,7 +127,7 @@
 <li class="toctree-l3"><a class="reference internal" href="pytaco.tensor_max.html">pytaco.tensor_max</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pytaco.tensor_min.html">pytaco.tensor_min</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pytaco.tensor_heaviside.html">pytaco.tensor_heaviside</a></li>
-<li class="toctree-l3"><a class="reference internal" href="pytaco.tensor_sum.html">pytaco.tensor_sum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pytaco.as_type.html">pytaco.as_type</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pytaco.matmul.html">pytaco.matmul</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">pytaco.inner</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pytaco.dot.html">pytaco.dot</a></li>
@@ -130,6 +135,7 @@
 <li class="toctree-l3"><a class="reference internal" href="pytaco.tensordot.html">pytaco.tensordot</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../tensor_info.html#tensor-manipulation-functions">Tensor Manipulation functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../parsers.html">Evaluate String Expressions</a></li>
@@ -147,7 +153,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">PyTaco</a>
+          <a href="../../index.html">Taco</a>
         
       </nav>
 
@@ -180,7 +186,7 @@
         
           <li><a href="../tensors.html">Tensors</a> &raquo;</li>
         
-          <li><a href="../tensor_info.html">Tensor Functions</a> &raquo;</li>
+          <li><a href="../tensor_info.html">Tensor Compute Functions</a> &raquo;</li>
         
       <li>pytaco.inner</li>
     
@@ -206,7 +212,46 @@
 <dl class="function">
 <dt id="pytaco.inner">
 <code class="descclassname">pytaco.</code><code class="descname">inner</code><span class="sig-paren">(</span><em>t1</em>, <em>t2</em>, <em>out_format=mode_format(compressed)</em>, <em>dtype=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pytaco.inner" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The inner product of two arrays.</p>
+<p>In general, this is a sum product over the last dimensions of the two inputs. If a or b is a scalar,
+element-wise multiplication is performed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>t1, t2: tensors, array_like</strong></dt><dd><p>The tensors to take the inner product of. If non-scalar, the size of their last dimensions must match.</p>
+</dd>
+<dt><strong>out_format: format, mode_format, optional</strong></dt><dd><ul class="simple">
+<li><p>If a <a class="reference internal" href="../format_class.html#pytaco.format" title="pytaco.format"><code class="xref py py-class docutils literal notranslate"><span class="pre">format</span></code></a> is specified, the result tensor is stored in the format out_format.</p></li>
+<li><p>If a <a class="reference internal" href="../mode_format.html#pytaco.mode_format" title="pytaco.mode_format"><code class="xref py py-class docutils literal notranslate"><span class="pre">mode_format</span></code></a> is specified, the result the result tensor has a with all of the dimensions
+stored in the <a class="reference internal" href="../mode_format.html#pytaco.mode_format" title="pytaco.mode_format"><code class="xref py py-class docutils literal notranslate"><span class="pre">mode_format</span></code></a> passed in.</p></li>
+</ul>
+</dd>
+<dt><strong>dtype: Datatype</strong></dt><dd><p>The datatype of the output tensor.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>res: tensor</dt><dd><p>The inner product of the tensors passed in.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>For 3-D tensors, this is equivalent to writing <code class="docutils literal notranslate"><span class="pre">A[i,</span> <span class="pre">j]</span> <span class="pre">=</span> <span class="pre">B[i,</span> <span class="pre">j,</span> <span class="pre">k]</span> <span class="pre">*</span> <span class="pre">C[i,</span> <span class="pre">j,</span> <span class="pre">k]</span></code>. We can also explicitly
+write <code class="docutils literal notranslate"><span class="pre">A[i,</span> <span class="pre">j]</span> <span class="pre">=</span> <span class="pre">sum(B[i,</span> <span class="pre">j,</span> <span class="pre">k]</span> <span class="pre">*</span> <span class="pre">C[i,</span> <span class="pre">j,</span> <span class="pre">k],</span> <span class="pre">k)</span></code> assuming the tensors and index variables have been defined.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pytaco</span> <span class="k">as</span> <span class="nn">pt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pt</span><span class="o">.</span><span class="n">inner</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span><span class="o">.</span><span class="n">to_array</span><span class="p">()</span>
+<span class="go">array([[ 14,  38,  62],</span>
+<span class="go">       [ 86, 110, 134]], dtype=int64)</span>
+</pre></div>
+</div>
+<p>We could perform the same computations with sparse tensors of any format.</p>
+</dd></dl>
 
 </div>
 

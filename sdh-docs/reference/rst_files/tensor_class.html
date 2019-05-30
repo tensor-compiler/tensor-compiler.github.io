@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Tensor Class &mdash; PyTaco  documentation</title>
+  <title>Tensor Class &mdash; Taco  documentation</title>
   
 
   
@@ -36,7 +36,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="pytaco.tensor_abs" href="functions/pytaco.tensor_abs.html" />
-    <link rel="prev" title="Tensor Functions" href="tensor_info.html" /> 
+    <link rel="prev" title="Tensor Compute Functions" href="tensor_info.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -50,7 +50,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> PyTaco
+            <a href="../index.html" class="icon icon-home"> Taco
           
 
           
@@ -89,7 +89,8 @@
 <li class="toctree-l1"><a class="reference internal" href="index_expressions.html">Index Expressions</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="tensors.html">Tensors</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Tensor Class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tensor_info.html">Tensor Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tensor_info.html">Tensor Compute Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tensor_info.html#tensor-manipulation-functions">Tensor Manipulation functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="parsers.html">Evaluate String Expressions</a></li>
@@ -107,7 +108,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">PyTaco</a>
+          <a href="../index.html">Taco</a>
         
       </nav>
 
@@ -140,7 +141,7 @@
         
           <li><a href="tensors.html">Tensors</a> &raquo;</li>
         
-          <li><a href="tensor_info.html">Tensor Functions</a> &raquo;</li>
+          <li><a href="tensor_info.html">Tensor Compute Functions</a> &raquo;</li>
         
       <li>Tensor Class</li>
     
@@ -171,34 +172,137 @@
 library . A tensor must consist of a homogeneous <a class="reference internal" href="dtype_object.html#pytaco.dtype" title="pytaco.dtype"><code class="xref py py-class docutils literal notranslate"><span class="pre">dtype</span></code></a> and be stored in a given
 <a class="reference internal" href="format_class.html#pytaco.format" title="pytaco.format"><code class="xref py py-class docutils literal notranslate"><span class="pre">format</span></code></a>. They can optionally be given a name.</p>
 <p>Taco allows users to compressed certain dimensions of tensors which means only the non-zeros and their index
-information is stored.</p>
+information is stored. This is useful for minimizing the size of the data that needs to be stored as well as
+speeding up computation since in some cases, taco can ignore computing 0’d out elements.</p>
+<p>Computations on tensors can be expressed using the <a class="reference internal" href="tensor_info.html#tfuncs"><span class="std std-ref">Tensor Compute Functions</span></a> provided or by forming <a class="reference internal" href="index_expressions.html#iexpr"><span class="std std-ref">Index Expressions</span></a> where
+tensors are indexed using <a class="reference internal" href="index_vars.html#pytaco.index_var" title="pytaco.index_var"><code class="xref py py-class docutils literal notranslate"><span class="pre">index_var</span></code></a> s to specify different computations and reductions along their
+dimensions.</p>
+<p>All operators on the tensor class produce compressed values by default. This can be overridden by using the
+<a class="reference internal" href="tensor_info.html#tfuncs"><span class="std std-ref">Tensor Compute Functions</span></a> methods provided and specifying your own format.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl>
 <dt><strong>arg1:  int, float, iterable, optional</strong></dt><dd><blockquote>
-<div><p>If this argument is a python int or float, PyTaco will create a scalar tensor and initialize it to the
-with the value passed in. If arg1 is an iterable, PyTaco will interpret this as the shape and initialize
-a tensor with the given shape. The default value is none meaning that PyTaco will simply create an empty
+<div><p>If this argument is a python int or float, taco will create a scalar tensor and initialize it to the
+with the value passed in. If arg1 is an iterable, taco will interpret this as the shape and initialize
+a tensor with the given shape. The default value is none meaning that taco will simply create an empty
 scalar tensor and ignore the fmt argument.</p>
 </div></blockquote>
 <dl class="simple">
-<dt>fmt: <a class="reference internal" href="format_class.html#pytaco.format" title="pytaco.format"><code class="xref py py-class docutils literal notranslate"><span class="pre">format</span></code></a>, optional</dt><dd><p>Format</p>
+<dt>fmt: <a class="reference internal" href="format_class.html#pytaco.format" title="pytaco.format"><code class="xref py py-class docutils literal notranslate"><span class="pre">format</span></code></a>, optional</dt><dd><p><a class="reference internal" href="format_class.html#pytaco.format" title="pytaco.format"><code class="xref py py-class docutils literal notranslate"><span class="pre">format</span></code></a> to store the tensor in.</p>
+<ul class="simple">
+<li><p>A list of <a class="reference internal" href="mode_format.html#pytaco.mode_format" title="pytaco.mode_format"><code class="xref py py-class docutils literal notranslate"><span class="pre">mode_format</span></code></a> s can also be given in which case, the mode ordering is taken to be the
+same as the list.</p></li>
+<li><p>If a single <a class="reference internal" href="mode_format.html#pytaco.mode_format" title="pytaco.mode_format"><code class="xref py py-class docutils literal notranslate"><span class="pre">mode_format</span></code></a> is given, all the dimensions of the tensor are initialized to that
+<a class="reference internal" href="mode_format.html#pytaco.mode_format" title="pytaco.mode_format"><code class="xref py py-class docutils literal notranslate"><span class="pre">mode_format</span></code></a>.</p></li>
+<li><p>If not specified then all dimensions default to compressed.</p></li>
+</ul>
 </dd>
-<dt>dtype: <a class="reference internal" href="dtype_object.html#pytaco.dtype" title="pytaco.dtype"><code class="xref py py-class docutils literal notranslate"><span class="pre">dtype</span></code></a>, optional</dt><dd><p>Dtype</p>
+<dt>dtype: <a class="reference internal" href="dtype_object.html#pytaco.dtype" title="pytaco.dtype"><code class="xref py py-class docutils literal notranslate"><span class="pre">dtype</span></code></a>, optional</dt><dd><p>The <a class="reference internal" href="dtype_object.html#pytaco.dtype" title="pytaco.dtype"><code class="xref py py-class docutils literal notranslate"><span class="pre">dtype</span></code></a> of the values stored by this tensor.</p>
 </dd>
-<dt>name: string, optional</dt><dd><p>Tensor name</p>
+<dt>name: str, optional</dt><dd><p>The name of the tensor to be created. If not specified the name will be automatically ignored by taco.
+Most users can ignore this but specifying the name can be useful to those wanting to read the C code
+generated by taco.</p>
 </dd>
 </dl>
 </dd>
 </dl>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>Tensors are iterable and one can iterate over the coordinates, value pairs in a tensor as shown in the example
+section below. The tensor iterator only returns non-zero elements along with their coordinates to the user. An
+example is shown below.</p>
+<p>To read values from a tensor they must be specified using one call to <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code>. As a result, attempting
+to read an order 2 tensor <code class="docutils literal notranslate"><span class="pre">A</span></code> using the syntax <code class="docutils literal notranslate"><span class="pre">A[0][0]</span></code> is illegal in taco. The correct way to read A would
+be to write <code class="docutils literal notranslate"><span class="pre">A[0,</span> <span class="pre">0]</span></code>. This holds in general tensors of all dimensions.</p>
+<p>Inserting is done by an explicit <a class="reference internal" href="functions/pytaco.tensor.insert.html#pytaco.tensor.insert" title="pytaco.tensor.insert"><code class="xref py py-func docutils literal notranslate"><span class="pre">tensor.insert()</span></code></a> method instead of <code class="docutils literal notranslate"><span class="pre">__setitem__</span></code>. This is because the
+current insert semantics actually increment the value in the current location.</p>
 <p class="rubric">Examples</p>
 <p>Create a scalar tensor with the value 42.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pytaco</span> <span class="k">as</span> <span class="nn">pt</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>Create an order 2 tensor, insert values then iterate over the non-zeros</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mat</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">pt</span><span class="o">.</span><span class="n">csr</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mat</span><span class="o">.</span><span class="n">insert</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mat</span><span class="o">.</span><span class="n">insert</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">coord</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">mat</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">coord</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+<span class="go">[0, 0] 100.0</span>
+<span class="go">[1, 1] 10.0</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">order</span></code></dt><dd><p>Returns an int which is the order (number of dimensions) of the tensor.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></dt><dd><p>Returns a string representing the name of the tensor.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">shape</span></code></dt><dd><p>Returns the shape of the tensor.</p>
+</dd>
+<dt><a class="reference internal" href="format_class.html#pytaco.format" title="pytaco.format"><code class="xref py py-obj docutils literal notranslate"><span class="pre">format</span></code></a></dt><dd><p>Returns the <a class="reference internal" href="format_class.html#pytaco.format" title="pytaco.format"><code class="xref py py-class docutils literal notranslate"><span class="pre">format</span></code></a> used to store the tensor.</p>
+</dd>
+<dt><a class="reference internal" href="dtype_object.html#pytaco.dtype" title="pytaco.dtype"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dtype</span></code></a></dt><dd><p>Returns the <a class="reference internal" href="dtype_object.html#pytaco.dtype" title="pytaco.dtype"><code class="xref py py-class docutils literal notranslate"><span class="pre">dtype</span></code></a> used to store the tensor.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code></dt><dd><p>This is equivalent to <code class="xref py py-func docutils literal notranslate"><span class="pre">transpose()</span></code> with arguments <code class="docutils literal notranslate"><span class="pre">shape[::-1]</span></code>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-center">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">transpose</span></code>(self, new_ordering[, new_format, name])</p></td>
+<td><p>Transposes a tensor.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.tensor.pack.html#pytaco.tensor.pack" title="pytaco.tensor.pack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pack</span></code></a>(self)</p></td>
+<td><p>Packs a tensor.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.tensor.compile.html#pytaco.tensor.compile" title="pytaco.tensor.compile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compile</span></code></a>(self)</p></td>
+<td><p>Compiles current expression.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">assemble</span></code>(self)</p></td>
+<td><p>Assemble the indices and values in the specified sparse structures.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute</span></code>(self)</p></td>
+<td><p>Compute the given expression and put the values in the tensor storage.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">evaluate</span></code>(self)</p></td>
+<td><p>Compile, assemble and compute as needed.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_dense</span></code>(self)</p></td>
+<td><p>Converts a tensor of any format to a dense tensor.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_array</span></code>(self)</p></td>
+<td><p>Same as <a class="reference internal" href="functions/pytaco.to_array.html#pytaco.to_array" title="pytaco.to_array"><code class="xref py py-func docutils literal notranslate"><span class="pre">to_array()</span></code></a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">toarray</span></code>(self)</p></td>
+<td><p>Alias for <a class="reference internal" href="functions/pytaco.to_array.html#pytaco.to_array" title="pytaco.to_array"><code class="xref py py-func docutils literal notranslate"><span class="pre">to_array()</span></code></a> for compatibility with scipy.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_sp_csr</span></code>(self)</p></td>
+<td><p>Same as <a class="reference internal" href="functions/pytaco.to_sp_csr.html#pytaco.to_sp_csr" title="pytaco.to_sp_csr"><code class="xref py py-func docutils literal notranslate"><span class="pre">to_sp_csr()</span></code></a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_sp_csc</span></code>(self)</p></td>
+<td><p>Same as <a class="reference internal" href="functions/pytaco.to_sp_csc.html#pytaco.to_sp_csc" title="pytaco.to_sp_csc"><code class="xref py py-func docutils literal notranslate"><span class="pre">to_sp_csc()</span></code></a>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code>(self)</p></td>
+<td><p>Returns a deep copy of a tensor.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.tensor.insert.html#pytaco.tensor.insert" title="pytaco.tensor.insert"><code class="xref py py-obj docutils literal notranslate"><span class="pre">insert</span></code></a>(self, coords, val)</p></td>
+<td><p>Increments the value at a given coordinate (<a class="reference internal" href="functions/pytaco.tensor.insert.html#pytaco.tensor.insert" title="pytaco.tensor.insert"><code class="xref py py-func docutils literal notranslate"><span class="pre">insert()</span></code></a>).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_explicit_zeros</span></code>(self, new_fmt[, new_dtype])</p></td>
+<td><p>Same as <a class="reference internal" href="functions/pytaco.remove_explicit_zeros.html#pytaco.remove_explicit_zeros" title="pytaco.remove_explicit_zeros"><code class="xref py py-func docutils literal notranslate"><span class="pre">remove_explicit_zeros()</span></code></a>.</p></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -214,7 +318,7 @@ scalar tensor and ignore the fmt argument.</p>
         <a href="functions/pytaco.tensor_abs.html" class="btn btn-neutral float-right" title="pytaco.tensor_abs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="tensor_info.html" class="btn btn-neutral float-left" title="Tensor Functions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="tensor_info.html" class="btn btn-neutral float-left" title="Tensor Compute Functions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
