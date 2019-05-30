@@ -6,10 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <meta name="author" content="Apurva Shrivastava">
+  
   <link rel="shortcut icon" href="../favicon.ico">
   
-  <title>Machine Learning: SDDMM - Documentation - The Tensor Algebra Compiler (taco)</title>
+  <title>Machine Learning: SDDMM - Documentation - The Tensor Algebra Compiler (TACO)</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -37,7 +37,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
       <div class="wy-side-nav-search">
-        <a href="http://tensor-compiler.org" class="icon icon-home"> Tensor Algebra Compiler (taco)</a>
+        <a href="http://tensor-compiler.org" class="icon icon-home"> Tensor Algebra Compiler (TACO)</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -71,6 +71,38 @@
           
             <li class="toctree-l1">
 		
+    <span class="caption-text">Example Applications</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../scientific_computing/index.html">Scientific Computing: SpMV</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../data_analytics/index.html">Data Analytics: MTTKRP</a>
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="index.html">Machine Learning: SDDMM</a>
+    <ul class="subnav">
+            
+    </ul>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../optimization/index.html">Strategies for Optimization</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../benchmarking/index.html">Guide to Benchmarking</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
     <span class="caption-text">C++ Library</span>
     <ul class="subnav">
                 <li class="">
@@ -80,28 +112,6 @@
                 <li class="">
                     
     <a class="" href="../computations/index.html">Computing on Tensors</a>
-                </li>
-    </ul>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <span class="caption-text">Example Applications</span>
-    <ul class="subnav">
-                <li class="">
-                    
-    <a class="" href="../scientific_computing/index.html">Scientific Computing: SpMV</a>
-                </li>
-                <li class=" current">
-                    
-    <a class="current" href="index.html">Machine Learning: SDDMM</a>
-    <ul class="subnav">
-            
-    </ul>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../data_analytics/index.html">Data Analytics: MTTKRP</a>
                 </li>
     </ul>
 	    </li>
@@ -142,78 +152,75 @@
           <div role="main">
             <div class="section">
               
-                <p>Sampled dense-dense matrix product (SDDMM) is a bottleneck operation in many factor analysis algorithms used in machine learning, including Alternating 
-Least Squares and Latent Dirichlet Allocation [1]. Mathematically, the operation can be expressed as <script type="math/tex">A = B \circ CD</script>, where <script type="math/tex">A</script> and <script type="math/tex">B</script> are sparse matrices, <script type="math/tex">C</script> and <script type="math/tex">D</script> are dense matrices, and <script type="math/tex">\circ</script> denotes component-wise multiplication. This operation can also be expressed in <a href="../computations/index.html#specifying-tensor-algebra-computations">index notation</a> as </p>
-<pre><code class="c++">A(i,j) = B(i,j) * C(i,k) * D(k,j)
-</code></pre>
-
-<p>You can use the taco Python library to easily and efficiently compute the SDDMM as demonstrated here:</p>
+                <p>Sampled dense-dense matrix product (SDDMM) is a bottleneck operation in many
+factor analysis algorithms used in machine learning, including Alternating
+Least Squares and Latent Dirichlet Allocation [1]. Mathematically, the
+operation can be expressed as </p>
+<p>
+<script type="math/tex; mode=display">A = B \circ CD,</script>
+</p>
+<p>where <script type="math/tex">A</script> and <script type="math/tex">B</script> are sparse matrices, <script type="math/tex">C</script> and <script type="math/tex">D</script> are dense matrices,
+and <script type="math/tex">\circ</script> denotes component-wise multiplication. This operation can also be
+expressed in <a href="../computations/index.html#specifying-tensor-algebra-computations">index
+notation</a> as </p>
+<p>
+<script type="math/tex; mode=display">A_{ij} = B_{ij} \cdot C_{ik} \cdot C_{kj}.</script>
+</p>
+<p>You can use the TACO Python library to easily and efficiently compute SDDMM, as
+shown here:</p>
 <pre><code class="python">import pytaco as pt
-from pytaco import dense, compressed, format
+from pytaco import dense, compressed
 import numpy as np
 
-# Predeclare the storage formats that the inputs and output will be stored as.
-# To define a format, you must specify whether each dimension is dense or sparse 
-# and (optionally) the order in which dimensions should be stored. The formats 
-# declared below correspond to doubly compressed sparse row (dcsr), row-major 
+# Define formats that the inputs and output will be stored as.  To define a
+# format, you must specify whether each dimension is dense or sparse and
+# (optionally) the order in which dimensions should be stored. The formats
+# declared below correspond to doubly compressed sparse row (dcsr), row-major
 # dense (rm), and column-major dense (dm).
-dcsr = format([compressed, compressed])
-rm   = format([dense, dense])
-cm   = format([dense, dense], [1, 0])
+dcsr = pt.format([compressed, compressed])
+rm   = pt.format([dense, dense])
+cm   = pt.format([dense, dense], [1, 0])
 
 # The matrix in this example can be download from:
 # https://www.cise.ufl.edu/research/sparse/MM/Williams/webbase-1M.tar.gz
 B = pt.read(&quot;webbase-1M.mtx&quot;, dcsr)
 
-# Use numpy to create random matrices
-x = pt.from_numpy_array(np.random.uniform( size=(B.shape[0], 1000) ) )
-z = pt.from_numpy_array(np.random.uniform( size=(1000, B.shape[1]) ), out_format=cm )
+# Generate two random matrices using NumPy and pass them into TACO
+x = pt.from_array(np.random.uniform(size=(B.shape[0], 1000)))
+z = pt.from_array(np.random.uniform(size=(1000, B.shape[1])), out_format=cm)
 
-# Declare output matrix as doubly compressed sparse row
+# Declare the result to be a doubly compressed sparse row matrix
 A = pt.tensor(B.shape, dcsr)
 
-# Create index vars
+# Declare index vars
 i, j, k = pt.get_index_vars(3)
+
+# Define the SDDMM computation
 A[i, j] = B[i, j] * C[i, k] * D[k, j]
 
-# store tensor
+# Perform the SDDMM computation and write the result to file
 pt.write(&quot;A.mtx&quot;, A)
 </code></pre>
 
-<p>Under the hood, when you run the above Python program, taco generates the imperative code shown below to compute the SDDMM. taco is able to do this efficiently by only computing entries of the intermediate matrix product that are actually needed to compute the output tensor <code>A</code>.</p>
-<pre><code class="c++">int A1_pos = A.d1.pos[0];
-int A2_pos = A.d2.pos[A1_pos];
-for (int B1_pos = B.d1.pos[0]; B1_pos &lt; B.d1.pos[(0 + 1)]; B1_pos++) {
-  int iB = B.d1.idx[B1_pos];
-  for (int B2_pos = B.d2.pos[B1_pos]; B2_pos &lt; B.d2.pos[(B1_pos + 1)]; B2_pos++) {
-    int jB = B.d2.idx[B2_pos];
-    double tk = 0;
-    for (int kC = 0; kC &lt; 1000; kC++) {
-      int C2_pos = (iB * 1000) + kC;
-      int D2_pos = (jB * 1000) + kC;
-      tk += (B.vals[B2_pos] * C.vals[C2_pos]) * D.vals[D2_pos];
-    }
-    A.vals[A2_pos] = tk;
-    A2_pos++;
-  }
-  if (A.d2.pos[(A1_pos + 1)] &gt; A.d2.pos[A1_pos]) A1_pos++;
-}
-</code></pre>
-
-<p>[1] Huasha Zhao. 2014. High Performance Machine Learning through Codesign and Rooflining. Ph.D. Dissertation. EECS Department, University of California, Berkeley. </p>
+<p>When you run the above Python program, TACO will generate code under the hood
+that efficiently performs the computation in one shot.  This lets TACO only 
+compute elements of the intermediate dense matrix product that are actually 
+needed to compute the result, thus reducing the asymptotic complexity of the 
+computation.</p>
+<p>[1] Huasha Zhao. 2014. High Performance Machine Learning through Codesign and
+Rooflining. Ph.D. Dissertation. EECS Department, University of California,
+Berkeley. </p>
               
             </div>
           </div>
           <footer>
-  <a href="https://github.com/tensor-compiler/taco" class="btn btn-danger" style="width: 100%">Try taco now</a>
-  <br><br>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../data_analytics/index.html" class="btn btn-neutral float-right" title="Data Analytics: MTTKRP">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../optimization/index.html" class="btn btn-neutral float-right" title="Strategies for Optimization">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../scientific_computing/index.html" class="btn btn-neutral" title="Scientific Computing: SpMV"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../data_analytics/index.html" class="btn btn-neutral" title="Data Analytics: MTTKRP"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -247,10 +254,10 @@ for (int B1_pos = B.d1.pos[0]; B1_pos &lt; B.d1.pos[(0 + 1)]; B1_pos++) {
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="../scientific_computing/index.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../data_analytics/index.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../data_analytics/index.html" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../optimization/index.html" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

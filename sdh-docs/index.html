@@ -6,10 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="None">
-  <meta name="author" content="Apurva Shrivastava">
+  
   <link rel="shortcut icon" href="./favicon.ico">
   
-  <title>Home - Documentation - The Tensor Algebra Compiler (taco)</title>
+  <title>Home - Documentation - The Tensor Algebra Compiler (TACO)</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="./css/theme.css" type="text/css" />
@@ -37,7 +37,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
       <div class="wy-side-nav-search">
-        <a href="http://tensor-compiler.org" class="icon icon-home"> Tensor Algebra Compiler (taco)</a>
+        <a href="http://tensor-compiler.org" class="icon icon-home"> Tensor Algebra Compiler (TACO)</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -80,6 +80,35 @@
           
             <li class="toctree-l1">
 		
+    <span class="caption-text">Example Applications</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="scientific_computing/index.html">Scientific Computing: SpMV</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="data_analytics/index.html">Data Analytics: MTTKRP</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="machine_learning/index.html">Machine Learning: SDDMM</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="optimization/index.html">Strategies for Optimization</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="benchmarking/index.html">Guide to Benchmarking</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
     <span class="caption-text">C++ Library</span>
     <ul class="subnav">
                 <li class="">
@@ -89,25 +118,6 @@
                 <li class="">
                     
     <a class="" href="computations/index.html">Computing on Tensors</a>
-                </li>
-    </ul>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <span class="caption-text">Example Applications</span>
-    <ul class="subnav">
-                <li class="">
-                    
-    <a class="" href="scientific_computing/index.html">Scientific Computing: SpMV</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="machine_learning/index.html">Machine Learning: SDDMM</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="data_analytics/index.html">Data Analytics: MTTKRP</a>
                 </li>
     </ul>
 	    </li>
@@ -144,11 +154,20 @@
           <div role="main">
             <div class="section">
               
-                <p><strong><a href="http://tensor-compiler.org">taco</a></strong> is a library for compiling dense and sparse linear and tensor algebra expressions. The expressions can range from simple kernels like SpMV to more complex kernels like MTTKRP, where the operands can be dense, sparse, or a mix of dense and sparse. taco automatically generates efficient compute kernels (loops) to evaluate these expressions.</p>
-<p>The sidebar to the left links to documentation for the taco C++ library as well as some examples demonstrating how taco can be used in real-world applications.</p>
+                <p><strong><a href="http://tensor-compiler.org">TACO</a></strong> is a library for performing sparse and
+dense linear algebra and tensor algebra computations. The computations can
+range from relatively simple ones like sparse matrix-vector multiplication to
+more complex ones like matricized tensor times Khatri-Rao product.  All these
+computations can be performed on any mix of dense and sparse tensors. Under the
+hood, TACO automatically generates efficient code to perform these
+computations.</p>
+<p>The sidebar to the left links to documentation for the TACO Python library as
+well as some examples demonstrating how TACO can be used in real-world
+applications.</p>
 <h1 id="system-requirements">System Requirements</h1>
 <ul>
-<li>A C compiler that supports C99 and OpenMP (if parallelism is desired), such as GCC or Clang</li>
+<li>A C compiler that supports C99 and OpenMP (if parallel execution is desired), such as GCC or Clang.</li>
+<li>Python 3 with NumPy and SciPy.</li>
 </ul>
 <h1 id="getting-help">Getting Help</h1>
 <p>Questions and bug reports can be submitted <a href="https://github.com/tensor-compiler/taco/issues">here</a>.</p>
@@ -156,8 +175,6 @@
             </div>
           </div>
           <footer>
-  <a href="https://github.com/tensor-compiler/taco" class="btn btn-danger" style="width: 100%">Try taco now</a>
-  <br><br>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
@@ -212,5 +229,5 @@
 
 <!--
 MkDocs version : 0.17.2
-Build Date UTC : 2019-05-25 02:00:30
+Build Date UTC : 2019-05-30 03:24:49
 -->

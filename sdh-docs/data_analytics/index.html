@@ -6,10 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <meta name="author" content="Apurva Shrivastava">
+  
   <link rel="shortcut icon" href="../favicon.ico">
   
-  <title>Data Analytics: MTTKRP - Documentation - The Tensor Algebra Compiler (taco)</title>
+  <title>Data Analytics: MTTKRP - Documentation - The Tensor Algebra Compiler (TACO)</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -37,7 +37,7 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
       <div class="wy-side-nav-search">
-        <a href="http://tensor-compiler.org" class="icon icon-home"> Tensor Algebra Compiler (taco)</a>
+        <a href="http://tensor-compiler.org" class="icon icon-home"> Tensor Algebra Compiler (TACO)</a>
         <div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -71,6 +71,38 @@
           
             <li class="toctree-l1">
 		
+    <span class="caption-text">Example Applications</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../scientific_computing/index.html">Scientific Computing: SpMV</a>
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="index.html">Data Analytics: MTTKRP</a>
+    <ul class="subnav">
+            
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../machine_learning/index.html">Machine Learning: SDDMM</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../optimization/index.html">Strategies for Optimization</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../benchmarking/index.html">Guide to Benchmarking</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
     <span class="caption-text">C++ Library</span>
     <ul class="subnav">
                 <li class="">
@@ -80,28 +112,6 @@
                 <li class="">
                     
     <a class="" href="../computations/index.html">Computing on Tensors</a>
-                </li>
-    </ul>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <span class="caption-text">Example Applications</span>
-    <ul class="subnav">
-                <li class="">
-                    
-    <a class="" href="../scientific_computing/index.html">Scientific Computing: SpMV</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../machine_learning/index.html">Machine Learning: SDDMM</a>
-                </li>
-                <li class=" current">
-                    
-    <a class="current" href="index.html">Data Analytics: MTTKRP</a>
-    <ul class="subnav">
-            
-    </ul>
                 </li>
     </ul>
 	    </li>
@@ -142,67 +152,68 @@
           <div role="main">
             <div class="section">
               
-                <p>Matricized tensor times Khatri-Rao product (MTTKRP) is a bottleneck operation in various algorithms - such as Alternating Least Squares - for computing sparse tensor factorizations like the Canonical Polyadic Decomposition. Mathematically, mode-1 MTTKRP (for order-3 tensors) can be expressed as <script type="math/tex">A = B_{(1)} (D \odot C)</script>, where <script type="math/tex">A</script>, <script type="math/tex">C</script>, and <script type="math/tex">D</script> are (typically) dense matrices, <script type="math/tex">B</script> is an order-3 tensor (matricizied along the first mode), and <script type="math/tex">\odot</script> denotes the Khatri-Rao product. This operation can also be expressed in <a href="../computations/index.html#specifying-tensor-algebra-computations">index notation</a> as </p>
-<pre><code class="c++">A(i,j) = B(i,k,l) * D(l,j) * C(k,j)
-</code></pre>
-
-<p>You can use the taco Python library to easily and efficiently compute the MTTKRP as demonstrated here:</p>
+                <p>Matricized tensor times Khatri-Rao product (MTTKRP) is a bottleneck operation
+in various algorithms - such as Alternating Least Squares - for computing
+sparse tensor factorizations like the Canonical Polyadic Decomposition.
+Mathematically, mode-1 MTTKRP (for three-dimensional tensors) can be expressed 
+as </p>
+<p>
+<script type="math/tex; mode=display">A = B_{(1)} (D \odot C),</script>
+</p>
+<p>where <script type="math/tex">A</script>, <script type="math/tex">C</script>, and <script type="math/tex">D</script> are typically dense matrices, <script type="math/tex">B</script> is a
+three-dimensional tensor (matricizied along the first mode), and <script type="math/tex">\odot</script>
+denotes the Khatri-Rao product. This operation can also be expressed in <a href="../computations/index.html#specifying-tensor-algebra-computations">index
+notation</a> as </p>
+<p>
+<script type="math/tex; mode=display">A_{ij} = B_{ikl} \cdot D_{lj} \cdot C_{kj}.</script>
+</p>
+<p>You can use the TACO Python library to easily and efficiently compute MTTKRP,
+as shown here:</p>
 <pre><code class="python">import pytaco as pt
 import numpy as np
-from pytaco import compressed, dense, format
+from pytaco import compressed, dense
 
-# Declare tensor formats
-csf = format([compressed, compressed, compressed])
-rm  = format([dense, dense])
+# Define formats for storing the sparse tensor and dense matrices
+csf = pt.format([compressed, compressed, compressed])
+rm  = pt.format([dense, dense])
 
-# Load a sparse order-3 tensor from file (stored in the FROSTT format) and 
-# store it as a compressed sparse fiber tensor. The tensor in this example 
-# can be download from: http://frostt.io/tensors/nell-2/
+# Load a sparse three-dimensional tensor from file (stored in the FROSTT
+# format) and store it as a compressed sparse fiber tensor. The tensor in this
+# example can be download from: http://frostt.io/tensors/nell-2/
 B = pt.read(&quot;nell-2.tns&quot;, csf);
 
-# Use numpy to create random matrices
-C = pt.from_numpy_array(np.random.uniform( size=(B.shape[1], 25) ) )
-D = pt.from_numpy_array(np.random.uniform( size=(B.shape[2], 25) ) )
+# Generate two random matrices using NumPy and pass them into TACO
+C = pt.from_array(np.random.uniform(size=(B.shape[1], 25)))
+D = pt.from_array(np.random.uniform(size=(B.shape[2], 25)))
 
-# Create output tensor
+# Declare the result to be a dense matrix
 A = pt.tensor([B.shape[0], 25], rm)
 
-# Create index vars and define the MTTKRP op
+# Declare index vars
 i, j, k, l = get_index_vars(4)
+
+# Define the MTTKRP computation
 A[i, j] = B[i, k, l] * D[l, j] * C[k, j]
 
+# Perform the MTTKRP computation and write the result to file
 pt.write(&quot;A.tns&quot;, A)
 </code></pre>
 
-<p>Under the hood, when you run the above Python program, taco generates the imperative code shown below to compute the MTTKRP. taco is able to evaluate this compound operation efficiently with a single kernel that avoids materializing the intermediate Khatri-Rao product.</p>
-<pre><code class="c++">for (int B1_pos = B.d1.pos[0]; B1_pos &lt; B.d1.pos[(0 + 1)]; B1_pos++) {
-  int iB = B.d1.idx[B1_pos];
-  for (int B2_pos = B.d2.pos[B1_pos]; B2_pos &lt; B.d2.pos[(B1_pos + 1)]; B2_pos++) {
-    int kB = B.d2.idx[B2_pos];
-    for (int B3_pos = B.d3.pos[B2_pos]; B3_pos &lt; B.d3.pos[(B2_pos + 1)]; B3_pos++) {
-      int lB = B.d3.idx[B3_pos];
-      double t37 = B.vals[B3_pos];
-      for (int jD = 0; jD &lt; 25; jD++) {
-        int D2_pos = (lB * 25) + jD;
-        int C2_pos = (kB * 25) + jD;
-        int A2_pos = (iB * 25) + jD;
-        A.vals[A2_pos] = A.vals[A2_pos] + ((t37 * D.vals[D2_pos]) * C.vals[C2_pos]);
-      }
-    }
-  }
-}
-</code></pre>
+<p>When you run the above Python program, TACO will generate code under the hood
+that efficiently performs the computation in one shot.  This lets TACO avoid
+materializing the intermediate Khatri-Rao product, thus reducing the amount of
+memory accesses and speeding up the computation.</p>
               
             </div>
           </div>
           <footer>
-  <a href="https://github.com/tensor-compiler/taco" class="btn btn-danger" style="width: 100%">Try taco now</a>
-  <br><br>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
+        <a href="../machine_learning/index.html" class="btn btn-neutral float-right" title="Machine Learning: SDDMM">Next <span class="icon icon-circle-arrow-right"></span></a>
       
-        <a href="../machine_learning/index.html" class="btn btn-neutral" title="Machine Learning: SDDMM"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+        <a href="../scientific_computing/index.html" class="btn btn-neutral" title="Scientific Computing: SpMV"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -236,8 +247,10 @@ pt.write(&quot;A.tns&quot;, A)
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="../machine_learning/index.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../scientific_computing/index.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
+      
+        <span style="margin-left: 15px"><a href="../machine_learning/index.html" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
