@@ -43,6 +43,11 @@ manually calling the result tensor's `compile` method, we can tell TACO to
 generate code needed for performing the computation before benchmarking starts,
 letting us measure only the performance of the computation itself.
 
+!!! warning
+    `pytaco.evaluate` and `pytaco.einsum` should not be used to benchmark
+    TACO's computational performance, since timing those functions will
+    include the time it takes to generate code for performing the computation.
+
 **The time it takes to construct the initial input tensors should also not be
 measured**, since again this overhead can often be amortized in practice.  By
 default, `pytaco.read` and functions for converting NumPy arrays and SciPy
