@@ -90,6 +90,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../index_vars.html">PyTaco Index Vars</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../idx_exp_obj.html">Index Expression Objects</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../expr_funcs.html">Index Expression Functions</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pytaco.cast.html">pytaco.cast</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pytaco.remainder.html">pytaco.remainder</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pytaco.abs.html">pytaco.abs</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pytaco.pow.html">pytaco.pow</a></li>
@@ -124,6 +125,10 @@
 <li class="toctree-l3"><a class="reference internal" href="pytaco.min.html">pytaco.min</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pytaco.heaviside.html">pytaco.heaviside</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pytaco.sum.html">pytaco.sum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pytaco.add.html">pytaco.add</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pytaco.mul.html">pytaco.mul</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pytaco.sub.html">pytaco.sub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pytaco.div.html">pytaco.div</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../iv_funcs.html">Convenience Functions</a></li>
@@ -131,6 +136,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../tensors.html">Tensors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../parsers.html">Evaluate String Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../udfs.html">User Defined Functions</a></li>
 </ul>
 
             
@@ -221,9 +227,9 @@
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p>The code below tells taco to compute the square of each value, sum over all those values and store it in the tensor
-res_t. Since <code class="docutils literal notranslate"><span class="pre">i</span></code> appears on the right hand side of the expression but not on the left, taco will take the sum of the
-values produced.</p>
+<p>The code below tells taco to compute the cube of each value, sum over all the j indices and store the result in res_t.
+Since <code class="docutils literal notranslate"><span class="pre">j</span></code> appears on the right hand side of the expression but not on the left, taco will take the sum of the
+values over the dimension indexed by j.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pytaco</span> <span class="k">as</span> <span class="nn">pt</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">([[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">get_index_vars</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>

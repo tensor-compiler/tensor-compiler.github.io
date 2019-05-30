@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>PyTaco Format Object &mdash; Taco  documentation</title>
+  <title>Tensor Format Object &mdash; Taco  documentation</title>
   
 
   
@@ -85,7 +85,7 @@
 <li class="toctree-l1"><a class="reference internal" href="datatype.html">Datatypes</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="format.html">Formats</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="mode_format.html">Mode Formats</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">PyTaco Format Object</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tensor Format Object</a></li>
 <li class="toctree-l2"><a class="reference internal" href="format_funcs.html">Format Functions</a></li>
 </ul>
 </li>
@@ -94,6 +94,7 @@
 <li class="toctree-l1"><a class="reference internal" href="index_expressions.html">Index Expressions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tensors.html">Tensors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parsers.html">Evaluate String Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="udfs.html">User Defined Functions</a></li>
 </ul>
 
             
@@ -141,7 +142,7 @@
         
           <li><a href="format.html">Formats</a> &raquo;</li>
         
-      <li>PyTaco Format Object</li>
+      <li>Tensor Format Object</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -160,13 +161,14 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="pytaco-format-object">
-<h1>PyTaco Format Object<a class="headerlink" href="#pytaco-format-object" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="tensor-format-object">
+<h1>Tensor Format Object<a class="headerlink" href="#tensor-format-object" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="pytaco.format">
 <em class="property">class </em><code class="descclassname">pytaco.</code><code class="descname">format</code><span class="sig-paren">(</span><em>mode_formats=[]</em>, <em>mode_ordering=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#pytaco.format" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a <a class="reference internal" href="tensor_class.html#pytaco.tensor" title="pytaco.tensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">tensor</span></code></a> format.</p>
-<p>The modes have the given mode storage formats and are stored in the given sequence. The</p>
+<p>The modes have the given mode storage formats and are stored in the given sequence. Mode i has the <a class="reference internal" href="mode_format.html#pytaco.mode_format" title="pytaco.mode_format"><code class="xref py py-class docutils literal notranslate"><span class="pre">mode_format</span></code></a>
+specified by mode_formats[mode_ordering[i]].</p>
 <p>If no arguments are given a format for a 0-order tensor (a scalar) is created.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

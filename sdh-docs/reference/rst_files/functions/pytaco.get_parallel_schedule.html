@@ -95,6 +95,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../index_expressions.html">Index Expressions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tensors.html">Tensors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../parsers.html">Evaluate String Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../udfs.html">User Defined Functions</a></li>
 </ul>
 
             
@@ -166,12 +167,13 @@
 <dl class="function">
 <dt id="pytaco.get_parallel_schedule">
 <code class="descclassname">pytaco.</code><code class="descname">get_parallel_schedule</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytaco.get_parallel_schedule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the parallel schedule.</p>
+<dd><p>Gets the current strategy for performing computations in parallel.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><dl class="simple">
-<dt>schedule: tuple (string, int)</dt><dd><p>A tuple where the first element represents the parallel schedule currently used (“static” or “dynamic”) and the
-second element is the chunk size used for parallelism.</p>
+<dt>schedule: tuple (string, int)</dt><dd><p>A tuple where the first element indicates the strategy currently being used 
+to perform computations in parallel (either “static” or “dynamic”) and the
+second element is the chunk size used for parallel computation.</p>
 </dd>
 </dl>
 </dd>

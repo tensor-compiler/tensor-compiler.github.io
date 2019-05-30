@@ -95,6 +95,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../index_expressions.html">Index Expressions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tensors.html">Tensors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../parsers.html">Evaluate String Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../udfs.html">User Defined Functions</a></li>
 </ul>
 
             
@@ -166,13 +167,20 @@
 <dl class="function">
 <dt id="pytaco.set_parallel_schedule">
 <code class="descclassname">pytaco.</code><code class="descname">set_parallel_schedule</code><span class="sig-paren">(</span><em>sched_type</em>, <em>chunk_size</em><span class="sig-paren">)</span><a class="headerlink" href="#pytaco.set_parallel_schedule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the parallel schedule.</p>
+<dd><p>Sets the strategy for performing computations in parallel.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>sched_type: string</strong></dt><dd><p>Either “static” or “dynamic”</p>
+<dt><strong>sched_type: string</strong></dt><dd><p>Either “static” or “dynamic”. “static” indicates that Taco should parallelize 
+subsequent computations using a strategy that assigns the same number of 
+coordinates along a particular dimension to be processed by each thread. 
+“dynamic” indicates that Taco should parallelize subsequent computations 
+using a strategy that assigns work to the threads at runtime for better 
+load balance.</p>
 </dd>
-<dt><strong>chunk_size: int</strong></dt><dd></dd>
+<dt><strong>chunk_size: int</strong></dt><dd><p>For a dynamic schedule, the amount of additional work that is assigned to 
+any idle thread.</p>
+</dd>
 </dl>
 </dd>
 </dl>
