@@ -66,6 +66,10 @@
                     
     <a class="" href="../pycomputations/index.html">Computing on Tensors</a>
                 </li>
+                <li class="">
+                    
+    <a class="" href="../pyreference/index.html">Reference Manual</a>
+                </li>
     </ul>
 	    </li>
           
@@ -99,21 +103,6 @@
             <li class="toctree-l1">
 		
     <a class="" href="../benchmarking/index.html">Guide to Benchmarking</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <span class="caption-text">C++ Library</span>
-    <ul class="subnav">
-                <li class="">
-                    
-    <a class="" href="../tensors/index.html">Defining Tensors</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../computations/index.html">Computing on Tensors</a>
-                </li>
-    </ul>
 	    </li>
           
         </ul>
@@ -159,14 +148,14 @@ as </p>
 <script type="math/tex; mode=display">y = Ax + z,</script>
 </p>
 <p>where <script type="math/tex">A</script> is a sparse matrix and <script type="math/tex">x</script>, <script type="math/tex">y</script>, and <script type="math/tex">z</script>
-are dense vectors. The computation can also be expressed in <a href="../computations/index.html#specifying-tensor-algebra-computations">index
+are dense vectors. The computation can also be expressed in <a href="computations.md#specifying-tensor-algebra-computations">index
 notation</a> as </p>
 <p>
 <script type="math/tex; mode=display">y_i = A_{ij} \cdot x_j + z_i.</script>
 </p>
 <p>You can use the TACO Python library to easily and efficiently compute SpMV, as
 shown here:</p>
-<pre><code class="python">import pytaco as pt
+<pre class="highlight"><code class="language-python">import pytaco as pt
 from pytaco import compressed, dense
 import numpy as np
 
@@ -177,7 +166,7 @@ dv  = pt.format([dense])
 # Load a sparse matrix stored in the matrix market format) and store it 
 # as a CSR matrix.  The matrix in this example can be downloaded from:
 # https://www.cise.ufl.edu/research/sparse/MM/Boeing/pwtk.tar.gz
-A = pt.read(&quot;pwtk.mtx&quot;, csr)
+A = pt.read("pwtk.mtx", csr)
 
 # Generate two random vectors using NumPy and pass them into TACO
 x = pt.from_array(np.random.uniform(size=A.shape[1]))
@@ -193,8 +182,7 @@ i, j = pt.get_index_vars(2)
 y[i] = A[i, j] * x[j] + z[i]
 
 # Perform the SpMV computation and write the result to file
-pt.write(&quot;y.tns&quot;, y)
-</code></pre>
+pt.write("y.tns", y)</code></pre>
 
 <p>When you run the above Python program, TACO will generate code under the hood
 that efficiently performs the computation in one shot.  This lets TACO avoid 
@@ -210,7 +198,7 @@ of memory accesses and speeding up the computation.</p>
         <a href="../data_analytics/index.html" class="btn btn-neutral float-right" title="Data Analytics: MTTKRP">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../pycomputations/index.html" class="btn btn-neutral" title="Computing on Tensors"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../pyreference/index.html" class="btn btn-neutral" title="Reference Manual"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -244,7 +232,7 @@ of memory accesses and speeding up the computation.</p>
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="../pycomputations/index.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../pyreference/index.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
         <span style="margin-left: 15px"><a href="../data_analytics/index.html" style="color: #fcfcfc">Next &raquo;</a></span>

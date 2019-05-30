@@ -1,0 +1,274 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pytaco.to_array &mdash; PyTaco  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="pytaco.to_sp_csc" href="pytaco.to_sp_csc.html" />
+    <link rel="prev" title="pytaco.from_sp_csr" href="pytaco.from_sp_csr.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> PyTaco
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Home:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../datatype.html">Datatypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../format.html">Formats</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../file_io.html">Tensor IO</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pytaco.read.html">pytaco.read</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytaco.write.html">pytaco.write</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytaco.from_array.html">pytaco.from_array</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytaco.from_sp_csc.html">pytaco.from_sp_csc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytaco.from_sp_csr.html">pytaco.from_sp_csr</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">pytaco.to_array</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytaco.to_sp_csc.html">pytaco.to_sp_csc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytaco.to_sp_csr.html">pytaco.to_sp_csr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytaco.as_tensor.html">pytaco.as_tensor</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../sched.html">Scheduling Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index_expressions.html">Index Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tensors.html">Tensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parsers.html">Evaluate String Expressions</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">PyTaco</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../file_io.html">Tensor IO</a> &raquo;</li>
+        
+      <li>pytaco.to_array</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/rst_files/functions/pytaco.to_array.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="pytaco-to-array">
+<h1>pytaco.to_array<a class="headerlink" href="#pytaco-to-array" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="pytaco.to_array">
+<code class="descclassname">pytaco.</code><code class="descname">to_array</code><span class="sig-paren">(</span><em>t</em><span class="sig-paren">)</span><a class="headerlink" href="#pytaco.to_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a taco tensor to a numpy array.</p>
+<p>This always copies the tensor. To avoid the copy for dense tensors, see the notes section.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>t: tensor</strong></dt><dd><p>A taco tensor to convert to a numpy array.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>arr: numpy.array</dt><dd><p>A numpy array containing a copy of the data in the tensor object t.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Dense tensors export python’s buffer interface. As a result, they can be converted to numpy arrays using
+<code class="docutils literal notranslate"><span class="pre">np.array(tensor,</span> <span class="pre">copy=False)</span></code> . Attempting to do this for sparse tensors throws an error. Note that as a result
+of exporting the buffer interface dense tensors can also be converted to eigen or any other library supporting this
+inferface.</p>
+<p>Also it is very important to note that if requesting a numpy view of data owned by taco, taco will mark the array as
+read only meaning the user cannot write to that data without using the taco reference. This is needed to avoid
+raising issues with taco’s delayed execution mechanism.</p>
+<p class="rubric">Examples</p>
+<p>We first look at a simple use of to_array</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pytaco</span> <span class="k">as</span> <span class="nn">pt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="n">pt</span><span class="o">.</span><span class="n">dense</span><span class="p">,</span> <span class="n">pt</span><span class="o">.</span><span class="n">compressed</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">insert</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">to_array</span><span class="p">()[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="go">10.0</span>
+</pre></div>
+</div>
+<p>One could choose to use np.array if a copy is not needed</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pytaco</span> <span class="k">as</span> <span class="nn">pt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">pt</span><span class="o">.</span><span class="n">dense</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">insert</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span>
+<span class="go">array([[10.,  0.],</span>
+<span class="go">       [ 0.,  0.]], dtype=float32)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">insert</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="mi">100</span><span class="p">)</span> <span class="c1"># Note that insert increments instead of setting!</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">to_array</span><span class="p">()[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="go">110.0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="pytaco.to_sp_csc.html" class="btn btn-neutral float-right" title="pytaco.to_sp_csc" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="pytaco.from_sp_csr.html" class="btn btn-neutral float-left" title="pytaco.from_sp_csr" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, MIT COMMIT GROUP
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

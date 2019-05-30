@@ -33,128 +33,199 @@ i, j, k = pytaco.get_index_vars(3)
 A[i,j,k] = B[i,j,k] * C[i,j,k] * D[i,j,k]
 ```
 
+!!! note
+    Accesses to scalars also require the square brackets notation.  Since
+    scalars are equivalent to tensors with zero dimension, `None` must be
+    explicitly specified as indices to indicate that no index variable is
+    needed to access a scalar.  As an example, the following expresses the
+    addition of two scalars `beta` and `gamma`:
+
+    ```python
+    alpha[None] = beta[None] + gamma[None]
+    ```
+
 !!! warning
-    It is important to note that due to the complications that arise from
-    assembling sparse structures, we cannot have a tensor appear both on the left
-    hand side and the right hand side of an expression.  For all forms of index
-    expressions, we do not support indexing a tensor with the same index variable.
-    For example expressions such as ```A[i,i]``` are disallowed.
+    TACO currently does not support computations that have a tensor as both an 
+    operand and the result, such as the following:
 
-NOTE: When using scalars to express computations we must still use the square brackets to index the tensor. Since scalars are order-0 tensors, ```None``` must be passed into the index to specify that no ```indexVar```s are used:
-```python
-import pytaco as pt
-i, j = pt.get_index_vars(2)
+    ```python
+    a[i] = a[i] * b[i]
+    ```
 
-# Make a scalar value
-A = pt.tensor(0)
-# Make a compressed tensor of size 3x3
-B = pt.tensor([3,3])
+    Such computations can be rewritten using explicit temporaries as follows:
 
-# Make some assignments
-B[0, 0] = 1
-B[1, 0] = 10
+    ```python
+    t[i] = a[i] * b[i]
+    a[i] = t[i]
+    ```
 
-# We can sum the elements in B as follows. Notice we need to use None to tell 
-# taco that A is a scalar.
-A[None] = B[i, j]
-```
+!!! warning
+    TACO currently does not support using the same index variable to index into 
+    multiple dimensions of the same tensor operand (e.g., `A[i,i]`).
 
 ## Expressing Reductions
 
-In both of the previous examples, all of the index variables are used to index into both the output and the inputs. However, it is possible for an index variable to be used to index into the inputs only, in which case the index variable is reduced (summed) over. For instance, the following example 
+In all of the previous examples, all the index variables are used to index into
+both the result and the operands of a computation.  It is also possible for
+an index variable to be used to index into the operands only, in which case the
+dimension indexed by that index variable is reduced (summed) over. For 
+instance, the computation 
 
-```c++
-y(i) = A(i,j) * x(j)
-```
-
-can be rewritten with the summation more explicit as \(y(i) = \sum_{j} A(i,j) \cdot x(j)\) and demonstrates how matrix-vector multiplication can be expressed in index notation.
-
-Note that, in taco, reductions are assumed to be over the smallest subexpression that captures all uses of the corresponding reduction variable. For instance, the following computation 
-
-```c++
-y(i) = A(i,j) * x(j) + z(i)
-```
+$$y_{i} = A_{ij} \cdot x_{j}$$
 
 can be rewritten with the summation more explicit as 
 
-$$y(i) = \big(\sum_{j} A(i,j) \cdot x(j)\big) + z(i),$$
+$$y_{i} = \sum_{j} A_{ij} \cdot x_j$$ 
 
-whereas the following computation 
+and demonstrates how matrix-vector multiplication can be expressed in index
+notation.  Both forms are supported by TACO:
 
-```c++
-y(i) = A(i,j) * x(j) + z(j)
+```python
+y[i] = A[i,j] * x[j]
+y[i] = sum(j, A[i,j] * x[j])
 ```
 
-can be rewritten with the summation more explicit as 
+Reductions that are not explicitly expressed are assumed to be over the
+smallest subexpression that captures all uses of the corresponding reduction
+variable. For instance, the computation 
 
-$$y(i) = \sum_{j} \big(A(i,j) \cdot x(j) + z(i)\big).$$
+$$y_{i} = A_{ij} \cdot x_{j} + z_{i}$$
+
+is equivalent to 
+
+$$y_i = \big(\sum_{j} A_{ij} \cdot x_j\big) + z_i,$$
+
+whereas the computation 
+
+$$y_{i} = A_{ij} \cdot x_{j} + z_{j}$$
+
+is equivalent to 
+
+$$y_i = \sum_{j} \big(A_{ij} \cdot x_j + z_j\big).$$
 
 # Expressing Broadcasts
 
-When using ```indexVar```s, we must ensure that dimensions with the same ```indexVar``` are of the same size. Operations can be broadcast along outer dimensions assuming the inner dimensions are of the same size. For example:
+TACO supports computations that broadcasts tensors along any number of
+dimensions.  The following example, for instance, broadcasts the vector `c` 
+along the row dimension of matrix `B`, adding `c` to each row of `B`:
 
 ```python
-import pytaco as pt
-i, j, k = pt.get_index_vars(3)
-
-# Make a compressed tensor of size 3x3
-A = pt.tensor([3,3])
-B = pt.tensor([3,3])
-
-# Make a dense vector
-C = pt.tensor([3], pt.dense)
-
-# Make some assignments
-C[0] = 1
-B[0, 0] = 1
-
-# We can add C to each row of B as follows:
-A[i, j] =  B[i, j] + C[j]
+A[i, j] =  B[i, j] + c[j]
 ```
 
-The following, however, is not valid since the dimension of index j is of a different size for the different tensors:
+However, TACO does not support NumPy-style broadcasting of dimensions that have 
+a size of one.  For example, the following is not allowed:
+
 ```python
-import pytaco as pt
-i, j, k = pt.get_index_vars(3)
-
-# Make a compressed tensor of size 3x3
 A = pt.tensor([3,3])
 B = pt.tensor([3,3])
+C = pt.tensor([3,1])
 
-# Make a dense vector
-C = pt.tensor([3,1], pt.dense)
-
-# Make some assignments
-C[1, 0] = 1
-B[0, 0] = 1
-
-# We can add C to each row of B as follows:
-A[i, j] =  B[i, j] + C[i, j]
+A[i, j] =  B[i, j] + C[i, j]  # ERROR!!
 ```
-
-Taco currently does not support numpy-style broadcasting of singleton dimensions as evidenced by the snippet above. 
 
 # Expressing Transposes
 
-Transposes are not allowed during computations. The user will need to explicitly transpose a tensor themselves using ```pt.tensor.transpose(new_ordering)``` before doing the computation.
+Computations that transpose tensors can be expressed by rearranging the order 
+in which index variables are used to access tensor operands.  The following
+example, for instance, adds matrix `B` to the transpose of matrix `C` and
+stores the result in matrix `A`:
+
+```python
+A = pt.tensor([3,3], pt.format([dense, dense]))
+B = pt.tensor([3,3], pt.format([dense, dense]))
+C = pt.tensor([3,3], pt.format([dense, dense]))
+
+A[i,j] = B[i,j] + C[j,i]
+```
+
+Note, however, that sparse dimensions of tensor operands impose dependencies on
+the order in which they can be accessed, based on the order in which they are
+stored in the operand formats.  This means, for instance, that if `B` is a CSR
+matrix, then `B[i,j]` requires that the dimension indexed by `i` be accessed
+before the dimension indexed by `j`.  TACO does not support any computation
+where these constraints form a cyclic dependency.  So the same computation from
+before is not supported for CSR matrices, since the access of `B` requires that
+`i` be accessed before `j` but the access of `C` requires that `j` be accessed
+before `i`:
+
+```python
+A = pt.tensor([3,3], pt.format([dense, compressed]))
+B = pt.tensor([3,3], pt.format([dense, compressed]))
+C = pt.tensor([3,3], pt.format([dense, compressed]))
+
+A[i,j] = B[i,j] + C[j,i]
+```
+
+As an alternative, you can first explicitly transpose `C` by invoking its
+`transpose` method, storing the result in a temporary, and then perform the
+addition with the already-transposed temporary:
+
+```python
+A = pt.tensor([3,3], pt.format([dense, compressed]))
+B = pt.tensor([3,3], pt.format([dense, compressed]))
+C = pt.tensor([3,3], pt.format([dense, compressed]))
+
+Ct = C.transpose([1, 0])  # Ct is also stored in the CSR format
+A[i,j] = B[i,j] + Ct[i,j]
+```
+
+Similarly, the following computation is not supported for the same reason that
+the access of `B`, which is stored in row-major order, requires `i` to be
+accessed before `j` but the access of `C`, which is stored in column-major
+order, requires `j` to be accessed before `i`:
+
+```python
+A = pt.tensor([3,3], pt.format([dense, compressed]))
+B = pt.tensor([3,3], pt.format([dense, compressed]))
+C = pt.tensor([3,3], pt.format([dense, compressed], [1, 0]))
+
+A[i,j] = B[i,j] + C[i,j]
+```
+
+We can again perform the same computation by invoking `transpose`, this time to
+repack `C` into the same CSR format as `A` and `B` before computing the 
+addition:
+
+```python
+A = pt.tensor([3,3], pt.format([dense, compressed]))
+B = pt.tensor([3,3], pt.format([dense, compressed]))
+C = pt.tensor([3,3], pt.format([dense, compressed], [1, 0]))
+
+Cp = C.transpose([0, 1], pt.format([dense, compressed]))  # Store a copy of C in the CSR format
+A[i,j] = B[i,j] + Cp[i,j]
+```
 
 # Performing the Computation
 
-Once a tensor algebra computation has been defined (and all of the inputs have been [initialized](tensors#initializing-tensors)), you can simply invoke the output tensor's `evaluate` method to perform the actual computation:
+Once a tensor algebra computation has been defined, you can simply invoke the
+result tensor's `evaluate` method to perform the actual computation:
 
-```c++
-A.evaluate();  // Perform the computation defined previously for output tensor A
+```python
+A.evaluate()
 ```
 
-Under the hood, when you invoke the `evaluate` method, taco first invokes the output tensor's `compile` method to generate kernels that assembles the output indices (if the tensor contains any sparse dimensions) and that performs the actual computation. taco would then call the two generated kernels by invoking the output tensor's `assemble` and `compute` methods. You can manually invoke these methods instead of calling `evaluate` as demonstrated below:
+Under the hood, TACO will first invoke the result tensor's `compile`
+method to generate code that performs the computation.  TACO will then perform 
+the actual computation by first invoking `assemble` to compute the sparsity 
+structure of the result and subsequently invoking `compute` to compute the 
+values of the result's nonzero elements.  Of course, you can also manually 
+invoke these methods in order to more precisely control when each step happens:
 
-```c++
-A.compile();   // Generate output assembly and compute kernels 
-A.assemble();  // Invoke the output assembly kernel to assemble the output indices
-A.compute();   // Invoke the compute kernel to perform the actual computation
+```python
+A.compile()
+A.assemble()
+A.compute()
 ```
 
-This can be useful if you want to perform the same computation multiple times, in which case it suffices to invoke `compile` once before the first time the computation is performed.
+If you define a computation and then access the result without first manually
+invoking `evaluate` or `compile`/`assemble`/`compute`, TACO will automatically
+invoke the computation immediately before the result is accessed.  In the
+following example, for instance, TACO will automatically generate code to
+compute the vector addition and then also actually perform the computation
+right before `a[0]` is printed:
 
-It is also possible to skip using the compiler functions entirely. Once you attempt to modify or view the output tensor, taco will automatically invoke the compiler in order to generate the data. 
-
+```python
+a[i] = b[i] + c[i]
+print(a[0])
+```

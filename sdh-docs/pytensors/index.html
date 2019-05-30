@@ -69,19 +69,13 @@
     <li class="toctree-l3"><a href="#defining-tensor-formats">Defining Tensor Formats</a></li>
     
 
-    <li class="toctree-l3"><a href="#tensor-datatypes">Tensor Datatypes</a></li>
-    
-
     <li class="toctree-l3"><a href="#initializing-tensors">Initializing Tensors</a></li>
     
 
-    <li class="toctree-l3"><a href="#loading-tensors-from-file">Loading Tensors from File</a></li>
+    <li class="toctree-l3"><a href="#file-io">File I/O</a></li>
     
 
-    <li class="toctree-l3"><a href="#writing-tensors-to-files">Writing Tensors to Files</a></li>
-    
-
-    <li class="toctree-l3"><a href="#io-with-numpy-or-scipy">I/O with Numpy or Scipy</a></li>
+    <li class="toctree-l3"><a href="#numpy-and-scipy-io">NumPy and SciPy I/O</a></li>
     
 
     </ul>
@@ -89,6 +83,10 @@
                 <li class="">
                     
     <a class="" href="../pycomputations/index.html">Computing on Tensors</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../pyreference/index.html">Reference Manual</a>
                 </li>
     </ul>
 	    </li>
@@ -120,21 +118,6 @@
             <li class="toctree-l1">
 		
     <a class="" href="../benchmarking/index.html">Guide to Benchmarking</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <span class="caption-text">C++ Library</span>
-    <ul class="subnav">
-                <li class="">
-                    
-    <a class="" href="../tensors/index.html">Defining Tensors</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../computations/index.html">Computing on Tensors</a>
-                </li>
-    </ul>
 	    </li>
           
         </ul>
@@ -174,161 +157,151 @@
             <div class="section">
               
                 <h1 id="declaring-tensors">Declaring Tensors</h1>
-<p><code>pytaco.Tensor</code> objects correspond to mathematical tensors. You can can declare a new tensor by specifying its name, a vector with the size of each dimension and the <a href="index.html#defining-tensor-formats">storage format</a> that will be used to store the tensor and a <a href="index.html#tensor-datatypes">datatype</a>:</p>
-<pre><code class="python"># Import the pytaco library
+<p><code>pytaco.tensor</code> objects, which represent mathematical tensors, form the core of
+the TACO Python library. You can can declare a new tensor by specifying the
+sizes of each dimension, the <a href="index.html#defining-tensor-formats">format</a>
+that will be used to store the tensor, and the
+<a href="index.html#tensor-datatypes">datatype</a> of the tensor's nonzero elements:</p>
+<pre class="highlight"><code class="language-python"># Import the TACO Python library
 import pytaco as pt
-# Import the storage formats to save some typing
 from pytaco import dense, compressed
 
-# Declare a new tensor &quot;A&quot; of double-precision floats with dimensions 
+# Declare a new tensor of double-precision floats with dimensions 
 # 512 x 64 x 2048, stored as a dense-sparse-sparse tensor
-A = pt.tensor(&quot;A&quot;, [512, 64, 2048], pt.format([dense, compressed, compressed]), pt.float64)
-</code></pre>
+A = pt.tensor([512, 64, 2048], pt.format([dense, compressed, compressed]), pt.float64)</code></pre>
 
-<p>The name of the tensor can be omitted, in which case taco will assign an arbitrary name to the tensor:</p>
-<pre><code class="python">import pytaco as pt
-from pytaco import dense, compressed
+<p>The datatype can be omitted, in which case TACO will default to using
+<code>pt.float32</code> to store the tensor's nonzero elements:</p>
+<pre class="highlight"><code class="language-python"># Declare the same tensor as before
+A = pt.tensor([512, 64, 2048], pt.format([dense, compressed, compressed]))</code></pre>
 
-# Declare a tensor with the same dimensions, storage format and type as before
-A = pt.tensor([512, 64, 2048], pt.format([dense, compressed, compressed]), pt.float64)
-</code></pre>
-
-<p>The <a href="index.html#tensor-datatypes">datatype</a> can also be omitted in which case taco will default to using <code>pt.float32</code>:</p>
-<pre><code class="python">import pytaco as pt
-from pytaco import dense, compressed
-
-# Declare a tensor with the same dimensions and storage format as before
-A = pt.tensor([512, 64, 2048], pt.format([dense, compressed, compressed]))
-</code></pre>
-
-<p>A single format can be given to create a tensor where all dimensions have that format:</p>
-<pre><code class="python">import pytaco as pt
-from pytaco import dense, compressed
-
-# Declare a dense tensor
+<p>Instead of specifying a format that is tied to the number of dimensions that a
+tensor has, we can simply specify whether all dimensions are dense or sparse:</p>
+<pre class="highlight"><code class="language-python"># Declare a tensor where all dimensions are dense
 A = pt.tensor([512, 64, 2048], dense)
 
-# Declare a compressed tensor
-B = pt.tensor([512, 64, 2048], compressed)
-</code></pre>
+# Declare a tensor where all dimensions are sparse
+B = pt.tensor([512, 64, 2048], compressed)</code></pre>
 
-<p>Scalars, which are treated as order-0 tensors, can be declared and initialized with some arbitrary value as demonstrated below:</p>
-<pre><code class="python">import pytaco as pt
-from pytaco import dense, compressed
-
-# Declare a scalar
-aplha = pt.tensor(42.0)
-</code></pre>
+<p>Scalars, which correspond to tensors that have zero dimension, can be declared
+and initialized with an arbitrary value as demonstrated below:</p>
+<pre class="highlight"><code class="language-python"># Declare a scalar
+aplha = pt.tensor(42.0)</code></pre>
 
 <h1 id="defining-tensor-formats">Defining Tensor Formats</h1>
-<p>Conceptually, you can think of a tensor as a tree with each level (excluding the root) corresponding to a dimension of the tensor. Each path from the root to a leaf node represents a tensor coordinate and its corresponding value. Which dimension each level of the tree corresponds to is determined by the order in which dimensions of the tensor are stored.</p>
-<p>taco uses a novel scheme that can describe different storage formats for any tensor by specifying the order in which tensor dimensions are stored and whether each dimension is sparse or dense. A sparse dimension stores only the subset of the dimension that contains non-zero values and is conceptually similar to the index arrays used in the compressed sparse row (CSR) matrix format, while a dense dimension stores both zeros and non-zeros. As demonstrated below, this scheme is flexibile enough to express many commonly-used matrix storage formats.</p>
-<p>You can define a new tensor storage format by creating a <code>pytaco.format</code> object. The constructor for <code>pytaco.format</code> takes as arguments a list specifying the type of each dimension and (optionally) a list specifying the order in which dimensions are to be stored, as seen below:</p>
-<pre><code class="python">import pytaco as pt
-from pytaco import dense, compressed, format
-dm   = format([dense, dense])                   # (Row-major) dense matrix
-csr  = format([dense, compressed])              # Compressed sparse row matrix
-csc  = format([dense, compressed], [1, 0])      # Compressed sparse column matrix
-dcsr = format([compressed, compressed], [1, 0]) # Doubly compressed sparse column matrix
-</code></pre>
+<p>Conceptually, you can think of a tensor as a tree where each level (excluding
+the root) corresponding to a dimension of the tensor.  Each path from the root
+to a leaf node represents the coordinates of a tensor element and its
+corresponding value.  Which dimension of the tensor each level of the tree
+corresponds to is determined by the order in which tensor dimensions are
+stored.</p>
+<p>TACO uses a novel scheme that can describe different storage formats for a
+tensor by specifying the order in which tensor dimensions are stored and
+whether each dimension is sparse or dense.  A sparse (compressed) dimension
+stores only the subset of the dimension that contains non-zero values, using
+index arrays that are found in the compressed sparse row (CSR) matrix format.
+A dense dimension, on the other hand, conceptually stores both zeros and
+non-zeros.  This scheme is flexibile enough to express many commonly-used
+tensor storage formats:</p>
+<pre class="highlight"><code class="language-python">import pytaco as pt
+from pytaco import dense, compressed
 
-<p><code>pytaco</code> provides common formats (csr, csc and csf) by default and can be used by simply typing <code>pt.csr</code>, <code>pt.csc</code> or <code>pt.csf</code>.</p>
-<h1 id="tensor-datatypes">Tensor Datatypes</h1>
-<p>Tensors can be of 10 different datatypes. The following are the possible tensor datatypes:</p>
-<p>Signed Integers:</p>
-<p><code>pytaco.int8</code></p>
-<p><code>pytaco.int16</code></p>
-<p><code>pytaco.int32</code></p>
-<p><code>pytaco.int64</code></p>
-<p>Unsigned Integers:</p>
-<p><code>pytaco.uint8</code></p>
-<p><code>pytaco.uint16</code></p>
-<p><code>pytaco.uint32</code></p>
-<p><code>pytaco.uint64</code></p>
-<p>Floating point precision: </p>
-<p><code>pytaco.float32</code> </p>
-<p><code>pytaco.float</code></p>
-<p>Double precision: </p>
-<p><code>pytaco.float64</code> </p>
-<p><code>pytaco.double</code></p>
+dm   = pt.format([dense, dense])                        # (Row-major) dense matrix format
+csr  = pt.format([dense, compressed])                   # Compressed sparse row matrix format
+csc  = pt.format([dense, compressed], [1, 0])           # Compressed sparse column matrix format
+dcsr = pt.format([compressed, compressed], [1, 0])      # Doubly compressed sparse column matrix format
+csf  = pt.format([compressed, compressed, compressed])  # Compressed sparse fiber tensor format</code></pre>
+
+<p>As demonstrated above, you can define a new tensor storage format by creating a
+<code>pytaco.format</code> object.  This requires specifying whether each tensor dimension
+is dense or sparse as well as (optionally) the order in which dimensions should
+be stored.  TACO also predefines some common tensor formats (including 
+<code>pt.csr</code>, <code>pt.csc</code> and <code>pt.csf</code>) that you can use out of the box.</p>
 <h1 id="initializing-tensors">Initializing Tensors</h1>
-<p>Tensors can be made by using python indexing syntax. For example, one may write the following:</p>
-<pre><code class="python">import pytaco as pt
-from pytaco import dense, compressed
-
-# Declare a dense tensor
+<p>Tensors can be made by using python indexing syntax. For example, one may write
+the following: You can initialize a tensor by calling its <code>insert</code> method to
+add a nonzero element to the tensor. The <code>insert</code> method takes two arguments:
+a list specifying the coordinates of the nonzero element to be added and the
+value to be inserted at that coordinate:</p>
+<pre class="highlight"><code class="language-python"># Declare a sparse tensor
 A = pt.tensor([512, 64, 2048], compressed)
 
-# Set location (0, 1, 0) in A to 42.0
-A[0, 1, 0] = 42.0
-</code></pre>
+# Set A(0, 1, 0) = 42.0
+A.insert([0, 1, 0], 42.0)</code></pre>
 
-<p>The insert operator adds the inserted non-zeros to a temporary buffer. Before a tensor can actually be used in a computation, it is automatcally packed. </p>
-<p>For most cases, this is not necessary but you may also invoke the <code>pack</code> method to compress the tensor into the storage format that was specified after all values have been inserted.</p>
-<p>NOTE: Multidimensional indexing (as used with lists) are NOT supported. For example, the following is invalid code:</p>
-<pre><code class="python">import pytaco as pt
-from pytaco import dense, compressed
-
-# Declare a dense tensor
+<p>If multiple elements are inserted at the same coordinates, they are summed 
+together:</p>
+<pre class="highlight"><code class="language-python"># Declare a sparse tensor
 A = pt.tensor([512, 64, 2048], compressed)
 
-# INVALID STATEMENT
-A[0][1][0] = 42.0
-</code></pre>
+# Set A(0, 1, 0) = 42.0 + 24.0 = 66.0
+A.insert([0, 1, 0], 42.0)
+A.insert([0, 1, 0], 24.0)</code></pre>
 
-<h1 id="loading-tensors-from-file">Loading Tensors from File</h1>
-<p>Rather than manually invoking building a tensor, you can load tensors directly from file by calling <code>pytaco.read</code> as demonstrated below:</p>
-<pre><code class="python">import pytaco as pt
-from pytaco import dense, compressed, format
+<p>The <code>insert</code> method adds the inserted nonzero element to a temporary buffer.
+Before a tensor can actually be used in a computation though, the <code>pack</code> method
+must be invoked to pack the tensor into the storage format that was specified
+when the tensor was first declared.  TACO will automatically do this
+immediately before the tensor is used in a computation.  You can also manually
+invoke <code>pack</code> though if you need full control over when exactly that is done:</p>
+<pre class="highlight"><code class="language-python">A.pack()</code></pre>
 
-# Load a dense-sparse-sparse tensor from file A.tns
-A = pt.read(&quot;A.tns&quot;, format([dense, compressed, compressed]))
-</code></pre>
+<p>You can then iterate over the nonzero elements of the tensor as follows:</p>
+<pre class="highlight"><code class="language-python">for elem in A:
+  print(elem)</code></pre>
 
-<p>By default, <code>pytaco.read</code> returns a packed tensor. You can optionally pass a Boolean flag as an argument to indicate whether the returned tensor should be packed or not: </p>
-<pre><code class="python">import pytaco as pt
-from pytaco import dense, compressed, format
+<h1 id="file-io">File I/O</h1>
+<p>Rather than manually constructing a tensor, you can load tensors directly from
+file by invoking the <code>pytaco.read</code> function:</p>
+<pre class="highlight"><code class="language-python"># Load a dense-sparse-sparse tensor from file "A.tns"
+A = pt.read("A.tns", pt.format([dense, compressed, compressed]))</code></pre>
 
-# Load an unpacked tensor from file A.tns
-A = pt.read(&quot;A.tns&quot;, format([dense, compressed, compressed]), false)
-</code></pre>
+<p>By default, <code>pytaco.read</code> returns a tensor that has already been packed into
+the specified storage format. You can optionally pass a Boolean flag as an
+argument to indicate whether the returned tensor should be packed or not: </p>
+<pre class="highlight"><code class="language-python"># Load an unpacked tensor from file "A.tns"
+A = pt.read("A.tns", format([dense, compressed, compressed]), false)</code></pre>
 
-<p>NOTE: the tensor will be packed anyway before any computation is actually performed.</p>
-<p>Currently, taco supports loading from the following matrix and tensor file formats:</p>
+<p>The loaded tensor will then remain unpacked until the <code>pack</code> method is manually 
+invoked or a computation that uses the tensor is performed.</p>
+<p>You can also write a tensor directly to file by invoking the <code>pytaco.write</code>
+function:</p>
+<pre class="highlight"><code class="language-python"># Write tensor A to file "A.tns"
+pt.write("A.tns", A)</code></pre>
+
+<p>TACO supports loading tensors from and storing tensors to the following file
+formats:</p>
 <ul>
 <li><a href="http://math.nist.gov/MatrixMarket/formats.html#MMformat">Matrix Market (Coordinate) Format (.mtx)</a></li>
 <li><a href="https://www.cise.ufl.edu/research/sparse/matrices/DOC/rb.pdf">Rutherford-Boeing Format (.rb)</a></li>
 <li><a href="http://frostt.io/tensors/file-formats.html">FROSTT Format (.tns)</a></li>
 </ul>
-<h1 id="writing-tensors-to-files">Writing Tensors to Files</h1>
-<p>You can also write a (packed) tensor directly to file by calling <code>pytaco.write</code>, as demonstrated below:</p>
-<pre><code class="python">import pytaco as pt
-
-A = pt.tensor([512, 64, 2048], compressed)
-A[0, 1, 0] = 42.0
-A[1, 1, 1] = 77
-pt.write(&quot;A.tns&quot;, A);  # Write tensor A to file A.tns
-</code></pre>
-
-<p><code>pytaco.write</code> supports the same set of matrix and tensor file formats as <code>pytaco.read</code>.</p>
-<h1 id="io-with-numpy-or-scipy">I/O with Numpy or Scipy</h1>
-<p>Tensors can be initialized with either numpy arrays or scipy sparse CSC or CSR matrices. As such, we can use the I/O from numpy and scipy and feed the data into pytaco by initializing a tensor.</p>
-<pre><code class="python">import pytaco as pt
+<h1 id="numpy-and-scipy-io">NumPy and SciPy I/O</h1>
+<p>Tensors can also be initialized with either NumPy arrays or SciPy sparse (CSR 
+or CSC) matrices:</p>
+<pre class="highlight"><code class="language-python">import pytaco as pt
 import numpy as np
 import scipy.sparse
 
-# Assuming matrix is CSR
+# Assuming SciPy matrix is stored in CSR
 sparse_matrix = scipy.sparse.load_npz('sparse_matrix.npz')
 
-# Pass data into taco for use
-taco_tensor = pt.from_scipy_csr(sparse_matrix)
+# Cast the matrix as a TACO tensor (also stored in CSR)
+taco_tensor = pt.from_sp_csr(sparse_matrix)
 
-# We can also load a numpy array
+# We can also load a NumPy array
 np_array = np.load('arr.npy')
 
-# And initialize a tensor from this array
-dense_tensor = pt.from_numpy_array(np_array)
-</code></pre>
+# And initialize a TACO tensor from this array
+dense_tensor = pt.from_array(np_array)</code></pre>
+
+<p>We can also export TACO tensors to either NumPy arrays or SciPy sparse
+matrices:</p>
+<pre class="highlight"><code class="language-python"># Convert the tensor to a SciPy CSR matrix
+sparse_matrix = taco_tensor.to_sp_csr()
+
+# Convert the tensor to a NumPy array
+np_array = dense_tensor.to_array()</code></pre>
               
             </div>
           </div>

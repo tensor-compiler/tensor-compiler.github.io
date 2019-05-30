@@ -66,6 +66,10 @@
                     
     <a class="" href="../pycomputations/index.html">Computing on Tensors</a>
                 </li>
+                <li class="">
+                    
+    <a class="" href="../pyreference/index.html">Reference Manual</a>
+                </li>
     </ul>
 	    </li>
           
@@ -98,21 +102,6 @@
     <a class="current" href="index.html">Guide to Benchmarking</a>
     <ul class="subnav">
             
-    </ul>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <span class="caption-text">C++ Library</span>
-    <ul class="subnav">
-                <li class="">
-                    
-    <a class="" href="../tensors/index.html">Defining Tensors</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../computations/index.html">Computing on Tensors</a>
-                </li>
     </ul>
 	    </li>
           
@@ -153,7 +142,7 @@ Python's built-in <code>time.perf_counter</code> function with minimal changes t
 applications.  As an example, we can benchmark the performance of the
 scientific computing application shown <a href="../scientific_computing/index.html">here</a> as
 follows:</p>
-<pre><code class="python">import pytaco as pt
+<pre class="highlight"><code class="language-python">import pytaco as pt
 from pytaco import compressed, dense
 import numpy as np
 import time
@@ -161,7 +150,7 @@ import time
 csr = pt.format([dense, compressed])
 dv  = pt.format([dense])
 
-A = pt.read(&quot;pwtk.mtx&quot;, csr)
+A = pt.read("pwtk.mtx", csr)
 x = pt.from_array(np.random.uniform(size=A.shape[1]))
 z = pt.from_array(np.random.uniform(size=A.shape[0]))
 y = pt.tensor([A.shape[0]], dv)
@@ -177,8 +166,7 @@ start = time.perf_counter()
 y.compute()
 end = time.perf_counter()
 
-print(&quot;Execution time: {0} seconds&quot;.format(end - start))
-</code></pre>
+print("Execution time: {0} seconds".format(end - start))</code></pre>
 
 <p>In order to accurately measure TACO's computational performance, <strong>only the
 time it takes to actually perform a computation should be measured.  The time
@@ -196,7 +184,7 @@ default, <code>pytaco.read</code> and functions for converting NumPy arrays and 
 matrices to TACO tensors return fully constructed tensors.  If you add nonzero
 elements to an input tensor by calling <code>insert</code> though, then <code>pack</code> must also
 be explicitly invoked before any benchmarking is done:</p>
-<pre><code class="python">import pytaco as pt
+<pre class="highlight"><code class="language-python">import pytaco as pt
 from pytaco import compressed, dense
 import numpy as np
 import random
@@ -205,7 +193,7 @@ import time
 csr = pt.format([dense, compressed])
 dv  = pt.format([dense])
 
-A = pt.read(&quot;pwtk.mtx&quot;, csr)
+A = pt.read("pwtk.mtx", csr)
 x = pt.tensor([A.shape[1]], dv)
 z = pt.tensor([A.shape[0]], dv)
 y = pt.tensor([A.shape[0]], dv)
@@ -227,8 +215,7 @@ start = time.perf_counter()
 y.compute()
 end = time.perf_counter()
 
-print(&quot;Execution time: {0} seconds&quot;.format(end - start))
-</code></pre>
+print("Execution time: {0} seconds".format(end - start))</code></pre>
 
 <p>TACO avoids regenerating code for performing the same computation though as
 long as the computation is redefined with the same index variables and with the
@@ -238,7 +225,7 @@ sufficiently large data sets, TACO will naturally amortize the overhead
 associated with generating code for performing the computation.  In such 
 scenarios, it is acceptable to include the initial code generation overhead 
 in the performance measurement:</p>
-<pre><code class="python">import pytaco as pt
+<pre class="highlight"><code class="language-python">import pytaco as pt
 from pytaco import compressed, dense
 import numpy as np
 import time
@@ -246,7 +233,7 @@ import time
 csr = pt.format([dense, compressed])
 dv  = pt.format([dense])
 
-A = pt.read(&quot;pwtk.mtx&quot;, csr)
+A = pt.read("pwtk.mtx", csr)
 x = pt.tensor([A.shape[1]], dv)
 z = pt.tensor([A.shape[0]], dv)
 y = pt.tensor([A.shape[0]], dv)
@@ -270,8 +257,7 @@ for k in range(1000):
   x.evaluate()
 end = time.perf_counter()
 
-print(&quot;Execution time: {0} seconds&quot;.format(end - start))
-</code></pre>
+print("Execution time: {0} seconds".format(end - start))</code></pre>
 
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -299,8 +285,6 @@ performing the computation in performance measurements.</p>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="../tensors/index.html" class="btn btn-neutral float-right" title="Defining Tensors">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
         <a href="../optimization/index.html" class="btn btn-neutral" title="Strategies for Optimization"><span class="icon icon-circle-arrow-left"></span> Previous</a>
@@ -339,8 +323,6 @@ performing the computation in performance measurements.</p>
       
         <span><a href="../optimization/index.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
-      
-        <span style="margin-left: 15px"><a href="../tensors/index.html" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

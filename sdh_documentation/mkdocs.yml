@@ -7,18 +7,18 @@ extra_javascript:
 markdown_extensions:
     - mdx_math
     - markdown.extensions.admonition
+    - markdown.extensions.fenced_code
+    - pymdownx.superfences
 use_directory_urls: false
 pages:
     - Home: index.md
     - Python Library:
         - 'Defining Tensors': 'pytensors.md'
         - 'Computing on Tensors': 'pycomputations.md'
+        - 'Reference Manual': 'pyreference.md'
     - Example Applications:
         - 'Scientific Computing: SpMV': 'scientific_computing.md'
         - 'Data Analytics: MTTKRP': 'data_analytics.md'
         - 'Machine Learning: SDDMM': 'machine_learning.md'
     - Strategies for Optimization: optimization.md
     - Guide to Benchmarking: benchmarking.md
-    - C++ Library:
-        - 'Defining Tensors': 'tensors.md'
-        - 'Computing on Tensors': 'computations.md'

@@ -12,9 +12,10 @@ applications.
 
 # System Requirements
 
-* A C compiler that supports C99 and OpenMP (if parallel execution is desired), such as GCC or Clang.
-* Python 3 with NumPy and SciPy.
+* A C compiler that supports C99, such as GCC or Clang
+    * Support for OpenMP is also required if parallel execution is desired
+* Python 3 with NumPy and SciPy
 
-# Getting Help
+<!--# Getting Help
 
-Questions and bug reports can be submitted [here](https://github.com/tensor-compiler/taco/issues).
+Questions and bug reports can be submitted [here](https://github.com/tensor-compiler/taco/issues).-->

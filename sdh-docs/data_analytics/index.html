@@ -66,6 +66,10 @@
                     
     <a class="" href="../pycomputations/index.html">Computing on Tensors</a>
                 </li>
+                <li class="">
+                    
+    <a class="" href="../pyreference/index.html">Reference Manual</a>
+                </li>
     </ul>
 	    </li>
           
@@ -99,21 +103,6 @@
             <li class="toctree-l1">
 		
     <a class="" href="../benchmarking/index.html">Guide to Benchmarking</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <span class="caption-text">C++ Library</span>
-    <ul class="subnav">
-                <li class="">
-                    
-    <a class="" href="../tensors/index.html">Defining Tensors</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../computations/index.html">Computing on Tensors</a>
-                </li>
-    </ul>
 	    </li>
           
         </ul>
@@ -162,14 +151,14 @@ as </p>
 </p>
 <p>where <script type="math/tex">A</script>, <script type="math/tex">C</script>, and <script type="math/tex">D</script> are typically dense matrices, <script type="math/tex">B</script> is a
 three-dimensional tensor (matricizied along the first mode), and <script type="math/tex">\odot</script>
-denotes the Khatri-Rao product. This operation can also be expressed in <a href="../computations/index.html#specifying-tensor-algebra-computations">index
+denotes the Khatri-Rao product. This operation can also be expressed in <a href="computations.md#specifying-tensor-algebra-computations">index
 notation</a> as </p>
 <p>
 <script type="math/tex; mode=display">A_{ij} = B_{ikl} \cdot D_{lj} \cdot C_{kj}.</script>
 </p>
 <p>You can use the TACO Python library to easily and efficiently compute MTTKRP,
 as shown here:</p>
-<pre><code class="python">import pytaco as pt
+<pre class="highlight"><code class="language-python">import pytaco as pt
 import numpy as np
 from pytaco import compressed, dense
 
@@ -180,7 +169,7 @@ rm  = pt.format([dense, dense])
 # Load a sparse three-dimensional tensor from file (stored in the FROSTT
 # format) and store it as a compressed sparse fiber tensor. The tensor in this
 # example can be download from: http://frostt.io/tensors/nell-2/
-B = pt.read(&quot;nell-2.tns&quot;, csf);
+B = pt.read("nell-2.tns", csf);
 
 # Generate two random matrices using NumPy and pass them into TACO
 C = pt.from_array(np.random.uniform(size=(B.shape[1], 25)))
@@ -196,8 +185,7 @@ i, j, k, l = get_index_vars(4)
 A[i, j] = B[i, k, l] * D[l, j] * C[k, j]
 
 # Perform the MTTKRP computation and write the result to file
-pt.write(&quot;A.tns&quot;, A)
-</code></pre>
+pt.write("A.tns", A)</code></pre>
 
 <p>When you run the above Python program, TACO will generate code under the hood
 that efficiently performs the computation in one shot.  This lets TACO avoid
