@@ -4,7 +4,7 @@
 the TACO Python library. You can can declare a new tensor by specifying the
 sizes of each dimension, the [format](pytensors.md#defining-tensor-formats)
 that will be used to store the tensor, and the
-[datatype](pytensors.md#tensor-datatypes) of the tensor's nonzero elements:
+[datatype](reference/rst_files/dtype_object.html) of the tensor's nonzero elements:
 
 ```python
 # Import the TACO Python library
