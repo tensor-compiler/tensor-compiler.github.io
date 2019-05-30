@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="pytaco.remainder" href="functions/pytaco.remainder.html" />
+    <link rel="next" title="pytaco.cast" href="functions/pytaco.cast.html" />
     <link rel="prev" title="Index Expression Objects" href="idx_exp_obj.html" /> 
 </head>
 
@@ -90,6 +90,7 @@
 <li class="toctree-l2"><a class="reference internal" href="index_vars.html">PyTaco Index Vars</a></li>
 <li class="toctree-l2"><a class="reference internal" href="idx_exp_obj.html">Index Expression Objects</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Index Expression Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="functions/pytaco.cast.html">pytaco.cast</a></li>
 <li class="toctree-l3"><a class="reference internal" href="functions/pytaco.remainder.html">pytaco.remainder</a></li>
 <li class="toctree-l3"><a class="reference internal" href="functions/pytaco.abs.html">pytaco.abs</a></li>
 <li class="toctree-l3"><a class="reference internal" href="functions/pytaco.pow.html">pytaco.pow</a></li>
@@ -124,6 +125,10 @@
 <li class="toctree-l3"><a class="reference internal" href="functions/pytaco.min.html">pytaco.min</a></li>
 <li class="toctree-l3"><a class="reference internal" href="functions/pytaco.heaviside.html">pytaco.heaviside</a></li>
 <li class="toctree-l3"><a class="reference internal" href="functions/pytaco.sum.html">pytaco.sum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functions/pytaco.add.html">pytaco.add</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functions/pytaco.mul.html">pytaco.mul</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functions/pytaco.sub.html">pytaco.sub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="functions/pytaco.div.html">pytaco.div</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="iv_funcs.html">Convenience Functions</a></li>
@@ -131,6 +136,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tensors.html">Tensors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parsers.html">Evaluate String Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="udfs.html">User Defined Functions</a></li>
 </ul>
 
             
@@ -205,107 +211,122 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.remainder.html#pytaco.remainder" title="pytaco.remainder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remainder</span></code></a>(e1, e2)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.cast.html#pytaco.cast" title="pytaco.cast"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cast</span></code></a>(e, dt)</p></td>
+<td><p>Cast an expression from one datatype to another.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.remainder.html#pytaco.remainder" title="pytaco.remainder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remainder</span></code></a>(e1, e2)</p></td>
 <td><p>Return element wise remainder of division.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.abs.html#pytaco.abs" title="pytaco.abs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">abs</span></code></a>(e1)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.abs.html#pytaco.abs" title="pytaco.abs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">abs</span></code></a>(e1)</p></td>
 <td><p>Return the element-wise absolute value of the index expression.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.pow.html#pytaco.pow" title="pytaco.pow"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pow</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.pow.html#pytaco.pow" title="pytaco.pow"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pow</span></code></a>(e1, e2)</p></td>
+<td><p>Computes e1**e2 element-wise.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.square.html#pytaco.square" title="pytaco.square"><code class="xref py py-obj docutils literal notranslate"><span class="pre">square</span></code></a>(e1)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.square.html#pytaco.square" title="pytaco.square"><code class="xref py py-obj docutils literal notranslate"><span class="pre">square</span></code></a>(e1)</p></td>
 <td><p>Return the element-wise square value of the index expression.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.cube.html#pytaco.cube" title="pytaco.cube"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cube</span></code></a>(e1)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.cube.html#pytaco.cube" title="pytaco.cube"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cube</span></code></a>(e1)</p></td>
 <td><p>Return the element-wise cube value of the index expression.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.sqrt.html#pytaco.sqrt" title="pytaco.sqrt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sqrt</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.sqrt.html#pytaco.sqrt" title="pytaco.sqrt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sqrt</span></code></a>(e1)</p></td>
+<td><p>Return the element-wise sqrt of the index expression.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.cube_root.html#pytaco.cube_root" title="pytaco.cube_root"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cube_root</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.cube_root.html#pytaco.cube_root" title="pytaco.cube_root"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cube_root</span></code></a>(e1)</p></td>
+<td><p>Return the element-wise cube root of the index expression.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.exp.html#pytaco.exp" title="pytaco.exp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">exp</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.exp.html#pytaco.exp" title="pytaco.exp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">exp</span></code></a>(e1)</p></td>
+<td><p>Calculate the exponential of all elements in an index expression.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.log.html#pytaco.log" title="pytaco.log"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.log.html#pytaco.log" title="pytaco.log"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log</span></code></a>(e1)</p></td>
+<td><p>Return the element-wise logarithm base e of the index expression.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.log10.html#pytaco.log10" title="pytaco.log10"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log10</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.log10.html#pytaco.log10" title="pytaco.log10"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log10</span></code></a>(e1)</p></td>
+<td><p>Return the element-wise logarithm base 10 of the index expression.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.sin.html#pytaco.sin" title="pytaco.sin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sin</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.sin.html#pytaco.sin" title="pytaco.sin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sin</span></code></a>(e1)</p></td>
+<td><p>Return the element-wise sine of the index expression.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.cos.html#pytaco.cos" title="pytaco.cos"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cos</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.cos.html#pytaco.cos" title="pytaco.cos"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cos</span></code></a>(e1)</p></td>
+<td><p>Return the element-wise cosine of the index expression.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.tan.html#pytaco.tan" title="pytaco.tan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tan</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.tan.html#pytaco.tan" title="pytaco.tan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tan</span></code></a>(e1)</p></td>
+<td><p>Return the element-wise tangent of the index expression.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.asin.html#pytaco.asin" title="pytaco.asin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">asin</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.asin.html#pytaco.asin" title="pytaco.asin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">asin</span></code></a>(e1)</p></td>
+<td><p>Return the element-wise arcsine of the index expression.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.acos.html#pytaco.acos" title="pytaco.acos"><code class="xref py py-obj docutils literal notranslate"><span class="pre">acos</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.acos.html#pytaco.acos" title="pytaco.acos"><code class="xref py py-obj docutils literal notranslate"><span class="pre">acos</span></code></a>(e1)</p></td>
+<td><p>Return the element-wise arccosine of the index expression.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.atan.html#pytaco.atan" title="pytaco.atan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atan</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.atan.html#pytaco.atan" title="pytaco.atan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atan</span></code></a>(e1)</p></td>
+<td><p>Return the element-wise arc tangent of the index expression.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.atan2.html#pytaco.atan2" title="pytaco.atan2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atan2</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.atan2.html#pytaco.atan2" title="pytaco.atan2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atan2</span></code></a>(e1)</p></td>
+<td><p>Return the element-wise arc tangent of the index expression respecting quadrants.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.sinh.html#pytaco.sinh" title="pytaco.sinh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sinh</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.sinh.html#pytaco.sinh" title="pytaco.sinh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sinh</span></code></a>(e1)</p></td>
+<td><p>Return the element-wise hyperbolic sine of the index expression.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.cosh.html#pytaco.cosh" title="pytaco.cosh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cosh</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.cosh.html#pytaco.cosh" title="pytaco.cosh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cosh</span></code></a>(e1)</p></td>
+<td><p>Return the element-wise hyperbolic cosine of the index expression.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.tanh.html#pytaco.tanh" title="pytaco.tanh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tanh</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.tanh.html#pytaco.tanh" title="pytaco.tanh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tanh</span></code></a>(e1)</p></td>
+<td><p>Return the element-wise hyperbolic tangent of the index expression.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.asinh.html#pytaco.asinh" title="pytaco.asinh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">asinh</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.asinh.html#pytaco.asinh" title="pytaco.asinh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">asinh</span></code></a>(e1)</p></td>
+<td><p>Return the element-wise hyperbolic arcsine of the index expression.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.acosh.html#pytaco.acosh" title="pytaco.acosh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">acosh</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.acosh.html#pytaco.acosh" title="pytaco.acosh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">acosh</span></code></a>(e1)</p></td>
+<td><p>Return the element-wise hyperbolic arccosine of the index expression.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.atanh.html#pytaco.atanh" title="pytaco.atanh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atanh</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.atanh.html#pytaco.atanh" title="pytaco.atanh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">atanh</span></code></a>(e1)</p></td>
+<td><p>Return the element-wise hyperbolic arc tangent of the index expression.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.logical_not.html#pytaco.logical_not" title="pytaco.logical_not"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logical_not</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.logical_not.html#pytaco.logical_not" title="pytaco.logical_not"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logical_not</span></code></a>(e1)</p></td>
+<td><p>Return the element-wise logical not of the index expression.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.gt.html#pytaco.gt" title="pytaco.gt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gt</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.gt.html#pytaco.gt" title="pytaco.gt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gt</span></code></a>(e1, e2)</p></td>
+<td><p>Computes e1 &gt; e2 element-wise.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.lt.html#pytaco.lt" title="pytaco.lt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lt</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.lt.html#pytaco.lt" title="pytaco.lt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lt</span></code></a>(e1, e2)</p></td>
+<td><p>Computes e1 &lt; e2 element-wise.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.ge.html#pytaco.ge" title="pytaco.ge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ge</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.ge.html#pytaco.ge" title="pytaco.ge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ge</span></code></a>(e1, e2)</p></td>
+<td><p>Computes e1 &gt;= e2 element-wise.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.le.html#pytaco.le" title="pytaco.le"><code class="xref py py-obj docutils literal notranslate"><span class="pre">le</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.le.html#pytaco.le" title="pytaco.le"><code class="xref py py-obj docutils literal notranslate"><span class="pre">le</span></code></a>(e1, e2)</p></td>
+<td><p>Computes e1 &lt;= e2 element-wise.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.eq.html#pytaco.eq" title="pytaco.eq"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eq</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.eq.html#pytaco.eq" title="pytaco.eq"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eq</span></code></a>(e1, e2)</p></td>
+<td><p>Computes e1 == e2 element-wise.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.ne.html#pytaco.ne" title="pytaco.ne"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ne</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.ne.html#pytaco.ne" title="pytaco.ne"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ne</span></code></a>(e1, e2)</p></td>
+<td><p>Computes e1 != e2 element-wise.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.max.html#pytaco.max" title="pytaco.max"><code class="xref py py-obj docutils literal notranslate"><span class="pre">max</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.max.html#pytaco.max" title="pytaco.max"><code class="xref py py-obj docutils literal notranslate"><span class="pre">max</span></code></a>(e1, e2)</p></td>
+<td><p>Computes max(e1, e2) element-wise.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.min.html#pytaco.min" title="pytaco.min"><code class="xref py py-obj docutils literal notranslate"><span class="pre">min</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.min.html#pytaco.min" title="pytaco.min"><code class="xref py py-obj docutils literal notranslate"><span class="pre">min</span></code></a>(e1, e2)</p></td>
+<td><p>Computes min(e1, e2) element-wise.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.heaviside.html#pytaco.heaviside" title="pytaco.heaviside"><code class="xref py py-obj docutils literal notranslate"><span class="pre">heaviside</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.heaviside.html#pytaco.heaviside" title="pytaco.heaviside"><code class="xref py py-obj docutils literal notranslate"><span class="pre">heaviside</span></code></a>(e1, e2)</p></td>
+<td><p>Computes element wise heaviside as described in <a class="reference internal" href="functions/pytaco.tensor_heaviside.html#pytaco.tensor_heaviside" title="pytaco.tensor_heaviside"><code class="xref py py-func docutils literal notranslate"><span class="pre">tensor_heaviside()</span></code></a>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.sum.html#pytaco.sum" title="pytaco.sum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sum</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.sum.html#pytaco.sum" title="pytaco.sum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sum</span></code></a>(var, e)</p></td>
+<td><p>Sums a dimension of an index expression.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.add.html#pytaco.add" title="pytaco.add"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add</span></code></a>(e1, e2)</p></td>
+<td><p>Computes e1 + e2 element-wise.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.mul.html#pytaco.mul" title="pytaco.mul"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mul</span></code></a>(e1, e2)</p></td>
+<td><p>Computes e1 * e2 element wise.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="functions/pytaco.sub.html#pytaco.sub" title="pytaco.sub"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sub</span></code></a>(e1, e2)</p></td>
+<td><p>Computes e1 - e2 element wise.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="functions/pytaco.div.html#pytaco.div" title="pytaco.div"><code class="xref py py-obj docutils literal notranslate"><span class="pre">div</span></code></a>(e1, e2)</p></td>
+<td><p>Computes e1 / e2 element wise.</p></td>
 </tr>
 </tbody>
 </table>
@@ -319,7 +340,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="functions/pytaco.remainder.html" class="btn btn-neutral float-right" title="pytaco.remainder" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="functions/pytaco.cast.html" class="btn btn-neutral float-right" title="pytaco.cast" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="idx_exp_obj.html" class="btn btn-neutral float-left" title="Index Expression Objects" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

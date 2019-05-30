@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Convenience Functions" href="../iv_funcs.html" />
+    <link rel="next" title="pytaco.add" href="pytaco.add.html" />
     <link rel="prev" title="pytaco.heaviside" href="pytaco.heaviside.html" /> 
 </head>
 
@@ -90,6 +90,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../index_vars.html">PyTaco Index Vars</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../idx_exp_obj.html">Index Expression Objects</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../expr_funcs.html">Index Expression Functions</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pytaco.cast.html">pytaco.cast</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pytaco.remainder.html">pytaco.remainder</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pytaco.abs.html">pytaco.abs</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pytaco.pow.html">pytaco.pow</a></li>
@@ -124,6 +125,10 @@
 <li class="toctree-l3"><a class="reference internal" href="pytaco.min.html">pytaco.min</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pytaco.heaviside.html">pytaco.heaviside</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">pytaco.sum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pytaco.add.html">pytaco.add</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pytaco.mul.html">pytaco.mul</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pytaco.sub.html">pytaco.sub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pytaco.div.html">pytaco.div</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../iv_funcs.html">Convenience Functions</a></li>
@@ -131,6 +136,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../tensors.html">Tensors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../parsers.html">Evaluate String Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../udfs.html">User Defined Functions</a></li>
 </ul>
 
             
@@ -203,8 +209,40 @@
 <h1>pytaco.sum<a class="headerlink" href="#pytaco-sum" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="pytaco.sum">
-<code class="descclassname">pytaco.</code><code class="descname">sum</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytaco.sum" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descclassname">pytaco.</code><code class="descname">sum</code><span class="sig-paren">(</span><em>var</em>, <em>e</em><span class="sig-paren">)</span><a class="headerlink" href="#pytaco.sum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sums a dimension of an index expression.</p>
+<p>Sums all elements in the dimension of the index expression specified by var.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>var: index_var</strong></dt><dd><p>An index var corresponding to the dimension to sum across in the input index expression e.</p>
+</dd>
+<dt><strong>e: index_expression</strong></dt><dd><p>The index expression to sum.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>reduced: index_expression</dt><dd><p>An index_expression with the dimension specified by var summed out.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This is different from the function <a class="reference internal" href="pytaco.tensor_sum.html#pytaco.tensor_sum" title="pytaco.tensor_sum"><code class="xref py py-func docutils literal notranslate"><span class="pre">tensor_sum()</span></code></a> since this function can only sum one index variable at a time.
+The different expressions can be chained together to get behavior similar to <a class="reference internal" href="pytaco.tensor_sum.html#pytaco.tensor_sum" title="pytaco.tensor_sum"><code class="xref py py-func docutils literal notranslate"><span class="pre">tensor_sum()</span></code></a>.</p>
+<p class="rubric">Examples</p>
+<p>We can use this to compute the magnitute of a vector without needed to specify a tensor to imply the reduction.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pytaco</span> <span class="k">as</span> <span class="nn">pt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">([</span><span class="mf">2.0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">11</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">i</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">index_var</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">pt</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="p">])))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="go">13.22875690460205</span>
+</pre></div>
+</div>
+</dd></dl>
 
 </div>
 
@@ -216,7 +254,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../iv_funcs.html" class="btn btn-neutral float-right" title="Convenience Functions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="pytaco.add.html" class="btn btn-neutral float-right" title="pytaco.add" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="pytaco.heaviside.html" class="btn btn-neutral float-left" title="pytaco.heaviside" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

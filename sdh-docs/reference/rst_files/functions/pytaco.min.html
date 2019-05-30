@@ -90,6 +90,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../index_vars.html">PyTaco Index Vars</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../idx_exp_obj.html">Index Expression Objects</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../expr_funcs.html">Index Expression Functions</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pytaco.cast.html">pytaco.cast</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pytaco.remainder.html">pytaco.remainder</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pytaco.abs.html">pytaco.abs</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pytaco.pow.html">pytaco.pow</a></li>
@@ -124,6 +125,10 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">pytaco.min</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pytaco.heaviside.html">pytaco.heaviside</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pytaco.sum.html">pytaco.sum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pytaco.add.html">pytaco.add</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pytaco.mul.html">pytaco.mul</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pytaco.sub.html">pytaco.sub</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pytaco.div.html">pytaco.div</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../iv_funcs.html">Convenience Functions</a></li>
@@ -131,6 +136,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../tensors.html">Tensors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../parsers.html">Evaluate String Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../udfs.html">User Defined Functions</a></li>
 </ul>
 
             
@@ -203,8 +209,23 @@
 <h1>pytaco.min<a class="headerlink" href="#pytaco-min" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="pytaco.min">
-<code class="descclassname">pytaco.</code><code class="descname">min</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytaco.min" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descclassname">pytaco.</code><code class="descname">min</code><span class="sig-paren">(</span><em>e1</em>, <em>e2</em><span class="sig-paren">)</span><a class="headerlink" href="#pytaco.min" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes min(e1, e2) element-wise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>e1, e2: index_expressions</strong></dt><dd><p>Input index expressions</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>min: index_expression</dt><dd><p>An index expression which computes the element wise minimum of two tensors</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 </div>
 

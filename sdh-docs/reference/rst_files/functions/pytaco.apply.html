@@ -1,0 +1,244 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pytaco.apply &mdash; Taco  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="pytaco.set_udf_dir" href="pytaco.set_udf_dir.html" />
+    <link rel="prev" title="User Defined Functions" href="../udfs.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Taco
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Home:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../datatype.html">Datatypes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../format.html">Formats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../file_io.html">Tensor IO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sched.html">Scheduling Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index_expressions.html">Index Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tensors.html">Tensors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parsers.html">Evaluate String Expressions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../udfs.html">User Defined Functions</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">pytaco.apply</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytaco.set_udf_dir.html">pytaco.set_udf_dir</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Taco</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../udfs.html">User Defined Functions</a> &raquo;</li>
+        
+      <li>pytaco.apply</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/rst_files/functions/pytaco.apply.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="pytaco-apply">
+<h1>pytaco.apply<a class="headerlink" href="#pytaco-apply" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="pytaco.apply">
+<code class="descclassname">pytaco.</code><code class="descname">apply</code><span class="sig-paren">(</span><em>func_name</em>, <em>arg_list</em>, <em>output_zero_specifier</em><span class="sig-paren">)</span><a class="headerlink" href="#pytaco.apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies a user defined function to an <a class="reference internal" href="../idx_exp_obj.html#pytaco.index_expression" title="pytaco.index_expression"><code class="xref py py-class docutils literal notranslate"><span class="pre">index_expression</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>func_name: str</strong></dt><dd><p>The name of the function to call from the udf dir.</p>
+</dd>
+<dt><strong>arg_list: list of index_expression</strong></dt><dd><p>The arguments that the function <code class="docutils literal notranslate"><span class="pre">func_name</span></code> should be called with. This should be index expressions
+corresponding to the number of arguments <code class="docutils literal notranslate"><span class="pre">func_name</span></code> expects.</p>
+</dd>
+<dt><strong>output_zero_specifier: list of ints:</strong></dt><dd><p>This specifies that if all inputs in corresponding to <code class="docutils literal notranslate"><span class="pre">arg_list[output_zero_specifier[i]</span></code>] are 0, then
+the output of the entire function should be 0. If this list is empty, then this means the function always
+outputs a non-zero (as is the case with exp). If this list is <code class="docutils literal notranslate"><span class="pre">[0]</span></code>, this means that  whenever the first
+argument is 0, the output should be 0. A list of <code class="docutils literal notranslate"><span class="pre">[1]</span></code> implies whenever the second argument is 0, the
+output should be 0 and so on. <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code> means that if both inputs to the function are 0, then a zero output
+is expected.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This function searches in the directory specified by calling <a class="reference internal" href="pytaco.set_udf_dir.html#pytaco.set_udf_dir" title="pytaco.set_udf_dir"><code class="xref py py-func docutils literal notranslate"><span class="pre">set_udf_dir()</span></code></a> for a C header that declares 
+and implements a function with name  <code class="docutils literal notranslate"><span class="pre">func_name</span></code>. If that function is found, taco will attempt to use that function 
+during compilation to perform computations on the expressions in <code class="docutils literal notranslate"><span class="pre">arg_list</span></code>. The function must be implemented in C99.</p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="pytaco.set_udf_dir.html" class="btn btn-neutral float-right" title="pytaco.set_udf_dir" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../udfs.html" class="btn btn-neutral float-left" title="User Defined Functions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, MIT COMMIT GROUP
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

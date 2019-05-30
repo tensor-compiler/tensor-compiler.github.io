@@ -95,6 +95,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tensors.html">Tensors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parsers.html">Evaluate String Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="udfs.html">User Defined Functions</a></li>
 </ul>
 
             
@@ -186,6 +187,9 @@ determining the output shape is easy once the expression has been written. See t
 expressions.</p>
 <p>Creating index expressions from 0 order tensors must be done by indexing the 0 order tensor with <code class="docutils literal notranslate"><span class="pre">None</span></code>. This tells
 taco that there are no dimensions to access.</p>
+<p>The <a class="reference internal" href="functions/pytaco.evaluate.html#pytaco.evaluate" title="pytaco.evaluate"><code class="xref py py-func docutils literal notranslate"><span class="pre">evaluate()</span></code></a> function allows users to represent index notation as a string using parenthesis instead of
+square brackets and not requiring that scalars be indexed with <code class="docutils literal notranslate"><span class="pre">None</span></code>. This function can infer the output dimension
+of the tensor given the input string but does not currently support all of the index expression functions available.</p>
 <p class="rubric">Examples</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pytaco</span> <span class="k">as</span> <span class="nn">pt</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">pt</span><span class="o">.</span><span class="n">index_expression</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
@@ -203,15 +207,21 @@ taco that there are no dimensions to access.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">scalar_expr</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>Determining output shape. An example using matrix multiply.</p>
+<p>An example of determining the output shape using matrix multiply:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>We can represent matrix multiply as <code class="docutils literal notranslate"><span class="pre">C[i,</span> <span class="pre">j]</span> <span class="pre">=</span> <span class="pre">A[i,</span> <span class="pre">k]</span> <span class="pre">*</span> <span class="pre">B[k,</span> <span class="pre">j]</span></code>. Since we have the representation of the computation
 and we know that dimensions indexed by the same index variable must have the same shape, we can construct C by letting
-its first dimension have size <code class="docutils literal notranslate"><span class="pre">A.shape[0]</span></code> since both dimensions are indexed by i and letting its second dimension
-have size B.shape[1] since <code class="docutils literal notranslate"><span class="pre">j</span></code> indexes both of those dimensions.</p>
+its first dimension have size <code class="docutils literal notranslate"><span class="pre">A.shape[0]</span></code> since both dimensions are indexed by <code class="docutils literal notranslate"><span class="pre">i</span></code> and letting its second dimension
+have size B.shape[1] since <code class="docutils literal notranslate"><span class="pre">j</span></code> indexes both of those dimensions. This, we would contiue the above as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">b</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+</pre></div>
+</div>
+<p>Then we could write
+&gt;&gt;&gt; i, j, k = pt.get_index_vars(3)
+&gt;&gt;&gt; c[i, j] = a[i, k] * b[k, j]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Attributes</dt>
 <dd class="field-odd"><dl class="simple">
