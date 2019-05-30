@@ -216,7 +216,7 @@ csf  = pt.format([compressed, compressed, compressed])  # Compressed sparse fibe
 <code>pytaco.format</code> object.  This requires specifying whether each tensor dimension
 is dense or sparse as well as (optionally) the order in which dimensions should
 be stored.  TACO also predefines some common tensor formats (including 
-<code>pt.csr</code>, <code>pt.csc</code> and <code>pt.csf</code>) that you can use out of the box.</p>
+<code>pt.csr</code> and <code>pt.csc</code>) that you can use out of the box.</p>
 <h1 id="initializing-tensors">Initializing Tensors</h1>
 <p>Tensors can be made by using python indexing syntax. For example, one may write
 the following: You can initialize a tensor by calling its <code>insert</code> method to
@@ -247,8 +247,8 @@ invoke <code>pack</code> though if you need full control over when exactly that 
 <pre class="highlight"><code class="language-python">A.pack()</code></pre>
 
 <p>You can then iterate over the nonzero elements of the tensor as follows:</p>
-<pre class="highlight"><code class="language-python">for elem in A:
-  print(elem)</code></pre>
+<pre class="highlight"><code class="language-python">for coordinates, val in A:
+  print(val)</code></pre>
 
 <h1 id="file-io">File I/O</h1>
 <p>Rather than manually constructing a tensor, you can load tensors directly from

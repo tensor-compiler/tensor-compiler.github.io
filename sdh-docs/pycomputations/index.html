@@ -228,8 +228,10 @@ instance, the computation </p>
 </p>
 <p>and demonstrates how matrix-vector multiplication can be expressed in index
 notation.  Both forms are supported by TACO:</p>
-<pre class="highlight"><code class="language-python">y[i] = A[i,j] * x[j]
-y[i] = sum(j, A[i,j] * x[j])</code></pre>
+<pre class="highlight"><code class="language-python">i, j = pytaco.get_index_vars(2)
+
+y[i] = A[i,j] * x[j]
+y[i] = pytaco.sum(j, A[i,j] * x[j])</code></pre>
 
 <p>Reductions that are not explicitly expressed are assumed to be over the
 smallest subexpression that captures all uses of the corresponding reduction
@@ -260,6 +262,7 @@ a size of one.  For example, the following is not allowed:</p>
 <pre class="highlight"><code class="language-python">A = pt.tensor([3,3])
 B = pt.tensor([3,3])
 C = pt.tensor([3,1])
+i, j = pt.get_index_vars(2)
 
 A[i, j] =  B[i, j] + C[i, j]  # ERROR!!</code></pre>
 
@@ -271,6 +274,7 @@ stores the result in matrix <code>A</code>:</p>
 <pre class="highlight"><code class="language-python">A = pt.tensor([3,3], pt.format([dense, dense]))
 B = pt.tensor([3,3], pt.format([dense, dense]))
 C = pt.tensor([3,3], pt.format([dense, dense]))
+i, j = pt.get_index_vars(2)
 
 A[i,j] = B[i,j] + C[j,i]</code></pre>
 
@@ -286,8 +290,9 @@ before <code>i</code>:</p>
 <pre class="highlight"><code class="language-python">A = pt.tensor([3,3], pt.format([dense, compressed]))
 B = pt.tensor([3,3], pt.format([dense, compressed]))
 C = pt.tensor([3,3], pt.format([dense, compressed]))
+i, j = pt.get_index_vars(2)
 
-A[i,j] = B[i,j] + C[j,i]</code></pre>
+A[i,j] = B[i,j] + C[j,i]  # ERROR!!</code></pre>
 
 <p>As an alternative, you can first explicitly transpose <code>C</code> by invoking its
 <code>transpose</code> method, storing the result in a temporary, and then perform the
@@ -295,6 +300,7 @@ addition with the already-transposed temporary:</p>
 <pre class="highlight"><code class="language-python">A = pt.tensor([3,3], pt.format([dense, compressed]))
 B = pt.tensor([3,3], pt.format([dense, compressed]))
 C = pt.tensor([3,3], pt.format([dense, compressed]))
+i, j = pt.get_index_vars(2)
 
 Ct = C.transpose([1, 0])  # Ct is also stored in the CSR format
 A[i,j] = B[i,j] + Ct[i,j]</code></pre>
@@ -306,8 +312,9 @@ order, requires <code>j</code> to be accessed before <code>i</code>:</p>
 <pre class="highlight"><code class="language-python">A = pt.tensor([3,3], pt.format([dense, compressed]))
 B = pt.tensor([3,3], pt.format([dense, compressed]))
 C = pt.tensor([3,3], pt.format([dense, compressed], [1, 0]))
+i, j = pt.get_index_vars(2)
 
-A[i,j] = B[i,j] + C[i,j]</code></pre>
+A[i,j] = B[i,j] + C[i,j]  # ERROR!!</code></pre>
 
 <p>We can again perform the same computation by invoking <code>transpose</code>, this time to
 repack <code>C</code> into the same CSR format as <code>A</code> and <code>B</code> before computing the 
@@ -315,6 +322,7 @@ addition:</p>
 <pre class="highlight"><code class="language-python">A = pt.tensor([3,3], pt.format([dense, compressed]))
 B = pt.tensor([3,3], pt.format([dense, compressed]))
 C = pt.tensor([3,3], pt.format([dense, compressed], [1, 0]))
+i, j = pt.get_index_vars(2)
 
 Cp = C.transpose([0, 1], pt.format([dense, compressed]))  # Store a copy of C in the CSR format
 A[i,j] = B[i,j] + Cp[i,j]</code></pre>

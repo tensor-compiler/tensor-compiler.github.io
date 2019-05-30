@@ -120,8 +120,8 @@ A.pack()
 You can then iterate over the nonzero elements of the tensor as follows:
 
 ```python
-for coordinate, elem in A:
-  print(elem)
+for coordinates, val in A:
+  print(val)
 ```
 
 # File I/O

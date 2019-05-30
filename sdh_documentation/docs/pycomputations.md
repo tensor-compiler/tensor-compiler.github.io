@@ -82,6 +82,7 @@ notation.  Both forms are supported by TACO:
 
 ```python
 i, j = pytaco.get_index_vars(2)
+
 y[i] = A[i,j] * x[j]
 y[i] = pytaco.sum(j, A[i,j] * x[j])
 ```
@@ -121,6 +122,7 @@ a size of one.  For example, the following is not allowed:
 A = pt.tensor([3,3])
 B = pt.tensor([3,3])
 C = pt.tensor([3,1])
+i, j = pt.get_index_vars(2)
 
 A[i, j] =  B[i, j] + C[i, j]  # ERROR!!
 ```
@@ -157,7 +159,7 @@ B = pt.tensor([3,3], pt.format([dense, compressed]))
 C = pt.tensor([3,3], pt.format([dense, compressed]))
 i, j = pt.get_index_vars(2)
 
-A[i,j] = B[i,j] + C[j,i]
+A[i,j] = B[i,j] + C[j,i]  # ERROR!!
 ```
 
 As an alternative, you can first explicitly transpose `C` by invoking its
@@ -185,7 +187,7 @@ B = pt.tensor([3,3], pt.format([dense, compressed]))
 C = pt.tensor([3,3], pt.format([dense, compressed], [1, 0]))
 i, j = pt.get_index_vars(2)
 
-A[i,j] = B[i,j] + C[i,j]
+A[i,j] = B[i,j] + C[i,j]  # ERROR!!
 ```
 
 We can again perform the same computation by invoking `transpose`, this time to
