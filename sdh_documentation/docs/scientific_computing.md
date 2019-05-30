@@ -2,13 +2,13 @@ Sparse matrix-vector multiplication (SpMV) is a bottleneck computation in many
 scientific and engineering computations. Mathematically, SpMV can be expressed
 as 
 
-<center>\(y = Ax + z\),</center>
+$$y = Ax + z,$$
 
 where \(A\) is a sparse matrix and \(x\), \(y\), and \(z\)
 are dense vectors. The computation can also be expressed in [index
 notation](computations.md#specifying-tensor-algebra-computations) as 
 
-<center>\(y_i = A_{ij}x_j + z_i\).</center>
+$$y_i = A_{ij} \cdot x_j + z_i.$$
 
 You can use the TACO Python library to easily and efficiently compute SpMV, as
 shown here:
@@ -27,7 +27,7 @@ dv  = pt.format([dense])
 # https://www.cise.ufl.edu/research/sparse/MM/Boeing/pwtk.tar.gz
 A = pt.read("pwtk.mtx", csr)
 
-# Generate two random vectors using numpy and pass them into TACO
+# Generate two random vectors using NumPy and pass them into TACO
 x = pt.from_array(np.random.uniform(size=A.shape[1]))
 z = pt.from_array(np.random.uniform(size=A.shape[0]))
 
