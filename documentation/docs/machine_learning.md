@@ -9,7 +9,7 @@ You can use the taco C++ library to easily and efficiently compute the SDDMM as 
 
 ```c++
 // On Linux and MacOS, you can compile and run this program like so:
-//   g++ -std=c++11 -O3 -DNDEBUG -DTACO -I ../../include -L../../build/lib -ltaco sddmm.cpp -o sddmm
+//   g++ -std=c++11 -O3 -DNDEBUG -DTACO -I ../../include -L../../build/lib sddmm.cpp -o sddmm -ltaco
 //   LD_LIBRARY_PATH=../../build/lib ./sddmm
 
 #include <random>

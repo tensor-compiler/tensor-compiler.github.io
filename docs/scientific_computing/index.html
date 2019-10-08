@@ -71,6 +71,21 @@
           
             <li class="toctree-l1">
 		
+    <span class="caption-text">Python Library</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../pytensors/">Defining Tensors</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../pycomputations/">Computing on Tensors</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
     <span class="caption-text">Example Applications</span>
     <ul class="subnav">
                 <li class=" current">
@@ -133,7 +148,7 @@
 
 <p>You can use the taco C++ library to easily and efficiently compute the SpMV as demonstrated here:</p>
 <pre><code class="c++">// On Linux and MacOS, you can compile and run this program like so:
-//   g++ -std=c++11 -O3 -DNDEBUG -DTACO -I ../../include -L../../build/lib -ltaco spmv.cpp -o spmv
+//   g++ -std=c++11 -O3 -DNDEBUG -DTACO -I ../../include -L../../build/lib spmv.cpp -o spmv -ltaco
 //   LD_LIBRARY_PATH=../../build/lib ./spmv
 
 #include &lt;random&gt;
@@ -162,14 +177,14 @@ int main(int argc, char* argv[]) {
   // Generate a random dense vector and store it in the dense vector format. 
   // Vectors correspond to order-1 tensors in taco.
   Tensor&lt;double&gt; x({A.getDimension(1)}, dv);
-  for (int i = 0; i &lt; x.getDimension(0)]; ++i) {
+  for (int i = 0; i &lt; x.getDimension(0); ++i) {
     x.insert({i}, unif(gen));
   }
   x.pack();
 
   // Generate another random dense vetor and store it in the dense vector format..
   Tensor&lt;double&gt; z({A.getDimension(0)}, dv);
-  for (int i = 0; i &lt; z.getDimension(0)]; ++i) {
+  for (int i = 0; i &lt; z.getDimension(0); ++i) {
     z.insert({i}, unif(gen));
   }
   z.pack();
@@ -203,6 +218,37 @@ int main(int argc, char* argv[]) {
 }
 </code></pre>
 
+<p>You can also use the Python library to compute SpMV as shown here:</p>
+<pre><code class="python">import pytaco as pt
+from pytaco import compressed, dense
+import numpy as np
+
+# Declare the storage formats as explained in the C++ sample
+csr = pt.format([dense, compressed])
+dv  = pt.format([dense])
+
+# Load a sparse matrix stored in the matrix market format) and store it as a csr matrix. 
+# The matrix  # in this example can be downloaded from:
+# https://www.cise.ufl.edu/research/sparse/MM/Boeing/pwtk.tar.gz
+A = pt.read(&quot;pwtk.mtx&quot;, csr)
+
+# Generate two random vectors using numpy and pass them into taco
+x = pt.from_numpy_array(np.random.uniform(size=A.shape[0]))
+z = pt.from_numpy_array(np.random.uniform(size=A.shape[0]))
+
+# Declare output vector as dense
+y = pt.tensor([A.shape[0]], dv)
+
+# Create index vars
+i, j = pt.get_index_vars(2)
+
+# Define the SpMV computation
+y[i] = 42 * A[i, j] * x[j] + 33 * z[i]
+
+# Store the output
+pt.write(&quot;y.tns&quot;, y)
+</code></pre>
+
 <p>Under the hood, when you run the above C++ program, taco generates the imperative code shown below to compute the SpMV. taco is able to evaluate this compound operation efficiently with a single kernel that avoids materializing the intermediate matrix-vector product.</p>
 <pre><code class="c++">for (int iA = 0; iA &lt; 217918; iA++) {
   double tj = 0;
@@ -225,7 +271,7 @@ int main(int argc, char* argv[]) {
         <a href="../machine_learning/" class="btn btn-neutral float-right" title="Machine Learning: SDDMM">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../computations/" class="btn btn-neutral" title="Computing on Tensors"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../pycomputations/" class="btn btn-neutral" title="Computing on Tensors"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -259,7 +305,7 @@ int main(int argc, char* argv[]) {
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="../computations/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../pycomputations/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
         <span style="margin-left: 15px"><a href="../machine_learning/" style="color: #fcfcfc">Next &raquo;</a></span>

@@ -8,7 +8,7 @@ You can use the taco C++ library to easily and efficiently compute the MTTKRP as
 
 ```c++
 // On Linux and MacOS, you can compile and run this program like so:
-//   g++ -std=c++11 -O3 -DNDEBUG -DTACO -I ../../include -L../../build/lib -ltaco mttkrp.cpp -o mttkrp
+//   g++ -std=c++11 -O3 -DNDEBUG -DTACO -I ../../include -L../../build/lib mttkrp.cpp -o mttkrp -ltaco
 //   LD_LIBRARY_PATH=../../build/lib ./mttkrp
 
 #include <random>

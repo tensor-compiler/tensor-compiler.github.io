@@ -71,6 +71,21 @@
           
             <li class="toctree-l1">
 		
+    <span class="caption-text">Python Library</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../pytensors/">Defining Tensors</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../pycomputations/">Computing on Tensors</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
     <span class="caption-text">Example Applications</span>
     <ul class="subnav">
                 <li class="">
@@ -133,7 +148,7 @@
 
 <p>You can use the taco C++ library to easily and efficiently compute the MTTKRP as demonstrated here:</p>
 <pre><code class="c++">// On Linux and MacOS, you can compile and run this program like so:
-//   g++ -std=c++11 -O3 -DNDEBUG -DTACO -I ../../include -L../../build/lib -ltaco mttkrp.cpp -o mttkrp
+//   g++ -std=c++11 -O3 -DNDEBUG -DTACO -I ../../include -L../../build/lib mttkrp.cpp -o mttkrp -ltaco
 //   LD_LIBRARY_PATH=../../build/lib ./mttkrp
 
 #include &lt;random&gt;
@@ -201,6 +216,34 @@ int main(int argc, char* argv[]) {
   // Write the output of the computation to file (stored in the FROSTT format).
   write(&quot;A.tns&quot;, A);
 }
+</code></pre>
+
+<p>We can also express this using the Python API.</p>
+<pre><code class="python">import pytaco as pt
+import numpy as np
+from pytaco import compressed, dense, format
+
+# Declare tensor formats
+csf = format([compressed, compressed, compressed])
+rm  = format([dense, dense])
+
+# Load a sparse order-3 tensor from file (stored in the FROSTT format) and 
+# store it as a compressed sparse fiber tensor. The tensor in this example 
+# can be download from: http://frostt.io/tensors/nell-2/
+B = pt.read(&quot;nell-2.tns&quot;, csf);
+
+# Use numpy to create random matrices
+C = pt.from_numpy_array(np.random.uniform( size=(B.shape[1], 25) ) )
+D = pt.from_numpy_array(np.random.uniform( size=(B.shape[2], 25) ) )
+
+# Create output tensor
+A = pt.tensor([B.shape[0], 25], rm)
+
+# Create index vars and define the MTTKRP op
+i, j, k, l = get_index_vars(4)
+A[i, j] = B[i, k, l] * D[l, j] * C[k, j]
+
+pt.write(&quot;A.tns&quot;, A)
 </code></pre>
 
 <p>Under the hood, when you run the above C++ program, taco generates the imperative code shown below to compute the MTTKRP. taco is able to evaluate this compound operation efficiently with a single kernel that avoids materializing the intermediate Khatri-Rao product.</p>

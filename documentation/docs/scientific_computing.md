@@ -8,7 +8,7 @@ You can use the taco C++ library to easily and efficiently compute the SpMV as d
 
 ```c++
 // On Linux and MacOS, you can compile and run this program like so:
-//   g++ -std=c++11 -O3 -DNDEBUG -DTACO -I ../../include -L../../build/lib -ltaco spmv.cpp -o spmv
+//   g++ -std=c++11 -O3 -DNDEBUG -DTACO -I ../../include -L../../build/lib spmv.cpp -o spmv -ltaco
 //   LD_LIBRARY_PATH=../../build/lib ./spmv
 
 #include <random>
@@ -37,14 +37,14 @@ int main(int argc, char* argv[]) {
   // Generate a random dense vector and store it in the dense vector format. 
   // Vectors correspond to order-1 tensors in taco.
   Tensor<double> x({A.getDimension(1)}, dv);
-  for (int i = 0; i < x.getDimension(0)]; ++i) {
+  for (int i = 0; i < x.getDimension(0); ++i) {
     x.insert({i}, unif(gen));
   }
   x.pack();
 
   // Generate another random dense vetor and store it in the dense vector format..
   Tensor<double> z({A.getDimension(0)}, dv);
-  for (int i = 0; i < z.getDimension(0)]; ++i) {
+  for (int i = 0; i < z.getDimension(0); ++i) {
     z.insert({i}, unif(gen));
   }
   z.pack();
