@@ -1,5 +1,3 @@
-# Tutorial 
-
 The linked Jupyter notebooks proivde an interactive introduction to the Python TACO library, including how to initialize tensors, define mode formats, and perform computations. There are three notebooks, which differ mainly in the final extended example: [SpMV](https://mybinder.org/v2/gh/tensor-compiler/taco-jupyter-notebooks/master?filepath=Taco%20Tutorial%20via%20SpMV.ipynb) (useful for scientific computing), [SDDMM](https://mybinder.org/v2/gh/tensor-compiler/taco-jupyter-notebooks/master?filepath=Taco%20Tutorial%20via%20SDDMM.ipynb) (machine learning), and [MTTKRP](https://mybinder.org/v2/gh/tensor-compiler/taco-jupyter-notebooks/master?filepath=Taco%20Tutorial%20via%20MTTKRP.ipynb) (data analytics).
 
 These notebooks are hosted online and __do not require any installation__; i.e., they can be run without having PyTaco, Jupyter, or even Python locally. However, they may take a minute or two to build.
