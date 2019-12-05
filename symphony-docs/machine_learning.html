@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="favicon.ico">
+  
+  <title>Machine Learning: SDDMM - Documentation - The Tensor Algebra Compiler (TACO)</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link href="extra.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Machine Learning: SDDMM";
+    var mkdocs_page_input_path = "machine_learning.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="js/jquery-2.1.1.min.js" defer></script>
+  <script src="js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="index.html" class="icon icon-home"> Documentation - The Tensor Algebra Compiler (TACO)</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="index.html">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Python Library</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="tutorial.html">Tutorial</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="pytensors.html">Defining Tensors</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="pycomputations.html">Computing on Tensors</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="pyreference.html">Reference Manual</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Example Applications</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="scientific_computing.html">Scientific Computing: SpMV</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="data_analytics.html">Data Analytics: MTTKRP</a>
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="machine_learning.html">Machine Learning: SDDMM</a>
+    <ul class="subnav">
+            
+    </ul>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="optimization.html">Strategies for Optimization</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="benchmarking.html">Guide to Benchmarking</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">Documentation - The Tensor Algebra Compiler (TACO)</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Example Applications &raquo;</li>
+        
+      
+    
+    <li>Machine Learning: SDDMM</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p>Sampled dense-dense matrix product (SDDMM) is a bottleneck operation in many
+factor analysis algorithms used in machine learning, including Alternating
+Least Squares and Latent Dirichlet Allocation [1]. Mathematically, the
+operation can be expressed as </p>
+<p>
+<script type="math/tex; mode=display">A = B \circ CD,</script>
+</p>
+<p>where <script type="math/tex">A</script> and <script type="math/tex">B</script> are sparse matrices, <script type="math/tex">C</script> and <script type="math/tex">D</script> are dense matrices,
+and <script type="math/tex">\circ</script> denotes component-wise multiplication. This operation can also be
+expressed in <a href="pycomputations.html#specifying-tensor-algebra-computations">index
+notation</a> as </p>
+<p>
+<script type="math/tex; mode=display">A_{ij} = B_{ij} \cdot C_{ik} \cdot C_{kj}.</script>
+</p>
+<p>You can use the TACO Python library to easily and efficiently compute SDDMM, as
+shown here:</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytaco</span> <span class="kn">as</span> <span class="nn">pt</span>
+<span class="kn">from</span> <span class="nn">pytaco</span> <span class="kn">import</span> <span class="n">dense</span><span class="p">,</span> <span class="n">compressed</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="c1"># Define formats that the inputs and output will be stored as.  To define a</span>
+<span class="c1"># format, you must specify whether each dimension is dense or sparse and</span>
+<span class="c1"># (optionally) the order in which dimensions should be stored. The formats</span>
+<span class="c1"># declared below correspond to doubly compressed sparse row (dcsr), row-major</span>
+<span class="c1"># dense (rm), and column-major dense (dm).</span>
+<span class="n">dcsr</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">compressed</span><span class="p">,</span> <span class="n">compressed</span><span class="p">])</span>
+<span class="n">rm</span>   <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">dense</span><span class="p">,</span> <span class="n">dense</span><span class="p">])</span>
+<span class="n">cm</span>   <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">dense</span><span class="p">,</span> <span class="n">dense</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># The matrix in this example can be download from:</span>
+<span class="c1"># https://www.cise.ufl.edu/research/sparse/MM/Williams/webbase-1M.tar.gz</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;webbase-1M.mtx&quot;</span><span class="p">,</span> <span class="n">dcsr</span><span class="p">)</span>
+
+<span class="c1"># Generate two random matrices using NumPy and pass them into TACO</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">from_array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">B</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1000</span><span class="p">)))</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">from_array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">B</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span> <span class="n">out_format</span><span class="o">=</span><span class="n">cm</span><span class="p">)</span>
+
+<span class="c1"># Declare the result to be a doubly compressed sparse row matrix</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">B</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dcsr</span><span class="p">)</span>
+
+<span class="c1"># Declare index vars</span>
+<span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">get_index_vars</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># Define the SDDMM computation</span>
+<span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">B</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">D</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+
+<span class="c1"># Perform the SDDMM computation and write the result to file</span>
+<span class="n">pt</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;A.mtx&quot;</span><span class="p">,</span> <span class="n">A</span><span class="p">)</span>
+</pre></div>
+
+<p>When you run the above Python program, TACO will generate code under the hood
+that efficiently performs the computation in one shot.  This lets TACO only 
+compute elements of the intermediate dense matrix product that are actually 
+needed to compute the result, thus reducing the asymptotic complexity of the 
+computation.</p>
+<p>[1] Huasha Zhao. 2014. High Performance Machine Learning through Codesign and
+Rooflining. Ph.D. Dissertation. EECS Department, University of California,
+Berkeley. </p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="optimization.html" class="btn btn-neutral float-right" title="Strategies for Optimization">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="data_analytics.html" class="btn btn-neutral" title="Data Analytics: MTTKRP"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="data_analytics.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="optimization.html" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '.';</script>
+    <script src="js/theme.js" defer></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" defer></script>
+      <script src="search/main.js" defer></script>
+
+</body>
+</html>

@@ -1,6 +1,6 @@
 site_name: 'Documentation - The Tensor Algebra Compiler (TACO)'
 site_favicon: favicon.ico
-theme_dir: 'readthedocs'
+theme: readthedocs
 extra_css: [extra.css]
 extra_javascript: 
     - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML
@@ -13,6 +13,7 @@ use_directory_urls: false
 pages:
     - Home: index.md
     - Python Library:
+        - 'Tutorial': 'tutorial.md'
         - 'Defining Tensors': 'pytensors.md'
         - 'Computing on Tensors': 'pycomputations.md'
         - 'Reference Manual': 'pyreference.md'
