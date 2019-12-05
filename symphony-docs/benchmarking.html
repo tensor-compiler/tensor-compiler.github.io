@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="favicon.ico">
+  
+  <title>Guide to Benchmarking - Documentation - The Tensor Algebra Compiler (TACO)</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link href="extra.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Guide to Benchmarking";
+    var mkdocs_page_input_path = "benchmarking.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="js/jquery-2.1.1.min.js" defer></script>
+  <script src="js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="index.html" class="icon icon-home"> Documentation - The Tensor Algebra Compiler (TACO)</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="index.html">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Python Library</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="tutorial.html">Tutorial</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="pytensors.html">Defining Tensors</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="pycomputations.html">Computing on Tensors</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="pyreference.html">Reference Manual</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Example Applications</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="scientific_computing.html">Scientific Computing: SpMV</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="data_analytics.html">Data Analytics: MTTKRP</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="machine_learning.html">Machine Learning: SDDMM</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="optimization.html">Strategies for Optimization</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="benchmarking.html">Guide to Benchmarking</a>
+    <ul class="subnav">
+            
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">Documentation - The Tensor Algebra Compiler (TACO)</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Guide to Benchmarking</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p>The performance of Python applications that use TACO can be measured using
+Python's built-in <code>time.perf_counter</code> function with minimal changes to the
+applications.  As an example, we can benchmark the performance of the
+scientific computing application shown <a href="scientific_computing.html">here</a> as
+follows:</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytaco</span> <span class="kn">as</span> <span class="nn">pt</span>
+<span class="kn">from</span> <span class="nn">pytaco</span> <span class="kn">import</span> <span class="n">compressed</span><span class="p">,</span> <span class="n">dense</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="n">csr</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">dense</span><span class="p">,</span> <span class="n">compressed</span><span class="p">])</span>
+<span class="n">dv</span>  <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">dense</span><span class="p">])</span>
+
+<span class="n">A</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;pwtk.mtx&quot;</span><span class="p">,</span> <span class="n">csr</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">from_array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">from_array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">dv</span><span class="p">)</span>
+
+<span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">get_index_vars</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+<span class="c1"># Tell TACO to generate code to perform the SpMV computation</span>
+<span class="n">y</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+
+<span class="c1"># Benchmark the actual SpMV computation</span>
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+<span class="n">y</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+<span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Execution time: {0} seconds&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">))</span>
+</pre></div>
+
+<p>In order to accurately measure TACO's computational performance, <strong>only the
+time it takes to actually perform a computation should be measured.  The time
+it takes to generate code under the hood for performing that computation should
+not be measured</strong>, since this overhead can be quite variable but can often be
+amortized in practice.  By default though, TACO will only generate and compile
+code it needs for performing a computation immediately before it has to
+actually perform the computation.  As the example above demonstrates, by
+manually calling the result tensor's <code>compile</code> method, we can tell TACO to
+generate code needed for performing the computation before benchmarking starts,
+letting us measure only the performance of the computation itself.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><code>pytaco.evaluate</code> and <code>pytaco.einsum</code> should not be used to benchmark
+TACO's computational performance, since timing those functions will
+include the time it takes to generate code for performing the computation.</p>
+</div>
+<p><strong>The time it takes to construct the initial operand tensors should also not be
+measured</strong>, since again this overhead can often be amortized in practice.  By
+default, <code>pytaco.read</code> and functions for converting NumPy arrays and SciPy
+matrices to TACO tensors return fully constructed tensors.  If you add nonzero
+elements to an operand tensor by invoking its <code>insert</code> method though, then
+<code>pack</code> must also be explicitly invoked before any benchmarking is done:</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytaco</span> <span class="kn">as</span> <span class="nn">pt</span>
+<span class="kn">from</span> <span class="nn">pytaco</span> <span class="kn">import</span> <span class="n">compressed</span><span class="p">,</span> <span class="n">dense</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="n">csr</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">dense</span><span class="p">,</span> <span class="n">compressed</span><span class="p">])</span>
+<span class="n">dv</span>  <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">dense</span><span class="p">])</span>
+
+<span class="n">A</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;pwtk.mtx&quot;</span><span class="p">,</span> <span class="n">csr</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">dv</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">dv</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">dv</span><span class="p">)</span>
+
+<span class="c1"># Insert random values into x and z and pack them into dense arrays</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+  <span class="n">x</span><span class="o">.</span><span class="n">insert</span><span class="p">([</span><span class="n">k</span><span class="p">],</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">())</span>
+<span class="n">x</span><span class="o">.</span><span class="n">pack</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+  <span class="n">z</span><span class="o">.</span><span class="n">insert</span><span class="p">([</span><span class="n">k</span><span class="p">],</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">())</span>
+<span class="n">z</span><span class="o">.</span><span class="n">pack</span><span class="p">()</span>
+
+<span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">get_index_vars</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+<span class="n">y</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+<span class="n">y</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+<span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Execution time: {0} seconds&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">))</span>
+</pre></div>
+
+<p>TACO avoids regenerating code for performing the same computation though as
+long as the computation is redefined with the same index variables and with the
+same operand and result tensors.  Thus, if your application executes the same
+computation many times in a loop and if the computation is executed on
+sufficiently large data sets, TACO will naturally amortize the overhead
+associated with generating code for performing the computation.  In such 
+scenarios, it is acceptable to include the initial code generation overhead 
+in the performance measurement:</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytaco</span> <span class="kn">as</span> <span class="nn">pt</span>
+<span class="kn">from</span> <span class="nn">pytaco</span> <span class="kn">import</span> <span class="n">compressed</span><span class="p">,</span> <span class="n">dense</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="n">csr</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">dense</span><span class="p">,</span> <span class="n">compressed</span><span class="p">])</span>
+<span class="n">dv</span>  <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">dense</span><span class="p">])</span>
+
+<span class="n">A</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;pwtk.mtx&quot;</span><span class="p">,</span> <span class="n">csr</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">dv</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">dv</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">dv</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+  <span class="n">x</span><span class="o">.</span><span class="n">insert</span><span class="p">([</span><span class="n">k</span><span class="p">],</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">())</span>
+<span class="n">x</span><span class="o">.</span><span class="n">pack</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+  <span class="n">z</span><span class="o">.</span><span class="n">insert</span><span class="p">([</span><span class="n">k</span><span class="p">],</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">())</span>
+<span class="n">z</span><span class="o">.</span><span class="n">pack</span><span class="p">()</span>
+
+<span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">get_index_vars</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># Benchmark the iterative SpMV computation, including overhead for </span>
+<span class="c1"># generating code in the first iteration to perform the computation</span>
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+  <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+  <span class="n">y</span><span class="o">.</span><span class="n">evaluate</span><span class="p">()</span>
+  <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+  <span class="n">x</span><span class="o">.</span><span class="n">evaluate</span><span class="p">()</span>
+<span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Execution time: {0} seconds&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">))</span>
+</pre></div>
+
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>In order to avoid regenerating code for performing a computation, the
+computation must be redefined with the exact same index variable <em>objects</em>
+and also with the exact same tensor objects for operands and result.  In
+the example above, every loop iteration redefines the computation of <code>y</code>
+and <code>x</code> using the same tensor and index variable objects costructed outside
+the loop, so TACO will only generate code to compute <code>y</code> and <code>x</code> in the
+first iteration.  If the index variables were constructed inside the loop
+though, TACO would regenerate code to compute <code>y</code> and <code>x</code> in every loop
+iteration, and the compilation overhead would not be amortized. </p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>As a rough rule of thumb, if a computation takes on the order of seconds or
+more in total to perform across all invocations with identical operands and
+result (and is always redefined with identical index variables), then it is
+acceptable to include the overhead associated with generating code for
+performing the computation in performance measurements.</p>
+</div>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="optimization.html" class="btn btn-neutral" title="Strategies for Optimization"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="optimization.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+    </span>
+</div>
+    <script>var base_url = '.';</script>
+    <script src="js/theme.js" defer></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" defer></script>
+      <script src="search/main.js" defer></script>
+
+</body>
+</html>
