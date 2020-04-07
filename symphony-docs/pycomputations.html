@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="favicon.ico">
+  
+  <title>Computing on Tensors - Documentation - The Tensor Algebra Compiler (TACO)</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link href="extra.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Computing on Tensors";
+    var mkdocs_page_input_path = "pycomputations.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="js/jquery-2.1.1.min.js" defer></script>
+  <script src="js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="index.html" class="icon icon-home"> Documentation - The Tensor Algebra Compiler (TACO)</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="index.html">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Python Library</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="tutorial.html">Tutorial</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="pytensors.html">Defining Tensors</a>
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="pycomputations.html">Computing on Tensors</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#specifying-tensor-algebra-computations">Specifying Tensor Algebra Computations</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#expressing-reductions">Expressing Reductions</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#expressing-broadcasts">Expressing Broadcasts</a></li>
+    
+
+    <li class="toctree-l3"><a href="#expressing-transposes">Expressing Transposes</a></li>
+    
+
+    <li class="toctree-l3"><a href="#performing-the-computation">Performing the Computation</a></li>
+    
+
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="pyreference.html">Reference Manual</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Example Applications</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="scientific_computing.html">Scientific Computing: SpMV</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="data_analytics.html">Data Analytics: MTTKRP</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="machine_learning.html">Machine Learning: SDDMM</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="optimization.html">Strategies for Optimization</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="benchmarking.html">Guide to Benchmarking</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">Documentation - The Tensor Algebra Compiler (TACO)</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Python Library &raquo;</li>
+        
+      
+    
+    <li>Computing on Tensors</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="specifying-tensor-algebra-computations">Specifying Tensor Algebra Computations</h1>
+<p>Tensor algebra computations can be expressed in TACO using tensor index
+notation, which at a high level describes how each element in the result tensor
+can be computed from elements in the operand tensors. As an example, matrix
+addition can be expressed in index notation as </p>
+<p>
+<script type="math/tex; mode=display">A_{ij} = B_{ij} + C_{ij}</script>
+</p>
+<p>where <script type="math/tex">A</script>, <script type="math/tex">B</script>, and <script type="math/tex">C</script> denote two-dimensional tensors (i.e., matrices)
+while <script type="math/tex">i</script> and <script type="math/tex">j</script> are index variables that represent abstract indices into
+the corresponding dimensions of the tensors.  In plain English, the example
+above essentially states that, for every <script type="math/tex">i</script> and <script type="math/tex">j</script>, the element in the
+<script type="math/tex">i</script>-th row and <script type="math/tex">j</script>-th column of <script type="math/tex">A</script> should be assigned the sum of the
+corresponding elements in <script type="math/tex">B</script> and <script type="math/tex">C</script>. Similarly, element-wise
+multiplication of three tensors can be expressed in index notation as </p>
+<p>
+<script type="math/tex; mode=display">A_{ijk} = B_{ijk} \cdot C_{ijk} \cdot D_{ijk}.</script>
+</p>
+<p>To define the same computation using the TACO Python library, we can write very
+similar code, with the main difference being that we also have to explicitly
+declare the index variables beforehand:</p>
+<div class="highlight"><pre><span></span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="n">pytaco</span><span class="o">.</span><span class="n">index_var</span><span class="p">(),</span> <span class="n">pytaco</span><span class="o">.</span><span class="n">index_var</span><span class="p">(),</span> <span class="n">pytaco</span><span class="o">.</span><span class="n">index_var</span><span class="p">()</span>
+<span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">B</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span>
+</pre></div>
+
+<p>This can also be rewritten more compactly as</p>
+<div class="highlight"><pre><span></span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="n">pytaco</span><span class="o">.</span><span class="n">get_index_vars</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">B</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span>
+</pre></div>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Accesses to scalars also require the square brackets notation.  Since
+scalars are equivalent to tensors with zero dimension, <code>None</code> must be
+explicitly specified as indices to indicate that no index variable is
+needed to access a scalar.  As an example, the following expresses the
+addition of two scalars <code>beta</code> and <code>gamma</code>:</p>
+<div class="highlight"><pre><span></span><span class="n">alpha</span><span class="p">[</span><span class="bp">None</span><span class="p">]</span> <span class="o">=</span> <span class="n">beta</span><span class="p">[</span><span class="bp">None</span><span class="p">]</span> <span class="o">+</span> <span class="n">gamma</span><span class="p">[</span><span class="bp">None</span><span class="p">]</span>
+</pre></div>
+
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>TACO currently does not support computations that have a tensor as both an 
+operand and the result, such as the following:</p>
+<div class="highlight"><pre><span></span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+</pre></div>
+
+<p>Such computations can be rewritten using explicit temporaries as follows:</p>
+<div class="highlight"><pre><span></span><span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+</pre></div>
+
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>TACO currently does not support using the same index variable to index into 
+multiple dimensions of the same tensor operand (e.g., <code>A[i,i]</code>).</p>
+</div>
+<h2 id="expressing-reductions">Expressing Reductions</h2>
+<p>In all of the previous examples, all the index variables are used to index into
+both the result and the operands of a computation.  It is also possible for
+an index variable to be used to index into the operands only, in which case the
+dimension indexed by that index variable is reduced (summed) over. For 
+instance, the computation </p>
+<p>
+<script type="math/tex; mode=display">y_{i} = A_{ij} \cdot x_{j}</script>
+</p>
+<p>can be rewritten with the summation more explicit as </p>
+<p>
+<script type="math/tex; mode=display">y_{i} = \sum_{j} A_{ij} \cdot x_j</script>
+</p>
+<p>and demonstrates how matrix-vector multiplication can be expressed in index
+notation.  Both forms are supported by TACO:</p>
+<div class="highlight"><pre><span></span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">pytaco</span><span class="o">.</span><span class="n">get_index_vars</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+<span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">pytaco</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+</pre></div>
+
+<p>Reductions that are not explicitly expressed are assumed to be over the
+smallest subexpression that captures all uses of the corresponding reduction
+variable. For instance, the computation </p>
+<p>
+<script type="math/tex; mode=display">y_{i} = A_{ij} \cdot x_{j} + z_{i}</script>
+</p>
+<p>is equivalent to </p>
+<p>
+<script type="math/tex; mode=display">y_i = \big(\sum_{j} A_{ij} \cdot x_j\big) + z_i,</script>
+</p>
+<p>whereas the computation </p>
+<p>
+<script type="math/tex; mode=display">y_{i} = A_{ij} \cdot x_{j} + z_{j}</script>
+</p>
+<p>is equivalent to </p>
+<p>
+<script type="math/tex; mode=display">y_i = \sum_{j} \big(A_{ij} \cdot x_j + z_j\big).</script>
+</p>
+<h1 id="expressing-broadcasts">Expressing Broadcasts</h1>
+<p>TACO supports computations that broadcasts tensors along any number of
+dimensions.  The following example, for instance, broadcasts the vector <code>c</code> 
+along the row dimension of matrix <code>B</code>, adding <code>c</code> to each row of <code>B</code>:</p>
+<div class="highlight"><pre><span></span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span>  <span class="n">B</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+</pre></div>
+
+<p>However, TACO does not support NumPy-style broadcasting of dimensions that have 
+a size of one.  For example, the following is not allowed:</p>
+<div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">get_index_vars</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span>  <span class="n">B</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>  <span class="c1"># ERROR!!</span>
+</pre></div>
+
+<h1 id="expressing-transposes">Expressing Transposes</h1>
+<p>Computations that transpose tensors can be expressed by rearranging the order 
+in which index variables are used to access tensor operands.  The following
+example, for instance, adds matrix <code>B</code> to the transpose of matrix <code>C</code> and
+stores the result in matrix <code>A</code>:</p>
+<div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">dense</span><span class="p">,</span> <span class="n">dense</span><span class="p">]))</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">dense</span><span class="p">,</span> <span class="n">dense</span><span class="p">]))</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">dense</span><span class="p">,</span> <span class="n">dense</span><span class="p">]))</span>
+<span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">get_index_vars</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">B</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">C</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">]</span>
+</pre></div>
+
+<p>Note, however, that sparse dimensions of tensor operands impose dependencies on
+the order in which they can be accessed, based on the order in which they are
+stored in the operand formats.  This means, for instance, that if <code>B</code> is a CSR
+matrix, then <code>B[i,j]</code> requires that the dimension indexed by <code>i</code> be accessed
+before the dimension indexed by <code>j</code>.  TACO does not support any computation
+where these constraints form a cyclic dependency.  So the same computation from
+before is not supported for CSR matrices, since the access of <code>B</code> requires that
+<code>i</code> be accessed before <code>j</code> but the access of <code>C</code> requires that <code>j</code> be accessed
+before <code>i</code>:</p>
+<div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">dense</span><span class="p">,</span> <span class="n">compressed</span><span class="p">]))</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">dense</span><span class="p">,</span> <span class="n">compressed</span><span class="p">]))</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">dense</span><span class="p">,</span> <span class="n">compressed</span><span class="p">]))</span>
+<span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">get_index_vars</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">B</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">C</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">]</span>  <span class="c1"># ERROR!!</span>
+</pre></div>
+
+<p>As an alternative, you can first explicitly transpose <code>C</code> by invoking its
+<code>transpose</code> method, storing the result in a temporary, and then perform the
+addition with the already-transposed temporary:</p>
+<div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">dense</span><span class="p">,</span> <span class="n">compressed</span><span class="p">]))</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">dense</span><span class="p">,</span> <span class="n">compressed</span><span class="p">]))</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">dense</span><span class="p">,</span> <span class="n">compressed</span><span class="p">]))</span>
+<span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">get_index_vars</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">Ct</span> <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">transpose</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>  <span class="c1"># Ct is also stored in the CSR format</span>
+<span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">B</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">Ct</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
+</pre></div>
+
+<p>Similarly, the following computation is not supported for the same reason that
+the access of <code>B</code>, which is stored in row-major order, requires <code>i</code> to be
+accessed before <code>j</code> but the access of <code>C</code>, which is stored in column-major
+order, requires <code>j</code> to be accessed before <code>i</code>:</p>
+<div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">dense</span><span class="p">,</span> <span class="n">compressed</span><span class="p">]))</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">dense</span><span class="p">,</span> <span class="n">compressed</span><span class="p">]))</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">dense</span><span class="p">,</span> <span class="n">compressed</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+<span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">get_index_vars</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">B</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>  <span class="c1"># ERROR!!</span>
+</pre></div>
+
+<p>We can again perform the same computation by invoking <code>transpose</code>, this time to
+repack <code>C</code> into the same CSR format as <code>A</code> and <code>B</code> before computing the 
+addition:</p>
+<div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">dense</span><span class="p">,</span> <span class="n">compressed</span><span class="p">]))</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">dense</span><span class="p">,</span> <span class="n">compressed</span><span class="p">]))</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">dense</span><span class="p">,</span> <span class="n">compressed</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+<span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">get_index_vars</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">Cp</span> <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">transpose</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">dense</span><span class="p">,</span> <span class="n">compressed</span><span class="p">]))</span>  <span class="c1"># Store a copy of C in the CSR format</span>
+<span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">B</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">Cp</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
+</pre></div>
+
+<h1 id="performing-the-computation">Performing the Computation</h1>
+<p>Once a tensor algebra computation has been defined, you can simply invoke the
+result tensor's <code>evaluate</code> method to perform the actual computation:</p>
+<div class="highlight"><pre><span></span><span class="n">A</span><span class="o">.</span><span class="n">evaluate</span><span class="p">()</span>
+</pre></div>
+
+<p>Under the hood, TACO will first invoke the result tensor's <code>compile</code>
+method to generate code that performs the computation.  TACO will then perform 
+the actual computation by first invoking <code>assemble</code> to compute the sparsity 
+structure of the result and subsequently invoking <code>compute</code> to compute the 
+values of the result's nonzero elements.  Of course, you can also manually 
+invoke these methods in order to more precisely control when each step happens:</p>
+<div class="highlight"><pre><span></span><span class="n">A</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="n">A</span><span class="o">.</span><span class="n">assemble</span><span class="p">()</span>
+<span class="n">A</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+</pre></div>
+
+<p>If you define a computation and then access the result without first manually
+invoking <code>evaluate</code> or <code>compile</code>/<code>assemble</code>/<code>compute</code>, TACO will automatically
+invoke the computation immediately before the result is accessed.  In the
+following example, for instance, TACO will automatically generate code to
+compute the vector addition and then also actually perform the computation
+right before <code>a[0]</code> is printed:</p>
+<div class="highlight"><pre><span></span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="pyreference.html" class="btn btn-neutral float-right" title="Reference Manual">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="pytensors.html" class="btn btn-neutral" title="Defining Tensors"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="pytensors.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="pyreference.html" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '.';</script>
+    <script src="js/theme.js" defer></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" defer></script>
+      <script src="search/main.js" defer></script>
+
+</body>
+</html>

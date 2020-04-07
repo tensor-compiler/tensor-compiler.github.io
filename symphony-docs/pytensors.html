@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="favicon.ico">
+  
+  <title>Defining Tensors - Documentation - The Tensor Algebra Compiler (TACO)</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link href="extra.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Defining Tensors";
+    var mkdocs_page_input_path = "pytensors.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="js/jquery-2.1.1.min.js" defer></script>
+  <script src="js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="index.html" class="icon icon-home"> Documentation - The Tensor Algebra Compiler (TACO)</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="index.html">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Python Library</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="tutorial.html">Tutorial</a>
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="pytensors.html">Defining Tensors</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#declaring-tensors">Declaring Tensors</a></li>
+    
+
+    <li class="toctree-l3"><a href="#defining-tensor-formats">Defining Tensor Formats</a></li>
+    
+
+    <li class="toctree-l3"><a href="#initializing-tensors">Initializing Tensors</a></li>
+    
+
+    <li class="toctree-l3"><a href="#file-io">File I/O</a></li>
+    
+
+    <li class="toctree-l3"><a href="#numpy-and-scipy-io">NumPy and SciPy I/O</a></li>
+    
+
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="pycomputations.html">Computing on Tensors</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="pyreference.html">Reference Manual</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Example Applications</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="scientific_computing.html">Scientific Computing: SpMV</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="data_analytics.html">Data Analytics: MTTKRP</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="machine_learning.html">Machine Learning: SDDMM</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="optimization.html">Strategies for Optimization</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="benchmarking.html">Guide to Benchmarking</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">Documentation - The Tensor Algebra Compiler (TACO)</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Python Library &raquo;</li>
+        
+      
+    
+    <li>Defining Tensors</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="declaring-tensors">Declaring Tensors</h1>
+<p><code>pytaco.tensor</code> objects, which represent mathematical tensors, form the core of
+the TACO Python library. You can can declare a new tensor by specifying the
+sizes of each dimension, the <a href="pytensors.html#defining-tensor-formats">format</a>
+that will be used to store the tensor, and the
+<a href="reference/rst_files/dtype_object.html">datatype</a> of the tensor's nonzero elements:</p>
+<div class="highlight"><pre><span></span><span class="c1"># Import the TACO Python library</span>
+<span class="kn">import</span> <span class="nn">pytaco</span> <span class="kn">as</span> <span class="nn">pt</span>
+<span class="kn">from</span> <span class="nn">pytaco</span> <span class="kn">import</span> <span class="n">dense</span><span class="p">,</span> <span class="n">compressed</span>
+
+<span class="c1"># Declare a new tensor of double-precision floats with dimensions </span>
+<span class="c1"># 512 x 64 x 2048, stored as a dense-sparse-sparse tensor</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">512</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">2048</span><span class="p">],</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">dense</span><span class="p">,</span> <span class="n">compressed</span><span class="p">,</span> <span class="n">compressed</span><span class="p">]),</span> <span class="n">pt</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+</pre></div>
+
+<p>The datatype can be omitted, in which case TACO will default to using
+<code>pt.float32</code> to store the tensor's nonzero elements:</p>
+<div class="highlight"><pre><span></span><span class="c1"># Declare the same tensor as before</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">512</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">2048</span><span class="p">],</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">dense</span><span class="p">,</span> <span class="n">compressed</span><span class="p">,</span> <span class="n">compressed</span><span class="p">]))</span>
+</pre></div>
+
+<p>Instead of specifying a format that is tied to the number of dimensions that a
+tensor has, we can simply specify whether all dimensions are dense or sparse:</p>
+<div class="highlight"><pre><span></span><span class="c1"># Declare a tensor where all dimensions are dense</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">512</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">2048</span><span class="p">],</span> <span class="n">dense</span><span class="p">)</span>
+
+<span class="c1"># Declare a tensor where all dimensions are sparse</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">512</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">2048</span><span class="p">],</span> <span class="n">compressed</span><span class="p">)</span>
+</pre></div>
+
+<p>Scalars, which correspond to tensors that have zero dimension, can be declared
+and initialized with an arbitrary value as demonstrated below:</p>
+<div class="highlight"><pre><span></span><span class="c1"># Declare a scalar</span>
+<span class="n">aplha</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mf">42.0</span><span class="p">)</span>
+</pre></div>
+
+<h1 id="defining-tensor-formats">Defining Tensor Formats</h1>
+<p>Conceptually, you can think of a tensor as a tree where each level (excluding
+the root) corresponding to a dimension of the tensor.  Each path from the root
+to a leaf node represents the coordinates of a tensor element and its
+corresponding value.  Which dimension of the tensor each level of the tree
+corresponds to is determined by the order in which tensor dimensions are
+stored.</p>
+<p>TACO uses a novel scheme that can describe different storage formats for a
+tensor by specifying the order in which tensor dimensions are stored and
+whether each dimension is sparse or dense.  A sparse (compressed) dimension
+stores only the subset of the dimension that contains non-zero values, using
+index arrays that are found in the compressed sparse row (CSR) matrix format.
+A dense dimension, on the other hand, conceptually stores both zeros and
+non-zeros.  This scheme is flexibile enough to express many commonly-used
+tensor storage formats:</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytaco</span> <span class="kn">as</span> <span class="nn">pt</span>
+<span class="kn">from</span> <span class="nn">pytaco</span> <span class="kn">import</span> <span class="n">dense</span><span class="p">,</span> <span class="n">compressed</span>
+
+<span class="n">dm</span>   <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">dense</span><span class="p">,</span> <span class="n">dense</span><span class="p">])</span>                        <span class="c1"># (Row-major) dense matrix format</span>
+<span class="n">csr</span>  <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">dense</span><span class="p">,</span> <span class="n">compressed</span><span class="p">])</span>                   <span class="c1"># Compressed sparse row matrix format</span>
+<span class="n">csc</span>  <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">dense</span><span class="p">,</span> <span class="n">compressed</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>           <span class="c1"># Compressed sparse column matrix format</span>
+<span class="n">dcsr</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">compressed</span><span class="p">,</span> <span class="n">compressed</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>      <span class="c1"># Doubly compressed sparse column matrix format</span>
+<span class="n">csf</span>  <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">compressed</span><span class="p">,</span> <span class="n">compressed</span><span class="p">,</span> <span class="n">compressed</span><span class="p">])</span>  <span class="c1"># Compressed sparse fiber tensor format</span>
+</pre></div>
+
+<p>As demonstrated above, you can define a new tensor storage format by creating a
+<code>pytaco.format</code> object.  This requires specifying whether each tensor dimension
+is dense or sparse as well as (optionally) the order in which dimensions should
+be stored.  TACO also predefines some common tensor formats (including 
+<code>pt.csr</code> and <code>pt.csc</code>) that you can use out of the box.</p>
+<h1 id="initializing-tensors">Initializing Tensors</h1>
+<p>Tensors can be made by using python indexing syntax. For example, one may write
+the following: You can initialize a tensor by calling its <code>insert</code> method to
+add a nonzero element to the tensor. The <code>insert</code> method takes two arguments:
+a list specifying the coordinates of the nonzero element to be added and the
+value to be inserted at that coordinate:</p>
+<div class="highlight"><pre><span></span><span class="c1"># Declare a sparse tensor</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">512</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">2048</span><span class="p">],</span> <span class="n">compressed</span><span class="p">)</span>
+
+<span class="c1"># Set A(0, 1, 0) = 42.0</span>
+<span class="n">A</span><span class="o">.</span><span class="n">insert</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="mf">42.0</span><span class="p">)</span>
+</pre></div>
+
+<p>If multiple elements are inserted at the same coordinates, they are summed 
+together:</p>
+<div class="highlight"><pre><span></span><span class="c1"># Declare a sparse tensor</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">512</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">2048</span><span class="p">],</span> <span class="n">compressed</span><span class="p">)</span>
+
+<span class="c1"># Set A(0, 1, 0) = 42.0 + 24.0 = 66.0</span>
+<span class="n">A</span><span class="o">.</span><span class="n">insert</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="mf">42.0</span><span class="p">)</span>
+<span class="n">A</span><span class="o">.</span><span class="n">insert</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="mf">24.0</span><span class="p">)</span>
+</pre></div>
+
+<p>The <code>insert</code> method adds the inserted nonzero element to a temporary buffer.
+Before a tensor can actually be used in a computation though, the <code>pack</code> method
+must be invoked to pack the tensor into the storage format that was specified
+when the tensor was first declared.  TACO will automatically do this
+immediately before the tensor is used in a computation.  You can also manually
+invoke <code>pack</code> though if you need full control over when exactly that is done:</p>
+<div class="highlight"><pre><span></span><span class="n">A</span><span class="o">.</span><span class="n">pack</span><span class="p">()</span>
+</pre></div>
+
+<p>You can then iterate over the nonzero elements of the tensor as follows:</p>
+<div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">coordinates</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">A</span><span class="p">:</span>
+  <span class="k">print</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+</pre></div>
+
+<h1 id="file-io">File I/O</h1>
+<p>Rather than manually constructing a tensor, you can load tensors directly from
+file by invoking the <code>pytaco.read</code> function:</p>
+<div class="highlight"><pre><span></span><span class="c1"># Load a dense-sparse-sparse tensor from file &quot;A.tns&quot;</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;A.tns&quot;</span><span class="p">,</span> <span class="n">pt</span><span class="o">.</span><span class="n">format</span><span class="p">([</span><span class="n">dense</span><span class="p">,</span> <span class="n">compressed</span><span class="p">,</span> <span class="n">compressed</span><span class="p">]))</span>
+</pre></div>
+
+<p>By default, <code>pytaco.read</code> returns a tensor that has already been packed into
+the specified storage format. You can optionally pass a Boolean flag as an
+argument to indicate whether the returned tensor should be packed or not: </p>
+<div class="highlight"><pre><span></span><span class="c1"># Load an unpacked tensor from file &quot;A.tns&quot;</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;A.tns&quot;</span><span class="p">,</span> <span class="n">format</span><span class="p">([</span><span class="n">dense</span><span class="p">,</span> <span class="n">compressed</span><span class="p">,</span> <span class="n">compressed</span><span class="p">]),</span> <span class="n">false</span><span class="p">)</span>
+</pre></div>
+
+<p>The loaded tensor will then remain unpacked until the <code>pack</code> method is manually 
+invoked or a computation that uses the tensor is performed.</p>
+<p>You can also write a tensor directly to file by invoking the <code>pytaco.write</code>
+function:</p>
+<div class="highlight"><pre><span></span><span class="c1"># Write tensor A to file &quot;A.tns&quot;</span>
+<span class="n">pt</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;A.tns&quot;</span><span class="p">,</span> <span class="n">A</span><span class="p">)</span>
+</pre></div>
+
+<p>TACO supports loading tensors from and storing tensors to the following file
+formats:</p>
+<ul>
+<li><a href="http://math.nist.gov/MatrixMarket/formats.html#MMformat">Matrix Market (Coordinate) Format (.mtx)</a></li>
+<li><a href="https://www.cise.ufl.edu/research/sparse/matrices/DOC/rb.pdf">Rutherford-Boeing Format (.rb)</a></li>
+<li><a href="http://frostt.io/tensors/file-formats.html">FROSTT Format (.tns)</a></li>
+</ul>
+<h1 id="numpy-and-scipy-io">NumPy and SciPy I/O</h1>
+<p>Tensors can also be initialized with either NumPy arrays or SciPy sparse (CSR 
+or CSC) matrices:</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytaco</span> <span class="kn">as</span> <span class="nn">pt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy.sparse</span>
+
+<span class="c1"># Assuming SciPy matrix is stored in CSR</span>
+<span class="n">sparse_matrix</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">load_npz</span><span class="p">(</span><span class="s1">&#39;sparse_matrix.npz&#39;</span><span class="p">)</span>
+
+<span class="c1"># Cast the matrix as a TACO tensor (also stored in CSR)</span>
+<span class="n">taco_tensor</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">from_sp_csr</span><span class="p">(</span><span class="n">sparse_matrix</span><span class="p">)</span>
+
+<span class="c1"># We can also load a NumPy array</span>
+<span class="n">np_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;arr.npy&#39;</span><span class="p">)</span>
+
+<span class="c1"># And initialize a TACO tensor from this array</span>
+<span class="n">dense_tensor</span> <span class="o">=</span> <span class="n">pt</span><span class="o">.</span><span class="n">from_array</span><span class="p">(</span><span class="n">np_array</span><span class="p">)</span>
+</pre></div>
+
+<p>We can also export TACO tensors to either NumPy arrays or SciPy sparse
+matrices:</p>
+<div class="highlight"><pre><span></span><span class="c1"># Convert the tensor to a SciPy CSR matrix</span>
+<span class="n">sparse_matrix</span> <span class="o">=</span> <span class="n">taco_tensor</span><span class="o">.</span><span class="n">to_sp_csr</span><span class="p">()</span>
+
+<span class="c1"># Convert the tensor to a NumPy array</span>
+<span class="n">np_array</span> <span class="o">=</span> <span class="n">dense_tensor</span><span class="o">.</span><span class="n">to_array</span><span class="p">()</span>
+</pre></div>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="pycomputations.html" class="btn btn-neutral float-right" title="Computing on Tensors">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="tutorial.html" class="btn btn-neutral" title="Tutorial"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="tutorial.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="pycomputations.html" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '.';</script>
+    <script src="js/theme.js" defer></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" defer></script>
+      <script src="search/main.js" defer></script>
+
+</body>
+</html>
