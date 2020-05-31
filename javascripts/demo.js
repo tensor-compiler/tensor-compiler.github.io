@@ -136,7 +136,13 @@ function demo() {
         case 'd':
           return "Dense";
         case 's':
-          return "Sparse";
+          return "Sparse (U)";
+        case 'u': 
+          return "Sparse (&#172;U)"
+        case 'q':
+          return "Singleton (U)";
+        case 'c':
+          return "Singleton (&#172;U)";
         default:
           return "";
       }
@@ -209,7 +215,13 @@ function demo() {
               listTensorsBody += "<li class=\"mdl-menu__item\" data-val=\"";
               listTensorsBody += "d\">Dense</li>";
               listTensorsBody += "<li class=\"mdl-menu__item\" data-val=\"";
-              listTensorsBody += "s\">Sparse</li>";
+              listTensorsBody += "s\">Sparse (U)</li>";
+              listTensorsBody += "<li class=\"mdl-menu__item\" data-val=\"";
+              listTensorsBody += "u\">Sparse (&#172;U)</li>";
+              listTensorsBody += "<li class=\"mdl-menu__item\" data-val=\"";
+              listTensorsBody += "q\">Singleton (U)</li>";
+              listTensorsBody += "<li class=\"mdl-menu__item\" data-val=\"";
+              listTensorsBody += "c\">Singleton (&#172;U) </li>";
               listTensorsBody += "</ul></div></li>";
             }
 
