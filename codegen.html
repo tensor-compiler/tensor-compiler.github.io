@@ -8,12 +8,15 @@
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
     <link rel="stylesheet" href="stylesheets/style.css">
     <link rel="stylesheet" href="stylesheets/getmdl-select.min.css">
+    <link rel="stylesheet" href="stylesheets/bootstrap-dropdown.css">
+    <link rel="stylesheet" href="stylesheets/dropdown.css">
     <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/styles/default.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/highlight.min.js"></script>
-    <!--<script src="javascripts/demo.min.js"></script>-->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js">
+    </script>
     <script src="javascripts/getmdl-select.min.js"></script>
     <script src="javascripts/jquery.ui.touch-punch.min.js"></script>
     <script src="javascripts/FileSaver.min.js"></script>
@@ -83,7 +86,36 @@
                     </th>
                   </tr>
                 </thead>
-                <tbody id="listTensors"></tbody>
+                <tbody id="listTensors">
+                  <!-- <tr>
+                    <td class="mdl-data-table__cell--non-numeric" width="100">
+                      <div align="center" style="font-size: 16px">y</div>
+                    </td>
+                    <td class="mdl-data-table__cell--non-numeric" style="padding: 0px">
+                      <ul id="dimsy" class="ui-state-default sortable">
+                        <li class="ui-state-default" style="width: 0px; padding: 0px"></li>
+                        <li id="dimy_0" class="ui-state-default">
+                          <div class="dropdown mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select" style="cursor: move">
+                            <input class="mdl-textfield__input format-input" id="dimy_0_select" type="text" readonly value="Dense" data-val="d" data-toggle="dropdown"/>
+                            <label for="dimy_0_select"><i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i></label>
+                            <label class="mdl-textfield__label" for="dimy_0_select">Dimension 1</label>
+                            <ul class="dropdown-menu">
+                              <li><a tabindex="-1" href="#">HTML</a></li>
+                              <li><a tabindex="-1" href="#">CSS</a></li>
+                              <li class="dropdown-submenu">
+                                <a class="test" href="#">Another dropdown <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                  <li><a href="#">3rd level dropdown</a></li>
+                                  <li><a href="#">3rd level dropdown</a></li>
+                                </ul>
+                            </li>
+                            </ul>
+                          </div>
+                        </li>
+                      </ul>
+                    </td>
+                  </tr> -->
+                </tbody>
               </table>
             </div>
             <div class="mdl-layout-spacer"></div>
@@ -148,6 +180,5 @@
         </div>
       </main>
     </div>
-
   </body>
 </html>

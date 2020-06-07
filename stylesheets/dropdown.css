@@ -1,0 +1,26 @@
+.dropdown-menu {
+  cursor: pointer;
+  top: initial;
+  min-width: 10px;
+  margin: 0;
+  padding-top: 0px;
+}
+
+.sortable .dropdown li {
+  padding: 0; 
+  font-size: 16px;
+}
+
+.sortable .dropdown li a {
+  padding: 8px 16px;
+}
+
+.dropdown-submenu {
+  position: relative;
+}
+
+.dropdown-submenu .dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -1px;
+}

@@ -138,11 +138,11 @@ function demo() {
         case 's':
           return "Sparse (U)";
         case 'u': 
-          return "Sparse (&#172;U)"
+          return "Sparse (&not;U)"
         case 'q':
           return "Singleton (U)";
         case 'c':
-          return "Singleton (&#172;U)";
+          return "Singleton (&not;U)";
         default:
           return "";
       }
@@ -185,11 +185,11 @@ function demo() {
               listTensorsBody += "<li id=\"";
               listTensorsBody += id;
               listTensorsBody += "\" class=\"ui-state-default\">";
-              listTensorsBody += "<div class=\"mdl-textfield mdl-js-textfield ";
+              listTensorsBody += "<div class=\"dropdown mdl-textfield mdl-js-textfield ";
               listTensorsBody += "mdl-textfield--floating-label getmdl-select\" ";
               listTensorsBody += "style=\"cursor: move\">";
               listTensorsBody += "<input class=\"mdl-textfield__input ";
-              listTensorsBody += "format-input\" id=\"";
+              listTensorsBody += "format-input\" data-toggle=\"dropdown\" id=\"";
               listTensorsBody += selectId;
               listTensorsBody += "\" type=\"text\" readonly ";
               listTensorsBody += "value=\"";
@@ -197,31 +197,33 @@ function demo() {
               listTensorsBody += "\" data-val=\"";
               listTensorsBody += format;
               listTensorsBody += "\"/>";
-              listTensorsBody += "<label for=\"";
-              listTensorsBody += selectId
-              listTensorsBody += "\">";
+              listTensorsBody += "<label>";
               listTensorsBody += "<i class=\"mdl-icon-toggle__label ";
               listTensorsBody += "material-icons\">keyboard_arrow_down</i>";
               listTensorsBody += "</label>";
-              listTensorsBody += "<label class=\"mdl-textfield__label\" for=\"";
-              listTensorsBody += selectId;
-              listTensorsBody += "\">Dimension ";
+              listTensorsBody += "<label class=\"mdl-textfield__label\">Dimension ";
               listTensorsBody += (dim + 1);
               listTensorsBody += "</label>";
-              listTensorsBody += "<ul class=\"mdl-menu mdl-menu--bottom-left ";
-              listTensorsBody += "mdl-js-menu\" for=\"";
+              listTensorsBody += "<ul class=\"dropdown-menu\" for=\""
               listTensorsBody += selectId;
-              listTensorsBody += "\">";
-              listTensorsBody += "<li class=\"mdl-menu__item\" data-val=\"";
-              listTensorsBody += "d\">Dense</li>";
-              listTensorsBody += "<li class=\"mdl-menu__item\" data-val=\"";
-              listTensorsBody += "s\">Sparse (U)</li>";
-              listTensorsBody += "<li class=\"mdl-menu__item\" data-val=\"";
-              listTensorsBody += "u\">Sparse (&#172;U)</li>";
-              listTensorsBody += "<li class=\"mdl-menu__item\" data-val=\"";
-              listTensorsBody += "q\">Singleton (U)</li>";
-              listTensorsBody += "<li class=\"mdl-menu__item\" data-val=\"";
-              listTensorsBody += "c\">Singleton (&#172;U) </li>";
+              listTensorsBody += "\"><li class =\"dense\"><a data-val=\""
+              listTensorsBody += "d\">Dense</a></li>";
+              listTensorsBody += "<li class=\"sparse dropdown-submenu\">";
+              listTensorsBody += "<a>Sparse";
+              listTensorsBody += "<i class=\"material-icons\" style=\"float:right\">";
+              listTensorsBody += "keyboard_arrow_right</i></a>";
+              listTensorsBody += "<ul class=\"dropdown-menu\">";
+              listTensorsBody += "<li><a data-val=\"s\">Unique</a></li>";
+              listTensorsBody += "<li><a data-val=\"u\">Not Unique</a></li>";
+              listTensorsBody += "</ul></li>";
+              listTensorsBody += "<li class=\"singleton dropdown-submenu\">";
+              listTensorsBody += "<a>Singleton";
+              listTensorsBody += "<i class=\"material-icons\" style=\"float:right\">";
+              listTensorsBody += "keyboard_arrow_right</i></a>";
+              listTensorsBody += "<ul class=\"dropdown-menu\">";
+              listTensorsBody += "<li><a data-val=\"q\">Unique</a></li>";
+              listTensorsBody += "<li><a data-val=\"c\">Not Unique</a></li>";
+              listTensorsBody += "</ul></li>";
               listTensorsBody += "</ul></div></li>";
             }
 
@@ -236,31 +238,57 @@ function demo() {
           $(".sortable").sortable({
               update: function(ev, ui) {
                 var listId = ui.item.parent().attr('id');
-                var tensor = listId.replace("dims", "");
-
-                tblFormatsView.insertCacheEntry(tensor, 
-                    tblFormatsView.createCacheEntry(listId));
-                
-                model.cancelReq();
-                model.setOutput("", "", "", "");
               }
           });
-          $(".format-input").change(function() {
-            var listId = $(this).parent().parent().parent().attr('id');
+
+          function updateCache(selectParent, val) {
+            var selectId = selectParent.attr('for');
+            var listId = selectParent.parent().parent().parent().attr('id');
             var tensor = listId.replace("dims", "");
+
+            var format = tblFormatsView.getFormatString(val);
+            format = format.replace("&not;", $("<div>").html("&not;").text());
+
+            $("#" + selectId).val(format);
+            $("#" + selectId).attr('data-val', val);
 
             tblFormatsView.insertCacheEntry(tensor, 
                 tblFormatsView.createCacheEntry(listId));
             
             model.cancelReq();
             model.setOutput("", "", "", "");
-          });
+          }
+
           for (t in model.input.tensorOrders) {
             if (model.input.tensorOrders[t] > 0) {
               tblFormatsView.insertCacheEntry(t, 
                   tblFormatsView.createCacheEntry("dims" + t));
             }
           }
+
+          $('.dropdown-submenu a').on("mouseover", function(e){
+            $(this).next('ul').show();
+          });
+
+          $('.sparse').on("mouseleave", function(e) {
+            $(this).find('ul').hide();
+          });
+
+          $('.singleton').on("mouseleave", function(e) {
+            $(this).find('ul').hide();
+          });
+          
+          $(".dense a").on("click", function(e){
+            var selectParent = $(this).parent().parent();
+            var val = $(this).attr("data-val");
+            updateCache(selectParent, val);
+          });
+
+          $('.dropdown-submenu .dropdown-menu a').on("click", function(e) {
+            var selectParent = $(this).parent().parent().parent().parent();            
+            var val = $(this).attr("data-val");
+            updateCache(selectParent, val);
+          });
 
           $("#tblFormats").show();
         } else {
@@ -470,6 +498,4 @@ function demo() {
   					assemblyGet.responseText, 
   					fullGet.responseText, "");
   });
-
-  hljs.initHighlightingOnLoad();
 }
