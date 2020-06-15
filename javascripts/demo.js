@@ -169,12 +169,12 @@ function demo() {
       if (order == 1) {
         names.push("Sparse");
       } else if (order == 2) {
-        names.push("DCSR");
+        names.push("COO");
         names.push("CSR");
-        names.push("COO");
+        names.push("DCSR");
       } else if (order >= 3) {
-        names.push("CSF");
         names.push("COO");
+        names.push("CSF");
       }
       return names; 
     },
@@ -233,9 +233,9 @@ function demo() {
             listTensorsBody += "style=\"padding: 0px\">";
             listTensorsBody += "<div class=\"dropdown mdl-textfield mdl-js-textfield ";
             listTensorsBody += "mdl-textfield--floating-label getmdl-select\" ";
-            listTensorsBody += "style=\"width: 140px; cursor: move\">";
-            listTensorsBody += "<input class=\"mdl-textfield__input ";
-            listTensorsBody += "format-input\" data-toggle=\"dropdown\" id=\"";
+            listTensorsBody += "style=\"width: 100px; cursor: move\">";
+            listTensorsBody += "<input class=\"mdl-textfield__input\" ";
+            listTensorsBody += "data-toggle=\"dropdown\" id=\"";
             listTensorsBody += formatNameId;
             listTensorsBody += "\" type=\"text\" readonly ";
             listTensorsBody += "value=\"";
@@ -276,8 +276,8 @@ function demo() {
               listTensorsBody += "<div class=\"dropdown mdl-textfield mdl-js-textfield ";
               listTensorsBody += "mdl-textfield--floating-label getmdl-select\" ";
               listTensorsBody += "style=\"cursor: move\">";
-              listTensorsBody += "<input class=\"mdl-textfield__input ";
-              listTensorsBody += "format-input\" data-toggle=\"dropdown\" id=\"";
+              listTensorsBody += "<input class=\"mdl-textfield__input\" ";
+              listTensorsBody += "data-toggle=\"dropdown\" id=\"";
               listTensorsBody += selectId;
               listTensorsBody += "\" type=\"text\" readonly ";
               listTensorsBody += "value=\"";
@@ -292,7 +292,7 @@ function demo() {
               listTensorsBody += "<label class=\"mdl-textfield__label\">Dimension ";
               listTensorsBody += (dim + 1);
               listTensorsBody += "</label>";
-              listTensorsBody += "<ul class=\"dropdown-menu\" for=\""
+              listTensorsBody += "<ul class=\"level-formats dropdown-menu\" for=\""
               listTensorsBody += selectId;
               listTensorsBody += "\"><li class =\"dense\"><a data-val=\""
               listTensorsBody += "d\">Dense</a></li>";
@@ -300,7 +300,7 @@ function demo() {
               listTensorsBody += "<a>Sparse";
               listTensorsBody += "<i class=\"material-icons\" style=\"float:right\">";
               listTensorsBody += "keyboard_arrow_right</i></a>";
-              listTensorsBody += "<ul class=\"dropdown-menu\">";
+              listTensorsBody += "<ul class=\"level-formats dropdown-menu\">";
               listTensorsBody += "<li><a data-val=\"s\">Unique</a></li>";
               listTensorsBody += "<li><a data-val=\"u\">Not Unique</a></li>";
               listTensorsBody += "</ul></li>";
@@ -308,7 +308,7 @@ function demo() {
               listTensorsBody += "<a>Singleton";
               listTensorsBody += "<i class=\"material-icons\" style=\"float:right\">";
               listTensorsBody += "keyboard_arrow_right</i></a>";
-              listTensorsBody += "<ul class=\"dropdown-menu\">";
+              listTensorsBody += "<ul class=\"level-formats dropdown-menu\">";
               listTensorsBody += "<li><a data-val=\"q\">Unique</a></li>";
               listTensorsBody += "<li><a data-val=\"c\">Not Unique</a></li>";
               listTensorsBody += "</ul></li>";
@@ -333,6 +333,9 @@ function demo() {
               var name = tblFormatsView.getFormatName(entry, model.input.tensorOrders[tensor]);
               $("#format" + tensor).val(name);
               tblFormatsView.insertNamesCacheEntry(tensor, name);
+
+              model.cancelReq();
+              model.setOutput("", "", "", "");
             }
           });
 
@@ -403,7 +406,10 @@ function demo() {
               tblFormatsView.insertLevelsCacheEntry(tensor, 
                   tblFormatsView.createEntryFromName(name, model.input.tensorOrders[tensor]));
               tblFormatsView.insertNamesCacheEntry(tensor, name);
+              
               model.updateInputViews();
+              model.cancelReq();
+              model.setOutput("", "", "", "");
             });
           });
 
