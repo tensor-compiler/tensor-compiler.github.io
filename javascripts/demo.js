@@ -113,13 +113,17 @@ function demo() {
   };
 
   var tblFormatsView = {
-    cache: {},
+    levelsCache: {},
+    namesCache: {},
     timerEvent: null,
 
-    insertCacheEntry: function(tensor, format) {
-      tblFormatsView.cache[tensor] = format;
+    insertLevelsCacheEntry: function(tensor, level) {
+      tblFormatsView.levelsCache[tensor] = level;
     },
-    createCacheEntry: function(listId) {
+    insertNamesCacheEntry: function(tensor, name) {
+      tblFormatsView.namesCache[tensor] = name;
+    },
+    createEntryFromId: function(listId) {
       var dims = $("#" + listId).sortable("toArray");
       var formats = [];
       var ordering = [];
@@ -131,7 +135,60 @@ function demo() {
 
       return { formats: formats, ordering: ordering };
     },
-    getFormatString: function(desc) {
+    createEntryFromName: function(name, order) {
+      var rules = {
+        "Dense": function(i) { return 'd'; },
+        "Sparse": function(i) { return 's'; },
+        "CSR": function(i) { return (i == 0) ? 'd' : 's'; },
+        "COO": function(i) { 
+          if (i == 0) {
+            return 'u';
+          } else if (i < order - 1) {
+            return 'c';
+          } else {
+            return 'q';
+          }
+        }
+      };  
+      rules["DCSR"] = rules["CSF"] = rules["Sparse"];
+
+      var formats = [];
+      var ordering = [];
+
+      var rule = rules[name];
+      for (var i = 0; i < order; ++i) {
+        formats.push(rule(i));
+        ordering.push(i);
+      }
+
+      return { formats: formats, ordering: ordering };
+    },
+    getFormatNamesList : function(order) {
+      var names = ["Dense"];
+
+      if (order == 1) {
+        names.push("Sparse");
+      } else if (order == 2) {
+        names.push("DCSR");
+        names.push("CSR");
+        names.push("COO");
+      } else if (order >= 3) {
+        names.push("CSF");
+        names.push("COO");
+      }
+      return names; 
+    },
+    getFormatName : function(currentEntry, order) {
+      var names = tblFormatsView.getFormatNamesList(order);
+      for (var name of names) {
+        var entry = tblFormatsView.createEntryFromName(name, order);
+        if (JSON.stringify(entry) == JSON.stringify(currentEntry)) {
+          return name;
+        } 
+      }
+      return "Custom";
+    },
+    getLevelFormatString: function(desc) {
       switch (desc) {
         case 'd':
           return "Dense";
@@ -156,11 +213,14 @@ function demo() {
         var listTensorsBody = "";
         for (t in model.input.tensorOrders) {
           var order = model.input.tensorOrders[t];
-          var cached = (tblFormatsView.cache.hasOwnProperty(t) && 
-                        tblFormatsView.cache[t].formats.length == order);
+          var cached = (tblFormatsView.levelsCache.hasOwnProperty(t) && 
+                        tblFormatsView.levelsCache[t].formats.length == order);
 
           if (order > 0) {
             var listId = "dims" + t;
+            var formatNameId = "format" + t;
+            var formatName = tblFormatsView.namesCache.hasOwnProperty(t) ? 
+                             tblFormatsView.namesCache[t] : "Dense";
 
             listTensorsBody += "<tr>";
             listTensorsBody += "<td class=\"mdl-data-table__cell--non-numeric\" ";
@@ -168,6 +228,34 @@ function demo() {
             listTensorsBody += "style=\"font-size: 16px\">";
             listTensorsBody += t;
             listTensorsBody += "</div></td>";
+
+            listTensorsBody += "<td class=\"mdl-data-table__cell--non-numeric\" ";
+            listTensorsBody += "style=\"padding: 0px\">";
+            listTensorsBody += "<div class=\"dropdown mdl-textfield mdl-js-textfield ";
+            listTensorsBody += "mdl-textfield--floating-label getmdl-select\" ";
+            listTensorsBody += "style=\"width: 140px; cursor: move\">";
+            listTensorsBody += "<input class=\"mdl-textfield__input ";
+            listTensorsBody += "format-input\" data-toggle=\"dropdown\" id=\"";
+            listTensorsBody += formatNameId;
+            listTensorsBody += "\" type=\"text\" readonly ";
+            listTensorsBody += "value=\"";
+            listTensorsBody += formatName;
+            listTensorsBody += "\"/>";
+            listTensorsBody += "<label>";
+            listTensorsBody += "<i class=\"mdl-icon-toggle__label ";
+            listTensorsBody += "material-icons\">keyboard_arrow_down</i>";
+            listTensorsBody += "</label>";
+            listTensorsBody += "<ul class=\"formats dropdown-menu\" for=\"";
+            listTensorsBody += formatNameId;
+            listTensorsBody += "\">";
+
+            for (var name of tblFormatsView.getFormatNamesList(order)) {
+              listTensorsBody += "<li><a id=\"";
+              listTensorsBody += formatNameId + "_" + name + "\" >";
+              listTensorsBody += name + "</a></li>";
+            }
+            listTensorsBody += "</div></td>";
+
             listTensorsBody += "<td class=\"mdl-data-table__cell--non-numeric\" ";
             listTensorsBody += "style=\"padding: 0px\">";
             listTensorsBody += "<ul id=\"";
@@ -177,8 +265,8 @@ function demo() {
             listTensorsBody += "style=\"width: 0px; padding: 0px\"></li>";
 
             for (var i = 0; i < order; ++i) {
-              var dim = cached ? tblFormatsView.cache[t].ordering[i] : i;
-              var format = cached ? tblFormatsView.cache[t].formats[i] : "d";
+              var dim = cached ? tblFormatsView.levelsCache[t].ordering[i] : i;
+              var level = cached ? tblFormatsView.levelsCache[t].formats[i] : "d";
               var id = "dim" + t + "_" + dim;
               var selectId = id + "_select";
 
@@ -193,9 +281,9 @@ function demo() {
               listTensorsBody += selectId;
               listTensorsBody += "\" type=\"text\" readonly ";
               listTensorsBody += "value=\"";
-              listTensorsBody += tblFormatsView.getFormatString(format);
+              listTensorsBody += tblFormatsView.getLevelFormatString(level);
               listTensorsBody += "\" data-val=\"";
-              listTensorsBody += format;
+              listTensorsBody += level;
               listTensorsBody += "\"/>";
               listTensorsBody += "<label>";
               listTensorsBody += "<i class=\"mdl-icon-toggle__label ";
@@ -236,9 +324,16 @@ function demo() {
           getmdlSelect.init(".getmdl-select");
 
           $(".sortable").sortable({
-              update: function(ev, ui) {
-                var listId = ui.item.parent().attr('id');
-              }
+            update: function(ev, ui) {
+              var listId = ui.item.parent().attr('id');
+              var id = ui.item.context.id;
+              var tensor = id.substring(3, id.indexOf("_"));
+
+              var entry = tblFormatsView.createEntryFromId(listId);
+              var name = tblFormatsView.getFormatName(entry, model.input.tensorOrders[tensor]);
+              $("#format" + tensor).val(name);
+              tblFormatsView.insertNamesCacheEntry(tensor, name);
+            }
           });
 
           function updateCache(selectParent, val) {
@@ -246,14 +341,19 @@ function demo() {
             var listId = selectParent.parent().parent().parent().attr('id');
             var tensor = listId.replace("dims", "");
 
-            var format = tblFormatsView.getFormatString(val);
-            format = format.replace("&not;", $("<div>").html("&not;").text());
+            var level = tblFormatsView.getLevelFormatString(val);
+            level = level.replace("&not;", $("<div>").html("&not;").text());
 
-            $("#" + selectId).val(format);
+            $("#" + selectId).val(level);
             $("#" + selectId).attr('data-val', val);
 
-            tblFormatsView.insertCacheEntry(tensor, 
-                tblFormatsView.createCacheEntry(listId));
+            var tensor = listId.substring(4);
+            var entry = tblFormatsView.createEntryFromId(listId);
+            var name = tblFormatsView.getFormatName(entry, model.input.tensorOrders[tensor]);
+
+            $("#format" + tensor).val(name);
+            tblFormatsView.insertNamesCacheEntry(tensor, name);
+            tblFormatsView.insertLevelsCacheEntry(tensor, entry);
             
             model.cancelReq();
             model.setOutput("", "", "", "");
@@ -261,8 +361,8 @@ function demo() {
 
           for (t in model.input.tensorOrders) {
             if (model.input.tensorOrders[t] > 0) {
-              tblFormatsView.insertCacheEntry(t, 
-                  tblFormatsView.createCacheEntry("dims" + t));
+              tblFormatsView.insertLevelsCacheEntry(t, 
+                  tblFormatsView.createEntryFromId("dims" + t));
             }
           }
 
@@ -288,6 +388,23 @@ function demo() {
             var selectParent = $(this).parent().parent().parent().parent();            
             var val = $(this).attr("data-val");
             updateCache(selectParent, val);
+          });
+
+          $(".formats a").each(function() {
+            $(this).click(function() {
+              var formatParent = $(this).parent().parent();
+              var formatId = formatParent.attr('for');
+              $("#" + formatId).val($(this).text());
+
+              var id = $(this).attr('id');
+              var tensor = id.substring(6, id.indexOf("_"));
+              var name = id.substring(id.indexOf("_") + 1);
+
+              tblFormatsView.insertLevelsCacheEntry(tensor, 
+                  tblFormatsView.createEntryFromName(name, model.input.tensorOrders[tensor]));
+              tblFormatsView.insertNamesCacheEntry(tensor, name);
+              model.updateInputViews();
+            });
           });
 
           $("#tblFormats").show();
@@ -410,34 +527,34 @@ function demo() {
       spmv: { name: "SpMV", 
         code: "y(i) = A(i,j) * x(j)",
         formats: {
-          y: { formats: ["d"], ordering: [0] },
-          A: { formats: ["d", "s"], ordering: [0, 1] },
-          x: { formats: ["d"], ordering: [0] }
+          y: { name: "Dense", levels: { formats: ["d"], ordering: [0] } },
+          A: { name: "CSR", levels: { formats: ["d", "s"], ordering: [0, 1] } },
+          x: { name: "Dense", levels: { formats: ["d"], ordering: [0] } }
         }
       },
       add: { name: "Sparse matrix addition", 
         code: "A(i,j) = B(i,j) + C(i,j)",
         formats: {
-          A: { formats: ["d", "s"], ordering: [0, 1] },
-          B: { formats: ["d", "s"], ordering: [0, 1] },
-          C: { formats: ["d", "s"], ordering: [0, 1] },
+          A: { name: "CSR", levels: { formats: ["d", "s"], ordering: [0, 1] } },
+          B: { name: "CSR", levels: { formats: ["d", "s"], ordering: [0, 1] } },
+          C: { name: "CSR", levels: { formats: ["d", "s"], ordering: [0, 1] } },
         }
       },
       ttv: { name: "Tensor-times-vector", 
         code: "A(i,j) = B(i,j,k) * c(k)",
         formats: {
-          A: { formats: ["s", "s"], ordering: [0, 1] },
-          B: { formats: ["s", "s", "s"], ordering: [0, 1, 2] },
-          c: { formats: ["d"], ordering: [0] },
+          A: { name: "DCSR", levels: { formats: ["s", "s"], ordering: [0, 1] } },
+          B: { name: "CSF", levels: { formats: ["s", "s", "s"], ordering: [0, 1, 2] } },
+          c: { name: "Dense", levels: { formats: ["d"], ordering: [0] } },
         }
       },
       mttkrp: { name: "MTTKRP", 
         code: "A(i,j) = B(i,k,l) * C(k,j) * D(l,j)",
         formats: {
-          A: { formats: ["d", "d"], ordering: [0, 1] },
-          B: { formats: ["s", "s", "s"], ordering: [0, 1, 2] },
-          C: { formats: ["d", "d"], ordering: [0, 1] },
-          D: { formats: ["d", "d"], ordering: [0, 1] },
+          A: { name: "Dense", levels: { formats: ["d", "d"], ordering: [0, 1] } },
+          B: { name: "CSF", levels: { formats: ["s", "s", "s"], ordering: [0, 1, 2] } },
+          C: { name: "Dense", levels: { formats: ["d", "d"], ordering: [0, 1] } },
+          D: { name: "Dense", levels: { formats: ["d", "d"], ordering: [0, 1] } },
         }
       }
   };
@@ -476,7 +593,8 @@ function demo() {
       var setExample = function() {
         $("#txtExpr").val(code);
         for (var tensor in formats) {
-          tblFormatsView.insertCacheEntry(tensor, formats[tensor]);
+          tblFormatsView.insertLevelsCacheEntry(tensor, formats[tensor].levels);
+          tblFormatsView.insertNamesCacheEntry(tensor, formats[tensor].name);
         }
         model.setInput(code);
       };
