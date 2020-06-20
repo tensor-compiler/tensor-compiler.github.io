@@ -87,7 +87,7 @@
                   <tr>
                     <th class="mdl-data-table__cell--non-numeric" width="100">
                       <div align="center" style="position:relative"><big>Tensor</big></div></th>
-                    <th class="mdl-data-table__cell--non-numeric" width="120px" 
+                    <th class="mdl-data-table__cell--non-numeric" width="175px" 
                       style="padding-left: 0px">
                       <div style="display:inline"><big>Format&nbsp;</big></div>
                     </th>
@@ -101,15 +101,15 @@
                         <div id="helpMenu" class="help-menu mdl-menu mdl-js-menu mdl-js-ripple-effect" for="btnHelp">
                           <p>
                             <strong>Dense</strong> levels store the size of the dimension $(N)$ and encode the coordinates in the interval $[0, N)$.
-                            <img src="images/dense.png" class="centered-img" style="height: 35px">
+                            <img src="images/dense-arrays.jpg" class="centered-img" style="height: 25px; padding-top:10px">
                           </p>
                           <p>
                             <strong>Sparse</strong> levels store coordinates in a segment of the $\texttt{crd}$ array, with segment bounds stored in the $\texttt{pos}$ array.
-                            <img src="images/sparse.png" class="centered-img" style="height: 60px">
+                            <img src="images/compressed-arrays.jpg" class="centered-img" style="height: 50px; padding-top:10px">
                           </p> 
                           <p>
                             <strong>Singleton</strong> levels store individual coordinates (with no siblings) in the $\texttt{crd}$ array.
-                            <img src="images/singleton.png" class="centered-img" style="height: 40px">
+                            <img src="images/singleton-arrays.jpg" class="centered-img" style="height: 25px; padding-top:10px">
                           </p>
                           <p> 
                             A level is <strong>unique (U)</strong> if no collection of coordinates that share the same ancestors contains duplicates, and it is <strong>not unique (&not;U)</strong> otherwise.

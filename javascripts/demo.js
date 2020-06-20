@@ -136,42 +136,57 @@ function demo() {
       return { formats: formats, ordering: ordering };
     },
     createEntryFromName: function(name, order) {
-      var rules = {
-        "Dense": function(i) { return 'd'; },
-        "Sparse": function(i) { return 's'; },
-        "CSR": function(i) { return (i == 0) ? 'd' : 's'; },
-        "COO": function(i) { 
-          if (i == 0) {
-            return 'u';
-          } else if (i < order - 1) {
-            return 'c';
-          } else {
-            return 'q';
-          }
-        }
-      };  
-      rules["DCSR"] = rules["CSF"] = rules["Sparse"];
-
       var formats = [];
       var ordering = [];
 
-      var rule = rules[name];
+      var rule = tblFormatsView.getFormatNameRule(name, order);
       for (var i = 0; i < order; ++i) {
         formats.push(rule(i));
-        ordering.push(i);
+        if (name == "CSC" || name == "DCSC") {
+          ordering.push(order - i - 1);
+        } else {
+          ordering.push(i);
+        }
       }
 
       return { formats: formats, ordering: ordering };
     },
+    getFormatNameRule : function(name, order) {
+      switch (name) {
+        case "Sparse array":
+        case "DCSR":
+        case "DCSC":
+        case "CSF": 
+          return function(i) { return 's'; };
+        case "CSR":
+        case "CSC":
+          return function(i) { return (i == 0) ? 'd' : 's'; }; 
+        case "COO": 
+          return function(i) { 
+            if (i == 0) {
+              return 'u';
+            } else if (i < order - 1) {
+              return 'c';
+            } else {
+              return 'q';
+            }
+          };
+        case "Dense array":
+        default: 
+          return function(i) { return 'd'; };
+      }
+    },
     getFormatNamesList : function(order) {
-      var names = ["Dense"];
+      var names = ["Dense array"];
 
       if (order == 1) {
-        names.push("Sparse");
+        names.push("Sparse array");
       } else if (order == 2) {
         names.push("COO");
         names.push("CSR");
+        names.push("CSC");
         names.push("DCSR");
+        names.push("DCSC");
       } else if (order >= 3) {
         names.push("COO");
         names.push("CSF");
@@ -193,9 +208,9 @@ function demo() {
         case 'd':
           return "Dense";
         case 's':
-          return "Sparse (U)";
+          return "Compressed (U)";
         case 'u': 
-          return "Sparse (&not;U)"
+          return "Compressed (&not;U)"
         case 'q':
           return "Singleton (U)";
         case 'c':
@@ -233,7 +248,7 @@ function demo() {
             listTensorsBody += "style=\"padding: 0px\">";
             listTensorsBody += "<div class=\"dropdown mdl-textfield mdl-js-textfield ";
             listTensorsBody += "mdl-textfield--floating-label getmdl-select\" ";
-            listTensorsBody += "style=\"width: 100px; cursor: move\">";
+            listTensorsBody += "style=\"width: 155px; cursor: move\">";
             listTensorsBody += "<input class=\"mdl-textfield__input\" ";
             listTensorsBody += "data-toggle=\"dropdown\" id=\"";
             listTensorsBody += formatNameId;
@@ -297,7 +312,7 @@ function demo() {
               listTensorsBody += "\"><li class =\"dense\"><a data-val=\""
               listTensorsBody += "d\">Dense</a></li>";
               listTensorsBody += "<li class=\"sparse dropdown-submenu\">";
-              listTensorsBody += "<a>Sparse";
+              listTensorsBody += "<a>Compressed";
               listTensorsBody += "<i class=\"material-icons\" style=\"float:right\">";
               listTensorsBody += "keyboard_arrow_right</i></a>";
               listTensorsBody += "<ul class=\"level-formats dropdown-menu\">";
@@ -533,9 +548,9 @@ function demo() {
       spmv: { name: "SpMV", 
         code: "y(i) = A(i,j) * x(j)",
         formats: {
-          y: { name: "Dense", levels: { formats: ["d"], ordering: [0] } },
+          y: { name: "Dense array", levels: { formats: ["d"], ordering: [0] } },
           A: { name: "CSR", levels: { formats: ["d", "s"], ordering: [0, 1] } },
-          x: { name: "Dense", levels: { formats: ["d"], ordering: [0] } }
+          x: { name: "Dense array", levels: { formats: ["d"], ordering: [0] } }
         }
       },
       add: { name: "Sparse matrix addition", 
@@ -551,16 +566,16 @@ function demo() {
         formats: {
           A: { name: "DCSR", levels: { formats: ["s", "s"], ordering: [0, 1] } },
           B: { name: "CSF", levels: { formats: ["s", "s", "s"], ordering: [0, 1, 2] } },
-          c: { name: "Dense", levels: { formats: ["d"], ordering: [0] } },
+          c: { name: "Dense array", levels: { formats: ["d"], ordering: [0] } },
         }
       },
       mttkrp: { name: "MTTKRP", 
         code: "A(i,j) = B(i,k,l) * C(k,j) * D(l,j)",
         formats: {
-          A: { name: "Dense", levels: { formats: ["d", "d"], ordering: [0, 1] } },
+          A: { name: "Dense array", levels: { formats: ["d", "d"], ordering: [0, 1] } },
           B: { name: "CSF", levels: { formats: ["s", "s", "s"], ordering: [0, 1, 2] } },
-          C: { name: "Dense", levels: { formats: ["d", "d"], ordering: [0, 1] } },
-          D: { name: "Dense", levels: { formats: ["d", "d"], ordering: [0, 1] } },
+          C: { name: "Dense array", levels: { formats: ["d", "d"], ordering: [0, 1] } },
+          D: { name: "Dense array", levels: { formats: ["d", "d"], ordering: [0, 1] } },
         }
       }
   };
