@@ -2,13 +2,18 @@
     "docs": [
         {
             "location": "/index.html", 
-            "text": "TACO\n is a library for performing sparse and\ndense linear algebra and tensor algebra computations. The computations can\nrange from relatively simple ones like sparse matrix-vector multiplication to\nmore complex ones like matricized tensor times Khatri-Rao product.  All these\ncomputations can be performed on any mix of dense and sparse tensors. Under the\nhood, TACO automatically generates efficient code to perform these\ncomputations.\n\n\nThe sidebar to the left links to documentation for the TACO Python library as\nwell as some examples demonstrating how TACO can be used in real-world\napplications.\n\n\nSystem Requirements\n\n\n\n\nA C compiler that supports C99, such as GCC or Clang\n\n\nSupport for OpenMP is also required if parallel execution is desired\n\n\n\n\n\n\nPython 3 with NumPy and SciPy", 
+            "text": "TACO\n is a library for performing sparse and\ndense linear algebra and tensor algebra computations. The computations can\nrange from relatively simple ones like sparse matrix-vector multiplication to\nmore complex ones like matricized tensor times Khatri-Rao product.  All these\ncomputations can be performed on any mix of dense and sparse tensors. Under the\nhood, TACO automatically generates efficient code to perform these\ncomputations.\n\n\nThe sidebar to the left links to documentation for the TACO C++ and Python\nlibraries as well as some examples demonstrating how TACO can be used in\nreal-world applications.\n\n\nSystem Requirements\n\n\n\n\nA C compiler that supports C99, such as GCC or Clang\n\n\nSupport for OpenMP is also required if parallel execution is desired\n\n\n\n\n\n\nPython 3 with NumPy and SciPy (for the Python library)\n\n\n\n\nGetting Help\n\n\nQuestions and bug reports can be submitted \nhere\n.", 
             "title": "Home"
         }, 
         {
             "location": "/index.html#system-requirements", 
-            "text": "A C compiler that supports C99, such as GCC or Clang  Support for OpenMP is also required if parallel execution is desired    Python 3 with NumPy and SciPy", 
+            "text": "A C compiler that supports C99, such as GCC or Clang  Support for OpenMP is also required if parallel execution is desired    Python 3 with NumPy and SciPy (for the Python library)", 
             "title": "System Requirements"
+        }, 
+        {
+            "location": "/index.html#getting-help", 
+            "text": "Questions and bug reports can be submitted  here .", 
+            "title": "Getting Help"
         }, 
         {
             "location": "/tensors/index.html", 
