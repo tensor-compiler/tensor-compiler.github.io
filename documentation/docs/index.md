@@ -6,16 +6,16 @@ computations can be performed on any mix of dense and sparse tensors. Under the
 hood, TACO automatically generates efficient code to perform these
 computations.
 
-The sidebar to the left links to documentation for the TACO Python library as
-well as some examples demonstrating how TACO can be used in real-world
-applications.
+The sidebar to the left links to documentation for the TACO C++ and Python
+libraries as well as some examples demonstrating how TACO can be used in
+real-world applications.
 
 # System Requirements
 
 * A C compiler that supports C99, such as GCC or Clang
     * Support for OpenMP is also required if parallel execution is desired
-* Python 3 with NumPy and SciPy
+* Python 3 with NumPy and SciPy (for the Python library)
 
-<!--# Getting Help
+# Getting Help
 
-Questions and bug reports can be submitted [here](https://github.com/tensor-compiler/taco/issues).-->
+Questions and bug reports can be submitted [here](https://github.com/tensor-compiler/taco/issues).
