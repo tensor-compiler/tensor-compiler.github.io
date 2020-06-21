@@ -3,8 +3,8 @@
 
     
     <url>
-     <loc>/</loc>
-     <lastmod>2017-12-02</lastmod>
+     <loc>/index.html</loc>
+     <lastmod>2020-06-21</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -12,14 +12,14 @@
     
         
     <url>
-     <loc>/tensors/</loc>
-     <lastmod>2017-12-02</lastmod>
+     <loc>/tensors/index.html</loc>
+     <lastmod>2020-06-21</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
-     <loc>/computations/</loc>
-     <lastmod>2017-12-02</lastmod>
+     <loc>/computations/index.html</loc>
+     <lastmod>2020-06-21</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -28,23 +28,59 @@
     
         
     <url>
-     <loc>/scientific_computing/</loc>
-     <lastmod>2017-12-02</lastmod>
+     <loc>/tutorial/index.html</loc>
+     <lastmod>2020-06-21</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
-     <loc>/machine_learning/</loc>
-     <lastmod>2017-12-02</lastmod>
+     <loc>/pytensors/index.html</loc>
+     <lastmod>2020-06-21</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
-     <loc>/data_analytics/</loc>
-     <lastmod>2017-12-02</lastmod>
+     <loc>/pycomputations/index.html</loc>
+     <lastmod>2020-06-21</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
+    <url>
+     <loc>/pyreference/index.html</loc>
+     <lastmod>2020-06-21</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    
+
+    
+        
+    <url>
+     <loc>/scientific_computing/index.html</loc>
+     <lastmod>2020-06-21</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>/data_analytics/index.html</loc>
+     <lastmod>2020-06-21</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>/machine_learning/index.html</loc>
+     <lastmod>2020-06-21</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    
+
+    
+    <url>
+     <loc>/optimization/index.html</loc>
+     <lastmod>2020-06-21</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
     
 
 </urlset>

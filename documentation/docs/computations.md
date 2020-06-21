@@ -1,6 +1,6 @@
 # Specifying Tensor Algebra Computations
 
-Tensor algebra computations can be expressed in taco with tensor index notation, which on a high level describes how each element in the output tensor can be computed from elements in the input tensors. As an example, matrix addition can be expressed in index notation as 
+Tensor algebra computations can be expressed in taco with tensor index notation, which at a high level describes how each element in the output tensor can be computed from elements in the input tensors. As an example, matrix addition can be expressed in index notation as 
 
 ```c++
 A(i,j) = B(i,j) + C(i,j)
