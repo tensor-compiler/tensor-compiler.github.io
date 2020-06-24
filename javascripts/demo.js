@@ -260,6 +260,7 @@ function demo() {
             listTensorsBody += "<i class=\"mdl-icon-toggle__label ";
             listTensorsBody += "material-icons\">keyboard_arrow_down</i>";
             listTensorsBody += "</label>";
+            listTensorsBody += "<label class=\"mdl-textfield__label\"></label>";
             listTensorsBody += "<ul class=\"formats dropdown-menu\" for=\"";
             listTensorsBody += formatNameId;
             listTensorsBody += "\">";
@@ -269,7 +270,7 @@ function demo() {
               listTensorsBody += formatNameId + "_" + name + "\" >";
               listTensorsBody += name + "</a></li>";
             }
-            listTensorsBody += "</div></td>";
+            listTensorsBody += "</ul></div></td>";
 
             listTensorsBody += "<td class=\"mdl-data-table__cell--non-numeric\" ";
             listTensorsBody += "style=\"padding: 0px\">";
