@@ -105,7 +105,7 @@ void deinit_taco_tensor_t(taco_tensor_t* t) {
   free(t->mode_ordering);
   free(t->mode_types);
   free(t);
-};
+}
 #endif
 
 int compute(taco_tensor_t *y, taco_tensor_t *A, taco_tensor_t *x) {
