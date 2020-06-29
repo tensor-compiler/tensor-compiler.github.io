@@ -256,7 +256,7 @@ function demo() {
             listTensorsBody += "value=\"";
             listTensorsBody += formatName;
             listTensorsBody += "\"/>";
-            listTensorsBody += "<label>";
+            listTensorsBody += "<label data-toggle=\"dropdown\">";
             listTensorsBody += "<i class=\"mdl-icon-toggle__label ";
             listTensorsBody += "material-icons\">keyboard_arrow_down</i>";
             listTensorsBody += "</label>";
@@ -301,7 +301,7 @@ function demo() {
               listTensorsBody += "\" data-val=\"";
               listTensorsBody += level;
               listTensorsBody += "\"/>";
-              listTensorsBody += "<label>";
+              listTensorsBody += "<label data-toggle=\"dropdown\">";
               listTensorsBody += "<i class=\"mdl-icon-toggle__label ";
               listTensorsBody += "material-icons\">keyboard_arrow_down</i>";
               listTensorsBody += "</label>";
