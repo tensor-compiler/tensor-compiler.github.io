@@ -7,5 +7,5 @@ If, on the other hand, you would like to run the notebooks on your computer, ple
 1. Install [Python 3](https://www.python.org/downloads/). 
 2. Intall [Jupyter](https://jupyter.org/install).
 3. Install [NumPy and SciPy](https://scipy.org/install.html).
-4. Install [PyTaco](https://github.com/tensor-compiler/taco/tree/second-taco). Be sure to clone the `second-taco` branch. 
+4. Install [PyTaco](https://github.com/tensor-compiler/taco/). Follow the instructions to build taco with the Python API.
 5. Clone the repository with the [tutorials](https://github.com/tensor-compiler/taco-jupyter-notebooks). 

@@ -9,7 +9,7 @@
   
   <link rel="shortcut icon" href="../favicon.ico">
   
-  <title>Data Analytics: MTTKRP - Documentation - The Tensor Algebra Compiler (TACO)</title>
+  <title>Tutorial - Documentation - The Tensor Algebra Compiler (TACO)</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -19,9 +19,9 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Data Analytics: MTTKRP";
-    var mkdocs_page_input_path = "data_analytics.md";
-    var mkdocs_page_url = "/data_analytics/index.html";
+    var mkdocs_page_name = "Tutorial";
+    var mkdocs_page_input_path = "tutorial.md";
+    var mkdocs_page_url = "/tutorial/index.html";
   </script>
   
   <script src="../js/jquery-2.1.1.min.js"></script>
@@ -73,9 +73,12 @@
 		
     <span class="caption-text">Python Library</span>
     <ul class="subnav">
-                <li class="">
+                <li class=" current">
                     
-    <a class="" href="../tutorial/index.html">Tutorial</a>
+    <a class="current" href="index.html">Tutorial</a>
+    <ul class="subnav">
+            
+    </ul>
                 </li>
                 <li class="">
                     
@@ -100,12 +103,9 @@
                     
     <a class="" href="../scientific_computing/index.html">Scientific Computing: SpMV</a>
                 </li>
-                <li class=" current">
+                <li class="">
                     
-    <a class="current" href="index.html">Data Analytics: MTTKRP</a>
-    <ul class="subnav">
-            
-    </ul>
+    <a class="" href="../data_analytics/index.html">Data Analytics: MTTKRP</a>
                 </li>
                 <li class="">
                     
@@ -141,11 +141,11 @@
     
       
         
-          <li>Example Applications &raquo;</li>
+          <li>Python Library &raquo;</li>
         
       
     
-    <li>Data Analytics: MTTKRP</li>
+    <li>Tutorial</li>
     <li class="wy-breadcrumbs-aside">
       
     </li>
@@ -155,56 +155,16 @@
           <div role="main">
             <div class="section">
               
-                <p>Matricized tensor times Khatri-Rao product (MTTKRP) is a bottleneck operation
-in various algorithms - such as Alternating Least Squares - for computing
-sparse tensor factorizations like the Canonical Polyadic Decomposition.
-Mathematically, mode-1 MTTKRP (for three-dimensional tensors) can be expressed 
-as </p>
-<p>
-<script type="math/tex; mode=display">A = B_{(1)} (D \odot C),</script>
-</p>
-<p>where <script type="math/tex">A</script>, <script type="math/tex">C</script>, and <script type="math/tex">D</script> are typically dense matrices, <script type="math/tex">B</script> is a
-three-dimensional tensor (matricizied along the first mode), and <script type="math/tex">\odot</script>
-denotes the Khatri-Rao product. This operation can also be expressed in <a href="../pycomputations/index.html#specifying-tensor-algebra-computations">index
-notation</a> as </p>
-<p>
-<script type="math/tex; mode=display">A_{ij} = B_{ikl} \cdot D_{lj} \cdot C_{kj}.</script>
-</p>
-<p>You can use the TACO Python library to easily and efficiently compute MTTKRP,
-as shown here:</p>
-<pre class="highlight"><code class="language-python">import pytaco as pt
-import numpy as np
-from pytaco import compressed, dense
-
-# Define formats for storing the sparse tensor and dense matrices
-csf = pt.format([compressed, compressed, compressed])
-rm  = pt.format([dense, dense])
-
-# Load a sparse three-dimensional tensor from file (stored in the FROSTT
-# format) and store it as a compressed sparse fiber tensor. The tensor in this
-# example can be download from: http://frostt.io/tensors/nell-2/
-B = pt.read("nell-2.tns", csf);
-
-# Generate two random matrices using NumPy and pass them into TACO
-C = pt.from_array(np.random.uniform(size=(B.shape[1], 25)))
-D = pt.from_array(np.random.uniform(size=(B.shape[2], 25)))
-
-# Declare the result to be a dense matrix
-A = pt.tensor([B.shape[0], 25], rm)
-
-# Declare index vars
-i, j, k, l = get_index_vars(4)
-
-# Define the MTTKRP computation
-A[i, j] = B[i, k, l] * D[l, j] * C[k, j]
-
-# Perform the MTTKRP computation and write the result to file
-pt.write("A.tns", A)</code></pre>
-
-<p>When you run the above Python program, TACO will generate code under the hood
-that efficiently performs the computation in one shot.  This lets TACO avoid
-materializing the intermediate Khatri-Rao product, thus reducing the amount of
-memory accesses and speeding up the computation.</p>
+                <p>The linked Jupyter notebooks proivde an interactive introduction to the Python TACO library, including how to initialize tensors, define mode formats, and perform computations. There are three notebooks, which differ mainly in the final extended example: <a href="https://mybinder.org/v2/gh/tensor-compiler/taco-jupyter-notebooks/master?filepath=Taco%20Tutorial%20via%20SpMV.ipynb">SpMV</a> (useful for scientific computing), <a href="https://mybinder.org/v2/gh/tensor-compiler/taco-jupyter-notebooks/master?filepath=Taco%20Tutorial%20via%20SDDMM.ipynb">SDDMM</a> (machine learning), and <a href="https://mybinder.org/v2/gh/tensor-compiler/taco-jupyter-notebooks/master?filepath=Taco%20Tutorial%20via%20MTTKRP.ipynb">MTTKRP</a> (data analytics).</p>
+<p>These notebooks are hosted online and <strong>do not require any installation</strong>; i.e., they can be run without having PyTaco, Jupyter, or even Python locally. However, they may take a minute or two to build.</p>
+<p>If, on the other hand, you would like to run the notebooks on your computer, please do the following: </p>
+<ol>
+<li>Install <a href="https://www.python.org/downloads/">Python 3</a>. </li>
+<li>Intall <a href="https://jupyter.org/install">Jupyter</a>.</li>
+<li>Install <a href="https://scipy.org/install.html">NumPy and SciPy</a>.</li>
+<li>Install <a href="https://github.com/tensor-compiler/taco/">PyTaco</a>. Follow the instructions to build taco with the Python API.</li>
+<li>Clone the repository with the <a href="https://github.com/tensor-compiler/taco-jupyter-notebooks">tutorials</a>. </li>
+</ol>
               
             </div>
           </div>
@@ -212,10 +172,10 @@ memory accesses and speeding up the computation.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../machine_learning/index.html" class="btn btn-neutral float-right" title="Machine Learning: SDDMM">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../pytensors/index.html" class="btn btn-neutral float-right" title="Defining Tensors">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../scientific_computing/index.html" class="btn btn-neutral" title="Scientific Computing: SpMV"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../computations/index.html" class="btn btn-neutral" title="Computing on Tensors"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -241,10 +201,10 @@ memory accesses and speeding up the computation.</p>
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="../scientific_computing/index.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../computations/index.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../machine_learning/index.html" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../pytensors/index.html" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
