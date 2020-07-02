@@ -48,8 +48,10 @@ class Handler(BaseHTTPRequestHandler):
         response['error'] = 'Server is unable to process the request in a timely manner'
         logFile = "/home/ubuntu/timeout.log"
       except subprocess.CalledProcessError as e:
-        response['error'] = re.compile(':\n .*\n').search(e.output.decode()).group()[3:-1]
-        if response['error'].strip() == "":
+        search = re.compile(':\n .*\n').search(e.output.decode())
+        if search is not None: 
+          response['error'] = search.group()[3:-1]
+        else: 
           response['error'] = 'Expression is currently not supported'
         logFile = "/home/ubuntu/errors.log"
       except:

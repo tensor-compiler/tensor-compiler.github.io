@@ -8,17 +8,26 @@
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
     <link rel="stylesheet" href="stylesheets/style.css">
     <link rel="stylesheet" href="stylesheets/getmdl-select.min.css">
+    <link rel="stylesheet" href="stylesheets/bootstrap-dropdown.css">
+    <link rel="stylesheet" href="stylesheets/dropdown.css">
     <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/styles/default.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/highlight.min.js"></script>
-    <!--<script src="javascripts/demo.min.js"></script>-->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js">
+    </script>
     <script src="javascripts/getmdl-select.min.js"></script>
     <script src="javascripts/jquery.ui.touch-punch.min.js"></script>
     <script src="javascripts/FileSaver.min.js"></script>
     <script src="javascripts/parser.js"></script>
     <script src="javascripts/demo.js"></script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+    <script type="text/javascript"
+      src="http://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
   </head>
   <body>
     <!-- Always shows a header, even in smaller screens. -->
@@ -76,14 +85,43 @@
               <table class="mdl-data-table mdl-js-data-table" style="width: 100%; margin-bottom: 8px">
                 <thead>
                   <tr>
-                    <th class="mdl-data-table__cell--non-numeric" width="100"><div align="center" style="position:relative; top:-1px"><big>Tensor</big></div></th>
-                    <th class="mdl-data-table__cell--non-numeric" style="padding-left: 7px">
+                    <th class="mdl-data-table__cell--non-numeric" width="100">
+                      <div align="center" style="position:relative"><big>Tensor</big></div></th>
+                    <th class="mdl-data-table__cell--non-numeric" width="175px" 
+                      style="padding-left: 0px">
                       <div style="display:inline"><big>Format&nbsp;</big></div>
-                      <div style="display:inline">(reorder dimensions by dragging the drop-down menus)</div>
+                    </th>
+                    <th class="mdl-data-table__cell--non-numeric" style="padding-left: 7px">
+                      <div style="display:inline"><big>Level Formats&nbsp;</big></div>
+                      <div style="display:inline; margin-right:10px">(reorder dimensions by dragging the drop-down menus)</div>
+                      <div style="display:inline; vertical-align: middle">
+                        <button id="btnHelp" class="help-btn mdl-button mdl-js-button mdl-button--icon">
+                          <i class="material-icons" style="font-size:20px">help_outline</i>
+                        </button>
+                        <div id="helpMenu" class="help-menu mdl-menu mdl-js-menu mdl-js-ripple-effect" for="btnHelp">
+                          <p>
+                            <strong>Dense</strong> levels store the size of the dimension $(N)$ and encode the coordinates in the interval $[0, N)$.
+                            <img src="images/dense-arrays.jpg" class="centered-img" style="height: 25px; padding-top:10px">
+                          </p>
+                          <p>
+                            <strong>Sparse</strong> levels store coordinates in a segment of the $\texttt{crd}$ array, with segment bounds stored in the $\texttt{pos}$ array.
+                            <img src="images/compressed-arrays.jpg" class="centered-img" style="height: 50px; padding-top:10px">
+                          </p> 
+                          <p>
+                            <strong>Singleton</strong> levels store individual coordinates (with no siblings) in the $\texttt{crd}$ array.
+                            <img src="images/singleton-arrays.jpg" class="centered-img" style="height: 25px; padding-top:10px">
+                          </p>
+                          <p> 
+                            A level is <strong>unique (U)</strong> if no collection of coordinates that share the same ancestors contains duplicates, and it is <strong>not unique (&not;U)</strong> otherwise.
+                          </p>
+                          <p style="margin-bottom: 0"> More info on taco's tensor formats can be found <a href="http://tensor-compiler.org/chou-oopsla18-taco-formats.pdf">here</a>.</p>
+                        </div>
+                      </div>
                     </th>
                   </tr>
                 </thead>
-                <tbody id="listTensors"></tbody>
+                <tbody id="listTensors">
+                </tbody>
               </table>
             </div>
             <div class="mdl-layout-spacer"></div>
@@ -148,6 +186,5 @@
         </div>
       </main>
     </div>
-
   </body>
 </html>
