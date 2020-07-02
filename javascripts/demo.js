@@ -161,7 +161,7 @@ function demo() {
         case "CSR":
         case "CSC":
           return function(i) { return (i == 0) ? 'd' : 's'; }; 
-        case "COO": 
+        case "Sorted COO": 
           return function(i) { 
             if (i == 0) {
               return 'u';
@@ -182,13 +182,13 @@ function demo() {
       if (order == 1) {
         names.push("Sparse array");
       } else if (order == 2) {
-        names.push("COO");
+        names.push("Sorted COO");
         names.push("CSR");
         names.push("CSC");
         names.push("DCSR");
         names.push("DCSC");
       } else if (order >= 3) {
-        names.push("COO");
+        names.push("Sorted COO");
         names.push("CSF");
       }
       return names; 
