@@ -118,17 +118,14 @@ int compute(taco_tensor_t *y, taco_tensor_t *A, taco_tensor_t *x) {
   int x1_dimension = (int)(x->dimensions[0]);
   double* restrict x_vals = (double*)(x->vals);
 
-  #pragma omp parallel for schedule(static)
-  for (int32_t py = 0; py < y1_dimension; py++) {
-    y_vals[py] = 0.0;
-  }
-
   #pragma omp parallel for schedule(runtime)
   for (int32_t i = 0; i < A1_dimension; i++) {
+    double y_val = 0.0;
     for (int32_t jA = A2_pos[i]; jA < A2_pos[(i + 1)]; jA++) {
       int32_t j = A2_crd[jA];
-      y_vals[i] = y_vals[i] + A_vals[jA] * x_vals[j];
+      y_val += A_vals[jA] * x_vals[j];
     }
+    y_vals[i] = y_val;
   }
   return 0;
 }
@@ -156,17 +153,14 @@ int evaluate(taco_tensor_t *y, taco_tensor_t *A, taco_tensor_t *x) {
   int32_t y_capacity = y1_dimension;
   y_vals = (double*)malloc(sizeof(double) * y_capacity);
 
-  #pragma omp parallel for schedule(static)
-  for (int32_t py = 0; py < y_capacity; py++) {
-    y_vals[py] = 0.0;
-  }
-
   #pragma omp parallel for schedule(runtime)
   for (int32_t i = 0; i < A1_dimension; i++) {
+    double y_val = 0.0;
     for (int32_t jA = A2_pos[i]; jA < A2_pos[(i + 1)]; jA++) {
       int32_t j = A2_crd[jA];
-      y_vals[i] = y_vals[i] + A_vals[jA] * x_vals[j];
+      y_val += A_vals[jA] * x_vals[j];
     }
+    y_vals[i] = y_val;
   }
 
   y->vals = (uint8_t*)y_vals;
@@ -174,8 +168,9 @@ int evaluate(taco_tensor_t *y, taco_tensor_t *A, taco_tensor_t *x) {
 }
 
 /*
- * The `pack` functions convert coordinate and value arrays in COO format to
- * the specified input format.
+ * The `pack` functions convert coordinate and value arrays in COO format,
+ * with nonzeros sorted lexicographically by their coordinates, to the
+ * specified input format.
  *
  * The `unpack` function converts the specified output format to coordinate
  * and value arrays in COO format.
@@ -223,12 +218,12 @@ int pack_A(taco_tensor_t *A, int* A_COO1_pos, int* A_COO1_crd, int* A_COO2_crd, 
         jA_COO++;
       }
       if (A_capacity <= jA) {
-        A_vals = (double*)realloc(A_vals, sizeof(double) * A_capacity * 2);
+        A_vals = (double*)realloc(A_vals, sizeof(double) * (A_capacity * 2));
         A_capacity *= 2;
       }
       A_vals[jA] = A_COO_val;
       if (A2_crd_size <= jA) {
-        A2_crd = (int32_t*)realloc(A2_crd, sizeof(int32_t) * A2_crd_size * 2);
+        A2_crd = (int32_t*)realloc(A2_crd, sizeof(int32_t) * (A2_crd_size * 2));
         A2_crd_size *= 2;
       }
       A2_crd[jA] = j;
@@ -299,12 +294,12 @@ int unpack(int** y_COO1_pos_ptr, int** y_COO1_crd_ptr, double** y_COO_vals_ptr, 
 
   for (int32_t i = 0; i < y1_dimension; i++) {
     if (y_COO_capacity <= iy_COO) {
-      y_COO_vals = (double*)realloc(y_COO_vals, sizeof(double) * y_COO_capacity * 2);
+      y_COO_vals = (double*)realloc(y_COO_vals, sizeof(double) * (y_COO_capacity * 2));
       y_COO_capacity *= 2;
     }
     y_COO_vals[iy_COO] = y_vals[i];
     if (y_COO1_crd_size <= iy_COO) {
-      y_COO1_crd = (int32_t*)realloc(y_COO1_crd, sizeof(int32_t) * y_COO1_crd_size * 2);
+      y_COO1_crd = (int32_t*)realloc(y_COO1_crd, sizeof(int32_t) * (y_COO1_crd_size * 2));
       y_COO1_crd_size *= 2;
     }
     y_COO1_crd[iy_COO] = i;

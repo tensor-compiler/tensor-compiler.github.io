@@ -5,72 +5,471 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include <math.h>
+#include <complex.h>
+#include <string.h>
 #define TACO_MIN(_a,_b) ((_a) < (_b) ? (_a) : (_b))
+#define TACO_MAX(_a,_b) ((_a) > (_b) ? (_a) : (_b))
+#define TACO_DEREF(_a) (((___context___*)(*__ctx__))->_a)
 #ifndef TACO_TENSOR_T_DEFINED
 #define TACO_TENSOR_T_DEFINED
-typedef enum { taco_dim_dense, taco_dim_sparse } taco_dim_t;
+typedef enum { taco_mode_dense, taco_mode_sparse } taco_mode_t;
 typedef struct {
-  int32_t     order;      // tensor order (number of dimensions)
-  int32_t*    dims;       // tensor dimensions
-  taco_dim_t* dim_types;  // dimension storage types
-  int32_t     csize;      // component size
-  int32_t*    dim_order;  // dimension storage order
-  uint8_t***  indices;    // tensor index data (per dimension)
-  uint8_t*    vals;       // tensor values
+  int32_t      order;         // tensor order (number of modes)
+  int32_t*     dimensions;    // tensor dimensions
+  int32_t      csize;         // component size
+  int32_t*     mode_ordering; // mode storage ordering
+  taco_mode_t* mode_types;    // mode storage types
+  uint8_t***   indices;       // tensor index data (per mode)
+  uint8_t*     vals;          // tensor values
+  int32_t      vals_size;     // values array size
 } taco_tensor_t;
 #endif
+int cmp(const void *a, const void *b) {
+  return *((const int*)a) - *((const int*)b);
+}
+int taco_binarySearchAfter(int *array, int arrayStart, int arrayEnd, int target) {
+  if (array[arrayStart] >= target) {
+    return arrayStart;
+  }
+  int lowerBound = arrayStart; // always < target
+  int upperBound = arrayEnd; // always >= target
+  while (upperBound - lowerBound > 1) {
+    int mid = (upperBound + lowerBound) / 2;
+    int midValue = array[mid];
+    if (midValue < target) {
+      lowerBound = mid;
+    }
+    else if (midValue > target) {
+      upperBound = mid;
+    }
+    else {
+      return mid;
+    }
+  }
+  return upperBound;
+}
+int taco_binarySearchBefore(int *array, int arrayStart, int arrayEnd, int target) {
+  if (array[arrayEnd] <= target) {
+    return arrayEnd;
+  }
+  int lowerBound = arrayStart; // always <= target
+  int upperBound = arrayEnd; // always > target
+  while (upperBound - lowerBound > 1) {
+    int mid = (upperBound + lowerBound) / 2;
+    int midValue = array[mid];
+    if (midValue < target) {
+      lowerBound = mid;
+    }
+    else if (midValue > target) {
+      upperBound = mid;
+    }
+    else {
+      return mid;
+    }
+  }
+  return lowerBound;
+}
+taco_tensor_t* init_taco_tensor_t(int32_t order, int32_t csize,
+                                  int32_t* dimensions, int32_t* mode_ordering,
+                                  taco_mode_t* mode_types) {
+  taco_tensor_t* t = (taco_tensor_t *) malloc(sizeof(taco_tensor_t));
+  t->order         = order;
+  t->dimensions    = (int32_t *) malloc(order * sizeof(int32_t));
+  t->mode_ordering = (int32_t *) malloc(order * sizeof(int32_t));
+  t->mode_types    = (taco_mode_t *) malloc(order * sizeof(taco_mode_t));
+  t->indices       = (uint8_t ***) malloc(order * sizeof(uint8_t***));
+  t->csize         = csize;
+  for (int32_t i = 0; i < order; i++) {
+    t->dimensions[i]    = dimensions[i];
+    t->mode_ordering[i] = mode_ordering[i];
+    t->mode_types[i]    = mode_types[i];
+    switch (t->mode_types[i]) {
+      case taco_mode_dense:
+        t->indices[i] = (uint8_t **) malloc(1 * sizeof(uint8_t **));
+        break;
+      case taco_mode_sparse:
+        t->indices[i] = (uint8_t **) malloc(2 * sizeof(uint8_t **));
+        break;
+    }
+  }
+  return t;
+}
+void deinit_taco_tensor_t(taco_tensor_t* t) {
+  for (int i = 0; i < t->order; i++) {
+    free(t->indices[i]);
+  }
+  free(t->indices);
+  free(t->dimensions);
+  free(t->mode_ordering);
+  free(t->mode_types);
+  free(t);
+}
 #endif
 
+int compute(taco_tensor_t *A, taco_tensor_t *B, taco_tensor_t *C, taco_tensor_t *D) {
+  int A1_dimension = (int)(A->dimensions[0]);
+  int A2_dimension = (int)(A->dimensions[1]);
+  double* restrict A_vals = (double*)(A->vals);
+  int* restrict B1_pos = (int*)(B->indices[0][0]);
+  int* restrict B1_crd = (int*)(B->indices[0][1]);
+  int* restrict B2_pos = (int*)(B->indices[1][0]);
+  int* restrict B2_crd = (int*)(B->indices[1][1]);
+  int* restrict B3_pos = (int*)(B->indices[2][0]);
+  int* restrict B3_crd = (int*)(B->indices[2][1]);
+  double* restrict B_vals = (double*)(B->vals);
+  int C1_dimension = (int)(C->dimensions[0]);
+  int C2_dimension = (int)(C->dimensions[1]);
+  double* restrict C_vals = (double*)(C->vals);
+  int D1_dimension = (int)(D->dimensions[0]);
+  int D2_dimension = (int)(D->dimensions[1]);
+  double* restrict D_vals = (double*)(D->vals);
+
+  #pragma omp parallel for schedule(static)
+  for (int32_t pA = 0; pA < (A1_dimension * A2_dimension); pA++) {
+    A_vals[pA] = 0.0;
+  }
+
+  #pragma omp parallel for schedule(runtime)
+  for (int32_t iB = B1_pos[0]; iB < B1_pos[1]; iB++) {
+    int32_t i = B1_crd[iB];
+    for (int32_t kB = B2_pos[iB]; kB < B2_pos[(iB + 1)]; kB++) {
+      int32_t k = B2_crd[kB];
+      for (int32_t lB = B3_pos[kB]; lB < B3_pos[(kB + 1)]; lB++) {
+        int32_t l = B3_crd[lB];
+        for (int32_t j = 0; j < D2_dimension; j++) {
+          int32_t jA = i * A2_dimension + j;
+          int32_t jC = k * C2_dimension + j;
+          int32_t jD = l * D2_dimension + j;
+          A_vals[jA] = A_vals[jA] + (B_vals[lB] * C_vals[jC]) * D_vals[jD];
+        }
+      }
+    }
+  }
+  return 0;
+}
+
 int assemble(taco_tensor_t *A, taco_tensor_t *B, taco_tensor_t *C, taco_tensor_t *D) {
-  int A1_size = *(int*)(A->indices[0][0]);
-  int A2_size = *(int*)(A->indices[1][0]);
+  int A1_dimension = (int)(A->dimensions[0]);
+  int A2_dimension = (int)(A->dimensions[1]);
   double* restrict A_vals = (double*)(A->vals);
 
-  A_vals = (double*)malloc(sizeof(double) * (A1_size * A2_size));
+  A_vals = (double*)malloc(sizeof(double) * (A1_dimension * A2_dimension));
 
   A->vals = (uint8_t*)A_vals;
   return 0;
 }
 
-int compute(taco_tensor_t *A, taco_tensor_t *B, taco_tensor_t *C, taco_tensor_t *D) {
-  int A1_size = *(int*)(A->indices[0][0]);
-  int A2_size = *(int*)(A->indices[1][0]);
+int evaluate(taco_tensor_t *A, taco_tensor_t *B, taco_tensor_t *C, taco_tensor_t *D) {
+  int A1_dimension = (int)(A->dimensions[0]);
+  int A2_dimension = (int)(A->dimensions[1]);
   double* restrict A_vals = (double*)(A->vals);
   int* restrict B1_pos = (int*)(B->indices[0][0]);
-  int* restrict B1_idx = (int*)(B->indices[0][1]);
+  int* restrict B1_crd = (int*)(B->indices[0][1]);
   int* restrict B2_pos = (int*)(B->indices[1][0]);
-  int* restrict B2_idx = (int*)(B->indices[1][1]);
+  int* restrict B2_crd = (int*)(B->indices[1][1]);
   int* restrict B3_pos = (int*)(B->indices[2][0]);
-  int* restrict B3_idx = (int*)(B->indices[2][1]);
+  int* restrict B3_crd = (int*)(B->indices[2][1]);
   double* restrict B_vals = (double*)(B->vals);
-  int C1_size = *(int*)(C->indices[0][0]);
-  int C2_size = *(int*)(C->indices[1][0]);
+  int C1_dimension = (int)(C->dimensions[0]);
+  int C2_dimension = (int)(C->dimensions[1]);
   double* restrict C_vals = (double*)(C->vals);
-  int D1_size = *(int*)(D->indices[0][0]);
-  int D2_size = *(int*)(D->indices[1][0]);
+  int D1_dimension = (int)(D->dimensions[0]);
+  int D2_dimension = (int)(D->dimensions[1]);
   double* restrict D_vals = (double*)(D->vals);
 
-  for (int32_t pA = 0; pA < (A1_size * A2_size); pA++) {
-    A_vals[pA] = 0;
+  int32_t A_capacity = A1_dimension * A2_dimension;
+  A_vals = (double*)malloc(sizeof(double) * A_capacity);
+
+  #pragma omp parallel for schedule(static)
+  for (int32_t pA = 0; pA < A_capacity; pA++) {
+    A_vals[pA] = 0.0;
   }
-  #pragma omp parallel for schedule(dynamic, 16)
-  for (int32_t pB1 = B1_pos[0]; pB1 < B1_pos[1]; pB1++) {
-    int32_t iB = B1_idx[pB1];
-    for (int32_t pB2 = B2_pos[pB1]; pB2 < B2_pos[pB1 + 1]; pB2++) {
-      int32_t kB = B2_idx[pB2];
-      for (int32_t pB3 = B3_pos[pB2]; pB3 < B3_pos[pB2 + 1]; pB3++) {
-        int32_t lB = B3_idx[pB3];
-        double tl = B_vals[pB3];
-        for (int32_t jC = 0; jC < C2_size; jC++) {
-          int32_t pC2 = (kB * C2_size) + jC;
-          int32_t pD2 = (lB * D2_size) + jC;
-          int32_t pA2 = (iB * A2_size) + jC;
-          A_vals[pA2] = A_vals[pA2] + ((tl * C_vals[pC2]) * D_vals[pD2]);
+
+  #pragma omp parallel for schedule(runtime)
+  for (int32_t iB = B1_pos[0]; iB < B1_pos[1]; iB++) {
+    int32_t i = B1_crd[iB];
+    for (int32_t kB = B2_pos[iB]; kB < B2_pos[(iB + 1)]; kB++) {
+      int32_t k = B2_crd[kB];
+      for (int32_t lB = B3_pos[kB]; lB < B3_pos[(kB + 1)]; lB++) {
+        int32_t l = B3_crd[lB];
+        for (int32_t j = 0; j < D2_dimension; j++) {
+          int32_t jA = i * A2_dimension + j;
+          int32_t jC = k * C2_dimension + j;
+          int32_t jD = l * D2_dimension + j;
+          A_vals[jA] = A_vals[jA] + (B_vals[lB] * C_vals[jC]) * D_vals[jD];
         }
       }
     }
   }
 
+  A->vals = (uint8_t*)A_vals;
+  return 0;
+}
+
+/*
+ * The `pack` functions convert coordinate and value arrays in COO format,
+ * with nonzeros sorted lexicographically by their coordinates, to the
+ * specified input format.
+ *
+ * The `unpack` function converts the specified output format to coordinate
+ * and value arrays in COO format.
+ *
+ * For both, the `_COO_pos` arrays contain two elements, where the first is 0
+ * and the second is the number of nonzeros in the tensor.
+ */
+
+int pack_B(taco_tensor_t *B, int* B_COO1_pos, int* B_COO1_crd, int* B_COO2_crd, int* B_COO3_crd, double* B_COO_vals) {
+  int* restrict B1_pos = (int*)(B->indices[0][0]);
+  int* restrict B1_crd = (int*)(B->indices[0][1]);
+  int* restrict B2_pos = (int*)(B->indices[1][0]);
+  int* restrict B2_crd = (int*)(B->indices[1][1]);
+  int* restrict B3_pos = (int*)(B->indices[2][0]);
+  int* restrict B3_crd = (int*)(B->indices[2][1]);
+  double* restrict B_vals = (double*)(B->vals);
+
+  B1_pos = (int32_t*)malloc(sizeof(int32_t) * 2);
+  B1_pos[0] = 0;
+  int32_t B1_crd_size = 1048576;
+  B1_crd = (int32_t*)malloc(sizeof(int32_t) * B1_crd_size);
+  int32_t iB = 0;
+  int32_t B2_pos_size = 1048576;
+  B2_pos = (int32_t*)malloc(sizeof(int32_t) * B2_pos_size);
+  B2_pos[0] = 0;
+  int32_t B2_crd_size = 1048576;
+  B2_crd = (int32_t*)malloc(sizeof(int32_t) * B2_crd_size);
+  int32_t kB = 0;
+  int32_t B3_pos_size = 1048576;
+  B3_pos = (int32_t*)malloc(sizeof(int32_t) * B3_pos_size);
+  B3_pos[0] = 0;
+  int32_t B3_crd_size = 1048576;
+  B3_crd = (int32_t*)malloc(sizeof(int32_t) * B3_crd_size);
+  int32_t lB = 0;
+  int32_t B_capacity = 1048576;
+  B_vals = (double*)malloc(sizeof(double) * B_capacity);
+
+
+  int32_t iB_COO = B_COO1_pos[0];
+  int32_t pB_COO1_end = B_COO1_pos[1];
+
+  while (iB_COO < pB_COO1_end) {
+    int32_t i = B_COO1_crd[iB_COO];
+    int32_t B_COO1_segend = iB_COO + 1;
+    while (B_COO1_segend < pB_COO1_end && B_COO1_crd[B_COO1_segend] == i) {
+      B_COO1_segend++;
+    }
+    int32_t pB2_begin = kB;
+    if (B2_pos_size <= iB + 1) {
+      B2_pos = (int32_t*)realloc(B2_pos, sizeof(int32_t) * (B2_pos_size * 2));
+      B2_pos_size *= 2;
+    }
+
+    int32_t kB_COO = iB_COO;
+
+    while (kB_COO < B_COO1_segend) {
+      int32_t k = B_COO2_crd[kB_COO];
+      int32_t B_COO2_segend = kB_COO + 1;
+      while (B_COO2_segend < B_COO1_segend && B_COO2_crd[B_COO2_segend] == k) {
+        B_COO2_segend++;
+      }
+      int32_t pB3_begin = lB;
+      if (B3_pos_size <= kB + 1) {
+        B3_pos = (int32_t*)realloc(B3_pos, sizeof(int32_t) * (B3_pos_size * 2));
+        B3_pos_size *= 2;
+      }
+
+      int32_t lB_COO = kB_COO;
+
+      while (lB_COO < B_COO2_segend) {
+        int32_t l = B_COO3_crd[lB_COO];
+        double B_COO_val = B_COO_vals[lB_COO];
+        lB_COO++;
+        while (lB_COO < B_COO2_segend && B_COO3_crd[lB_COO] == l) {
+          B_COO_val += B_COO_vals[lB_COO];
+          lB_COO++;
+        }
+        if (B_capacity <= lB) {
+          B_vals = (double*)realloc(B_vals, sizeof(double) * (B_capacity * 2));
+          B_capacity *= 2;
+        }
+        B_vals[lB] = B_COO_val;
+        if (B3_crd_size <= lB) {
+          B3_crd = (int32_t*)realloc(B3_crd, sizeof(int32_t) * (B3_crd_size * 2));
+          B3_crd_size *= 2;
+        }
+        B3_crd[lB] = l;
+        lB++;
+      }
+
+      B3_pos[kB + 1] = lB;
+      if (pB3_begin < lB) {
+        if (B2_crd_size <= kB) {
+          B2_crd = (int32_t*)realloc(B2_crd, sizeof(int32_t) * (B2_crd_size * 2));
+          B2_crd_size *= 2;
+        }
+        B2_crd[kB] = k;
+        kB++;
+      }
+      kB_COO = B_COO2_segend;
+    }
+
+    B2_pos[iB + 1] = kB;
+    if (pB2_begin < kB) {
+      if (B1_crd_size <= iB) {
+        B1_crd = (int32_t*)realloc(B1_crd, sizeof(int32_t) * (B1_crd_size * 2));
+        B1_crd_size *= 2;
+      }
+      B1_crd[iB] = i;
+      iB++;
+    }
+    iB_COO = B_COO1_segend;
+  }
+
+  B1_pos[1] = iB;
+
+  B->indices[0][0] = (uint8_t*)(B1_pos);
+  B->indices[0][1] = (uint8_t*)(B1_crd);
+  B->indices[1][0] = (uint8_t*)(B2_pos);
+  B->indices[1][1] = (uint8_t*)(B2_crd);
+  B->indices[2][0] = (uint8_t*)(B3_pos);
+  B->indices[2][1] = (uint8_t*)(B3_crd);
+  B->vals = (uint8_t*)B_vals;
+  return 0;
+}
+
+int pack_C(taco_tensor_t *C, int* C_COO1_pos, int* C_COO1_crd, int* C_COO2_crd, double* C_COO_vals) {
+  int C1_dimension = (int)(C->dimensions[0]);
+  int C2_dimension = (int)(C->dimensions[1]);
+  double* restrict C_vals = (double*)(C->vals);
+
+  int32_t C_capacity = C1_dimension * C2_dimension;
+  C_vals = (double*)malloc(sizeof(double) * C_capacity);
+
+  #pragma omp parallel for schedule(static)
+  for (int32_t pC = 0; pC < C_capacity; pC++) {
+    C_vals[pC] = 0.0;
+  }
+
+  int32_t kC_COO = C_COO1_pos[0];
+  int32_t pC_COO1_end = C_COO1_pos[1];
+
+  while (kC_COO < pC_COO1_end) {
+    int32_t k = C_COO1_crd[kC_COO];
+    int32_t C_COO1_segend = kC_COO + 1;
+    while (C_COO1_segend < pC_COO1_end && C_COO1_crd[C_COO1_segend] == k) {
+      C_COO1_segend++;
+    }
+    int32_t jC_COO = kC_COO;
+
+    while (jC_COO < C_COO1_segend) {
+      int32_t j = C_COO2_crd[jC_COO];
+      double C_COO_val = C_COO_vals[jC_COO];
+      jC_COO++;
+      while (jC_COO < C_COO1_segend && C_COO2_crd[jC_COO] == j) {
+        C_COO_val += C_COO_vals[jC_COO];
+        jC_COO++;
+      }
+      int32_t jC = k * C2_dimension + j;
+      C_vals[jC] = C_COO_val;
+    }
+    kC_COO = C_COO1_segend;
+  }
+
+  C->vals = (uint8_t*)C_vals;
+  return 0;
+}
+
+int pack_D(taco_tensor_t *D, int* D_COO1_pos, int* D_COO1_crd, int* D_COO2_crd, double* D_COO_vals) {
+  int D1_dimension = (int)(D->dimensions[0]);
+  int D2_dimension = (int)(D->dimensions[1]);
+  double* restrict D_vals = (double*)(D->vals);
+
+  int32_t D_capacity = D1_dimension * D2_dimension;
+  D_vals = (double*)malloc(sizeof(double) * D_capacity);
+
+  #pragma omp parallel for schedule(static)
+  for (int32_t pD = 0; pD < D_capacity; pD++) {
+    D_vals[pD] = 0.0;
+  }
+
+  int32_t lD_COO = D_COO1_pos[0];
+  int32_t pD_COO1_end = D_COO1_pos[1];
+
+  while (lD_COO < pD_COO1_end) {
+    int32_t l = D_COO1_crd[lD_COO];
+    int32_t D_COO1_segend = lD_COO + 1;
+    while (D_COO1_segend < pD_COO1_end && D_COO1_crd[D_COO1_segend] == l) {
+      D_COO1_segend++;
+    }
+    int32_t jD_COO = lD_COO;
+
+    while (jD_COO < D_COO1_segend) {
+      int32_t j = D_COO2_crd[jD_COO];
+      double D_COO_val = D_COO_vals[jD_COO];
+      jD_COO++;
+      while (jD_COO < D_COO1_segend && D_COO2_crd[jD_COO] == j) {
+        D_COO_val += D_COO_vals[jD_COO];
+        jD_COO++;
+      }
+      int32_t jD = l * D2_dimension + j;
+      D_vals[jD] = D_COO_val;
+    }
+    lD_COO = D_COO1_segend;
+  }
+
+  D->vals = (uint8_t*)D_vals;
+  return 0;
+}
+
+int unpack(int** A_COO1_pos_ptr, int** A_COO1_crd_ptr, int** A_COO2_crd_ptr, double** A_COO_vals_ptr, taco_tensor_t *A) {
+  int* A_COO1_pos;
+  int* A_COO1_crd;
+  int* A_COO2_crd;
+  double* A_COO_vals;
+  int A1_dimension = (int)(A->dimensions[0]);
+  int A2_dimension = (int)(A->dimensions[1]);
+  double* restrict A_vals = (double*)(A->vals);
+
+  A_COO1_pos = (int32_t*)malloc(sizeof(int32_t) * 2);
+  A_COO1_pos[0] = 0;
+  int32_t A_COO1_crd_size = 1048576;
+  A_COO1_crd = (int32_t*)malloc(sizeof(int32_t) * A_COO1_crd_size);
+  int32_t A_COO2_crd_size = 1048576;
+  A_COO2_crd = (int32_t*)malloc(sizeof(int32_t) * A_COO2_crd_size);
+  int32_t jA_COO = 0;
+  int32_t A_COO_capacity = 1048576;
+  A_COO_vals = (double*)malloc(sizeof(double) * A_COO_capacity);
+
+
+  for (int32_t i = 0; i < A1_dimension; i++) {
+    for (int32_t j = 0; j < A2_dimension; j++) {
+      if (A_COO_capacity <= jA_COO) {
+        A_COO_vals = (double*)realloc(A_COO_vals, sizeof(double) * (A_COO_capacity * 2));
+        A_COO_capacity *= 2;
+      }
+      int32_t jA = i * A2_dimension + j;
+      A_COO_vals[jA_COO] = A_vals[jA];
+      if (A_COO2_crd_size <= jA_COO) {
+        int32_t A_COO2_crd_new_size = TACO_MAX(A_COO2_crd_size * 2,(jA_COO + 1));
+        A_COO2_crd = (int32_t*)realloc(A_COO2_crd, sizeof(int32_t) * A_COO2_crd_new_size);
+        A_COO2_crd_size = A_COO2_crd_new_size;
+      }
+      A_COO2_crd[jA_COO] = j;
+      if (A_COO1_crd_size <= jA_COO) {
+        A_COO1_crd = (int32_t*)realloc(A_COO1_crd, sizeof(int32_t) * (A_COO1_crd_size * 2));
+        A_COO1_crd_size *= 2;
+      }
+      A_COO1_crd[jA_COO] = i;
+      jA_COO++;
+    }
+  }
+
+  A_COO1_pos[1] = jA_COO;
+
+  *A_COO1_pos_ptr = A_COO1_pos;
+  *A_COO1_crd_ptr = A_COO1_crd;
+  *A_COO2_crd_ptr = A_COO2_crd;
+  *A_COO_vals_ptr = A_COO_vals;
   return 0;
 }
