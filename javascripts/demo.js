@@ -235,7 +235,7 @@ function demo() {
             var listId = "dims" + t;
             var formatNameId = "format" + t;
             var formatName = tblFormatsView.namesCache.hasOwnProperty(t) ? 
-                             tblFormatsView.namesCache[t] : "Dense";
+                             tblFormatsView.namesCache[t] : "Dense array";
 
             listTensorsBody += "<tr>";
             listTensorsBody += "<td class=\"mdl-data-table__cell--non-numeric\" ";
