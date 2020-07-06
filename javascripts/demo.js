@@ -3,7 +3,8 @@ function demo() {
     input: {
       expression: "",
       tensorOrders: {},
-      error: ""
+      error: "",
+      schedule: ""
     },
     output: {
       computeLoops: "",
@@ -64,6 +65,7 @@ function demo() {
               break;
             }
           }
+          model.input.schedule = "q";
         } catch (e) {
           model.input.tensorOrders = {};
           model.input.error = "Input expression is invalid";
@@ -448,12 +450,156 @@ function demo() {
     }
   };
 
+  var tblCommandsView = {
+    id: 0,
+    commands: {"split": 4, "fuse": 3, "pos": 3, "parallelize": 3},
+
+    makeRow: function() {
+      var commandId = "command" + tblCommandsView.id;
+      var contentsId = "command" + tblCommandsView.id + "-contents"; 
+      var row = "<tr>";
+      row += "<td class=\"mdl-data-table__cell--non-numeric\""; 
+      row += "style=\"padding: 0px 20px\">";
+      row += "<div class=\"dropdown mdl-textfield mdl-js-textfield ";
+      row += "mdl-textfield--floating-label getmdl-select\" ";
+      row += "style=\"width: 120px\">";
+      row += "<input class=\"mdl-textfield__input\" ";
+      row += "data-toggle=\"dropdown\" id=\"";
+      row += commandId; 
+      row += "\" type=\"text\" readonly ";
+      row += "value=\"\">";
+      row += "<label data-toggle=\"dropdown\">";
+      row += "<i class=\"mdl-icon-toggle__label ";
+      row += "material-icons\">keyboard_arrow_down</i>";
+      row += "</label>";
+      row += "<label class=\"mdl-textfield__label\"></label>";
+      row += "<ul class=\"commands dropdown-menu\" for=\"";
+      row += commandId;
+      row += "\">";
+      row += "<li><a>fuse</a></li>";
+      row += "<li><a>pos</a></li>";
+      row += "<li><a>split</a></li>";
+      row += "<li><a>parallelize</a></li>";
+      row += "</ul></div></td>";
+      row += "<td class=\"mdl-data-table__cell--non-numeric\""; 
+      row += "style=\"width: 100%; padding: 0px 20px\" id=\"";
+      row += contentsId; 
+      row += "\"></td></tr>";
+      tblCommandsView.id++; 
+      return row; 
+    },
+    makeParameters: function(command, id) {
+      if (command == "parallelize") {
+        return tblCommandsView.makeParallelize(id);
+      }
+
+      var parameters = tblCommandsView.getParameters(command);
+      var parametersRow = "<ul class=\"ui-state-default sortable\">";
+      for (var p in parameters) {
+        var inputId = "param" + p + "-" + id; 
+        parametersRow += "<li>";
+        parametersRow += "<div class=\"schedule-input mdl-textfield mdl-js-textfield ";
+        parametersRow += "mdl-textfield--floating-label getmdl-select\""
+        parametersRow += "style=\"width:130px\">";
+        parametersRow += "<input class=\"space mdl-textfield__input\" type=\"text\" id=\""; 
+        parametersRow += inputId; 
+        parametersRow += "\"><label class=\"mdl-textfield__label\">";
+        parametersRow += parameters[p];
+        parametersRow += "</label><ul></ul>";
+        parametersRow += "</div></li>";
+        parametersRow += "<ul></ul>";
+        parametersRow += "</div></li>";
+      }
+      parametersRow += "</ul>";
+      return parametersRow; 
+    },
+    makeParallelize: function(id) {
+      var parametersRow = "<ul class=\"ui-state-default sortable\">";
+      
+      var inputId0 = "param" + 0 + "-" + id; 
+      parametersRow += "<li>";
+      parametersRow += "<div class=\"schedule-input mdl-textfield mdl-js-textfield ";
+      parametersRow += "mdl-textfield--floating-label getmdl-select\""
+      parametersRow += "style=\"width:130px\">";
+      parametersRow += "<input class=\"space mdl-textfield__input\" type=\"text\" id=\""; 
+      parametersRow += inputId0; 
+      parametersRow += "\"><label class=\"mdl-textfield__label\">";
+      parametersRow += "Parallel IndexVar";
+      parametersRow += "</label><ul></ul>";
+      parametersRow += "</div></li>";
+      parametersRow += "<ul></ul>";
+      parametersRow += "</div></li>";
+
+      var count = 1; 
+      var parameters = {
+        "Hardware": ["Not Parallel", "Default Unit", "CPU Thread", "CPU Vector"],
+        "Race Strategy": ["Ignore Races", "No Races", "Atomics", "Temporary", "Parallel Reduction"]
+      };
+
+      for (var p in parameters) {
+        var inputId = "param" + count + "-" + id; 
+        parametersRow += "<li>";
+        parametersRow += "<div class=\"schedule-input dropdown mdl-textfield mdl-js-textfield ";
+        parametersRow += "mdl-textfield--floating-label getmdl-select\" ";
+        parametersRow += "style=\"width: 155px\">";
+        parametersRow += "<input class=\"mdl-textfield__input\" ";
+        parametersRow += "data-toggle=\"dropdown\" id=\"";
+        parametersRow += inputId; 
+        parametersRow += "\" type=\"text\" readonly ";
+        parametersRow += "value=\"";
+        parametersRow += parameters[p][0];
+        parametersRow += "\"><label data-toggle=\"dropdown\">";
+        parametersRow += "<i class=\"mdl-icon-toggle__label ";
+        parametersRow += "material-icons\">keyboard_arrow_down</i>";
+        parametersRow += "</label><label class=\"mdl-textfield__label\">";
+        parametersRow += p;
+        parametersRow += "</label>";
+        parametersRow += "<label class=\"mdl-textfield__label\"></label>";
+        parametersRow += "<ul class=\"commands options dropdown-menu\" for=\"";
+        parametersRow += inputId;
+        parametersRow += "\">";
+        for (var o in parameters[p]) {
+          parametersRow += "<li><a>"; 
+          parametersRow += parameters[p][o]; 
+          parametersRow += "</a></li>";
+        }
+        parametersRow += "</ul></div></li>";
+        count++; 
+      }
+      
+      parametersRow += "</ul>";
+      return parametersRow; 
+    },
+    getParameters: function(command) {
+      switch(command) {
+        case "split":
+          return ["Split IndexVar", "Outer IndexVar", "Inner IndexVar", "Split Factor"];
+        case "fuse":
+          return ["Outer IndexVar", "Inner IndexVar", "Fused IndexVar"];
+        case "pos": 
+          return ["Original IndexVar", "Derived IndexVar", "Accessed Tensor"]; 
+      }
+    },
+    updateView: function(timeout) {
+      clearTimeout(tblFormatsView.timerEvent);
+      $("#tblCommands").on("change", "*", function() {
+        model.cancelReq();
+        model.setOutput("", "", "", "");
+      });
+    }
+  };
+
   model.addInputView(txtExprView.updateView);
   model.addInputView(tblFormatsView.updateView);
   model.addInputView(btnGetKernelView.updateView);
+  model.addInputView(tblCommandsView.updateView);
 
   $("#txtExpr").keyup(function() {
     model.setInput($("#txtExpr").val());
+  });
+
+  $("#txtSchedule").keyup(function() {
+    model.input.schedule = $("#txtSchedule").val();
   });
 
   var panelKernelsView = {
@@ -527,9 +673,32 @@ function demo() {
       }
     }
 
+    command += " -set-schedule=";
+    for (var i = 0; i < tblCommandsView.id; ++i) {
+      var c = $("#command" + i).val();
+      var tempCommand = c + "-";
+      var valid = true; 
+
+      for (var j = 0; j < tblCommandsView.commands[c]; ++j) {
+        var param = $("#param" + j + "-" + i).val().replace(" ", "");
+        if (!param) {
+          valid = false; 
+          break; 
+        } 
+        tempCommand += param + "-"; 
+      }
+
+      if (valid) {
+        // only add if user inputted all parameters
+        command += tempCommand; 
+      }
+    }
+    command += "q";
+    console.log(command);
+
     var req = $.ajax({
         type: "POST",
-        url: "http://tensor-compiler-online.csail.mit.edu",
+        url: "http://localhost:80",
         data: escape(command),
         async: true,
         cache: false,
@@ -598,20 +767,20 @@ function demo() {
   $("#listExamples").html(listExamplesBody);
 
   var getURLParam = function(key) {
-  	var url = window.location.search.substring(1);
-  	var params = url.split('&');
-  	for (var i = 0; i < params.length; ++i) {
-  		var param = params[i].split('=');
-  		if (param[0] === key) {
-  			return param[1];
-  		}
-  	}
-  	return "";
+    var url = window.location.search.substring(1);
+    var params = url.split('&');
+    for (var i = 0; i < params.length; ++i) {
+      var param = params[i].split('=');
+      if (param[0] === key) {
+        return param[1];
+      }
+    }
+    return "";
   };
 
   var demo = getURLParam("demo");
   if (!(demo in examples)) {
-  	demo = "spmv";
+    demo = "spmv";
   }
 
   for (var e in examples) {
@@ -638,8 +807,23 @@ function demo() {
   var assemblyGet = $.get(urlPrefix + "_assembly.c");
   var fullGet = $.get(urlPrefix + "_full.c");
   $.when(computeGet, assemblyGet, fullGet).done(function() {
-  	model.setOutput(computeGet.responseText, 
-  					assemblyGet.responseText, 
-  					fullGet.responseText, "");
+    model.setOutput(computeGet.responseText, 
+            assemblyGet.responseText, 
+            fullGet.responseText, "");
   });
+
+  $("#btnCommand").click(function() {    
+    $("#tblCommands > tbody:last-child").append(tblCommandsView.makeRow());
+    getmdlSelect.init(".getmdl-select");
+  });
+
+  $("#tblCommands").on("click", ".commands a", function() {
+    var command = $(this).text();
+    var commandId = $(this).parent().parent().attr("for");
+    var id = commandId.substring(7);
+
+    $("#" + commandId).val(command);
+    $("#" + commandId + "-contents").html(tblCommandsView.makeParameters(command, id));
+    getmdlSelect.init(".getmdl-select");
+  }); 
 }

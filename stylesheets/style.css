@@ -130,8 +130,11 @@ a{
   height: 320px;
 }
 
-.sortable {
+ul {
   list-style-type: none; 
+}
+
+.sortable {
   margin: 0px; 
   padding: 0px;
 }
@@ -212,4 +215,16 @@ a{
   display: block;
   margin-left: auto;
   margin-right: auto;
+}
+
+.schedule-input {
+  width: 100px;
+}
+
+.space {
+  font-family: monospace;
+}
+
+.horizontal li {
+  display: inline;
 }
