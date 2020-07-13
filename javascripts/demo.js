@@ -3,8 +3,9 @@ function demo() {
     input: {
       expression: "",
       tensorOrders: {},
-      error: "",
-      schedule: ""
+      indices: {},
+      resultAcesses: [],
+      error: ""
     },
     output: {
       computeLoops: "",
@@ -15,6 +16,7 @@ function demo() {
     req: null,
 
     inputViews: [],
+    scheduleViews: {}, 
     outputViews: [],
     reqViews: [],
 
@@ -25,6 +27,20 @@ function demo() {
     updateInputViews: function() {
       for (v in model.inputViews) {
         model.inputViews[v](400);
+      }
+    },
+    addScheduleView: function(id, newView) {
+      model.scheduleViews[id].push(newView); 
+      newView(0);
+    },
+    clearScheduleViews: function(id) {
+      model.scheduleViews[id] = [];
+    },
+    updateScheduleViews: function() {
+      for (id in model.scheduleViews) {
+        for (v in model.scheduleViews[id]) {
+          model.scheduleViews[id][v](0);
+        }
       }
     },
     addOutputView: function(newView) {
@@ -57,6 +73,8 @@ function demo() {
       } else {
         try {
           model.input.tensorOrders = parser.parse(expression);
+          model.input.indices = [...new Set(parser_indices.parse(expression))];
+          model.input.resultAccesses = [...new Set(parser_accesses.parse(expression))];
           model.input.error = "";
           for (t in model.input.tensorOrders) {
             if (model.input.tensorOrders[t] < 0) {
@@ -65,7 +83,6 @@ function demo() {
               break;
             }
           }
-          model.input.schedule = "q";
         } catch (e) {
           model.input.tensorOrders = {};
           model.input.error = "Input expression is invalid";
@@ -253,7 +270,7 @@ function demo() {
             listTensorsBody += "style=\"padding: 0px\">";
             listTensorsBody += "<div class=\"dropdown mdl-textfield mdl-js-textfield ";
             listTensorsBody += "mdl-textfield--floating-label getmdl-select\" ";
-            listTensorsBody += "style=\"width: 155px; cursor: move\">";
+            listTensorsBody += "style=\"width: 155px\">";
             listTensorsBody += "<input class=\"mdl-textfield__input\" ";
             listTensorsBody += "data-toggle=\"dropdown\" id=\"";
             listTensorsBody += formatNameId;
@@ -452,7 +469,40 @@ function demo() {
 
   var tblCommandsView = {
     id: 0,
-    commands: {"split": 4, "fuse": 3, "pos": 3, "parallelize": 3},
+    commands: {
+      split: {
+        parameters: ["Split IndexVar", "Outer IndexVar", "Inner IndexVar", "Split Factor"],
+        0: ["index dropdown", [1, "0"], [2, "1"]],
+        4: ["number"]
+      },
+      divide: {
+        parameters: ["Divided IndexVar", "Outer IndexVar", "Inner IndexVar", "Divide Factor"],
+        0: ["index dropdown", [1, "0"], [2, "1"]],
+        4: ["number"]
+      },
+      reorder: {
+        parameters: ["Reordered IndexVar", "Reordered IndexVar"],
+        0: ["index dropdown"],
+        1: ["index dropdown"],
+      },
+      pos: {
+        parameters: ["Original IndexVar", "Derived IndexVar", "Accessed Tensor"], 
+        0: ["index dropdown", [1, "pos"]],
+        2: ["access dropdown"]
+      },
+      fuse: {
+        parameters: ["Outer IndexVar", "Inner IndexVar", "Fused IndexVar"],
+        0: ["index dropdown"],
+        1: ["index dropdown"],
+        2: ["default", "f"]
+      },
+      unroll: {
+        parameters: ["Unrolled IndexVar", "Unroll Factor"],
+        0: ["index dropdown"],
+        2: ["number"]
+      }
+    },
+    indices: [],
 
     makeRow: function() {
       var commandId = "command" + tblCommandsView.id;
@@ -476,113 +526,171 @@ function demo() {
       row += "<ul class=\"commands dropdown-menu\" for=\"";
       row += commandId;
       row += "\">";
-      row += "<li><a>fuse</a></li>";
-      row += "<li><a>pos</a></li>";
-      row += "<li><a>split</a></li>";
-      row += "<li><a>parallelize</a></li>";
+      for (var c in tblCommandsView.commands) {
+        row += "<li><a>" + c + "</a></li>"
+      }
       row += "</ul></div></td>";
       row += "<td class=\"mdl-data-table__cell--non-numeric\""; 
       row += "style=\"width: 100%; padding: 0px 20px\" id=\"";
       row += contentsId; 
       row += "\"></td></tr>";
+
       tblCommandsView.id++; 
+      tblCommandsView.indices.push([]);
+
       return row; 
     },
     makeParameters: function(command, id) {
-      if (command == "parallelize") {
-        return tblCommandsView.makeParallelize(id);
-      }
-
-      var parameters = tblCommandsView.getParameters(command);
-      var parametersRow = "<ul class=\"ui-state-default sortable\">";
-      for (var p in parameters) {
-        var inputId = "param" + p + "-" + id; 
-        parametersRow += "<li>";
-        parametersRow += "<div class=\"schedule-input mdl-textfield mdl-js-textfield ";
-        parametersRow += "mdl-textfield--floating-label getmdl-select\""
-        parametersRow += "style=\"width:130px\">";
-        parametersRow += "<input class=\"space mdl-textfield__input\" type=\"text\" id=\""; 
-        parametersRow += inputId; 
-        parametersRow += "\"><label class=\"mdl-textfield__label\">";
-        parametersRow += parameters[p];
-        parametersRow += "</label><ul></ul>";
-        parametersRow += "</div></li>";
-        parametersRow += "<ul></ul>";
-        parametersRow += "</div></li>";
-      }
-      parametersRow += "</ul>";
-      return parametersRow; 
-    },
-    makeParallelize: function(id) {
-      var parametersRow = "<ul class=\"ui-state-default sortable\">";
-      
-      var inputId0 = "param" + 0 + "-" + id; 
-      parametersRow += "<li>";
-      parametersRow += "<div class=\"schedule-input mdl-textfield mdl-js-textfield ";
-      parametersRow += "mdl-textfield--floating-label getmdl-select\""
-      parametersRow += "style=\"width:130px\">";
-      parametersRow += "<input class=\"space mdl-textfield__input\" type=\"text\" id=\""; 
-      parametersRow += inputId0; 
-      parametersRow += "\"><label class=\"mdl-textfield__label\">";
-      parametersRow += "Parallel IndexVar";
-      parametersRow += "</label><ul></ul>";
-      parametersRow += "</div></li>";
-      parametersRow += "<ul></ul>";
-      parametersRow += "</div></li>";
-
-      var count = 1; 
-      var parameters = {
-        "Hardware": ["Not Parallel", "Default Unit", "CPU Thread", "CPU Vector"],
-        "Race Strategy": ["Ignore Races", "No Races", "Atomics", "Temporary", "Parallel Reduction"]
-      };
-
-      for (var p in parameters) {
-        var inputId = "param" + count + "-" + id; 
-        parametersRow += "<li>";
-        parametersRow += "<div class=\"schedule-input dropdown mdl-textfield mdl-js-textfield ";
-        parametersRow += "mdl-textfield--floating-label getmdl-select\" ";
-        parametersRow += "style=\"width: 155px\">";
-        parametersRow += "<input class=\"mdl-textfield__input\" ";
-        parametersRow += "data-toggle=\"dropdown\" id=\"";
-        parametersRow += inputId; 
-        parametersRow += "\" type=\"text\" readonly ";
-        parametersRow += "value=\"";
-        parametersRow += parameters[p][0];
-        parametersRow += "\"><label data-toggle=\"dropdown\">";
-        parametersRow += "<i class=\"mdl-icon-toggle__label ";
-        parametersRow += "material-icons\">keyboard_arrow_down</i>";
-        parametersRow += "</label><label class=\"mdl-textfield__label\">";
-        parametersRow += p;
-        parametersRow += "</label>";
-        parametersRow += "<label class=\"mdl-textfield__label\"></label>";
-        parametersRow += "<ul class=\"commands options dropdown-menu\" for=\"";
-        parametersRow += inputId;
-        parametersRow += "\">";
-        for (var o in parameters[p]) {
-          parametersRow += "<li><a>"; 
-          parametersRow += parameters[p][o]; 
-          parametersRow += "</a></li>";
+      // a normal textfield
+      function empty(parameterName, inputId, isIndexVar = true, defaultValue = "") {
+        if (defaultValue === "") {
+          console.log(isIndexVar);
         }
-        parametersRow += "</ul></div></li>";
-        count++; 
+
+        var parameter = "<li>";
+        parameter += "<div class=\"schedule-input mdl-textfield mdl-js-textfield ";
+        parameter += "mdl-textfield--floating-label getmdl-select ";
+        if (isIndexVar) {
+          parameter += "index-var"; 
+        }
+        parameter += "\">"
+        parameter += "<input class=\"space-font mdl-textfield__input\" type=\"text\" value = \""
+        parameter += defaultValue;
+        parameter += "\" id=\""; 
+        parameter += inputId; 
+        parameter += "\"><label class=\"mdl-textfield__label\">";
+        parameter += parameterName;
+        parameter += "</label><ul></ul>";
+        parameter += "</div></li>";
+        parameter += "<ul></ul>";
+        parameter += "</div></li>";
+        return parameter;
       }
+
+      // a dropdown where user can choose from input index variables
+      function indexDropdown(parameterName, inputId, dependencies) {        
+        var parameter = "<li>";
+        parameter += "<div class=\"schedule-input dropdown mdl-textfield mdl-js-textfield ";
+        parameter += "mdl-textfield--floating-label getmdl-select\">";
+        parameter += "<input class=\"space-font mdl-textfield__input\" ";
+        parameter += "data-toggle=\"dropdown\" id=\"";
+        parameter += inputId; 
+        parameter += "\" type=\"text\" readonly value=\" \">";;
+        parameter += "<label data-toggle=\"dropdown\">";
+        parameter += "<i class=\"mdl-icon-toggle__label ";
+        parameter += "material-icons\">keyboard_arrow_down</i>";
+        parameter += "</label><label class=\"mdl-textfield__label\">";
+        parameter += parameterName;
+        parameter += "</label>";
+        parameter += "<label class=\"mdl-textfield__label\"></label>";
+        parameter += "<ul class=\"space-font options dropdown-menu\" for=\"";
+        parameter += inputId;
+        parameter += "\">";
+        for (var index of model.input.indices) {
+          parameter += "<li><a>"; 
+          parameter += index; 
+          parameter += "</a></li>";
+        }
+        for (var i = 0; i < id; ++i) {
+          for (var index of tblCommandsView.indices[i]) {
+            parameter += "<li><a>"; 
+            parameter += index; 
+            parameter += "</a></li>";
+          }
+        }
+        parameter += "</ul></div></li>";
+
+        model.addScheduleView(id, function(timeout) {
+          var value = $("#" + inputId).val();
+          if (!value || !value.replace(" ", "")) { return; } // input uninitialized 
+
+          for (var d of dependencies) {
+            var dependentId = "param" + id + "-" + d[0];
+            var item = $("#" + dependentId); 
+
+            item.val(value + d[1]);
+            document.getElementById(dependentId).parentNode.MaterialTextfield.checkDirty();
+          }
+        });
+
+        return parameter;
+      }
+
+      // a dropdown where user can choose from argument tensors
+      function accessDropdown(parameterName, inputId) {
+        var parameter = "<li>";
+        parameter += "<div class=\"schedule-input dropdown mdl-textfield mdl-js-textfield ";
+        parameter += "mdl-textfield--floating-label getmdl-select\">";
+        parameter += "<input class=\"space-font mdl-textfield__input\" ";
+        parameter += "data-toggle=\"dropdown\" id=\"";
+        parameter += inputId; 
+        parameter += "\" type=\"text\" readonly value=\" \">";;
+        parameter += "<label data-toggle=\"dropdown\">";
+        parameter += "<i class=\"mdl-icon-toggle__label ";
+        parameter += "material-icons\">keyboard_arrow_down</i>";
+        parameter += "</label><label class=\"mdl-textfield__label\">";
+        parameter += parameterName;
+        parameter += "</label>";
+        parameter += "<label class=\"mdl-textfield__label\"></label>";
+        parameter += "<ul class=\"space-font options dropdown-menu\" for=\"";
+        parameter += inputId;
+        parameter += "\">";
+        for (var index of model.input.resultAccesses) {
+          parameter += "<li><a>"; 
+          parameter += index; 
+          parameter += "</a></li>";
+        }
+        parameter += "</ul></div></li>";
+        return parameter; 
+      }
+
+      var commandInfo = tblCommandsView.commands[command]; 
+      var parametersList = commandInfo["parameters"];
       
-      parametersRow += "</ul>";
-      return parametersRow; 
-    },
-    getParameters: function(command) {
-      switch(command) {
-        case "split":
-          return ["Split IndexVar", "Outer IndexVar", "Inner IndexVar", "Split Factor"];
-        case "fuse":
-          return ["Outer IndexVar", "Inner IndexVar", "Fused IndexVar"];
-        case "pos": 
-          return ["Original IndexVar", "Derived IndexVar", "Accessed Tensor"]; 
+      var parametersRow = "<ul class=\"ui-state-default sortable\">";
+      for (var p in parametersList) {
+        var parameterName = parametersList[p]; 
+        var inputId = "param" + id + "-" + p; 
+
+        var parameterInfo = commandInfo[p];
+        if (!parameterInfo) {
+          parametersRow += empty(parameterName, inputId);
+          continue; 
+        }
+        switch(parameterInfo[0]) {
+          case "index dropdown":
+            parametersRow += indexDropdown(parameterName, inputId, parameterInfo.slice(1));
+            break;
+          case "access dropdown":
+            parametersRow += accessDropdown(parameterName, inputId);
+            break;
+          case "number":
+            parametersRow += empty(parameterName, inputId, false);
+          case "default":
+            parametersRow += empty(parameterName, inputId, true, parameterInfo[1]);
+            break;         
+        }
       }
+
+      parametersRow += "</ul>";
+
+      model.addScheduleView(id, function(timeout) {
+        tblCommandsView.indices[id] = []; 
+
+        for (var p in parametersList) {
+          var item = $("#param" + id + "-" + p); 
+          var value = item.val();
+          if (item.parent().hasClass("index-var") && value) {  
+            tblCommandsView.indices[id].push(value);
+          }
+        }
+      }); 
+
+      return parametersRow; 
     },
     updateView: function(timeout) {
       clearTimeout(tblFormatsView.timerEvent);
-      $("#tblCommands").on("change", "*", function() {
+      $("#tblCommands").on("change", ".schedule-input", function() {
         model.cancelReq();
         model.setOutput("", "", "", "");
       });
@@ -596,10 +704,6 @@ function demo() {
 
   $("#txtExpr").keyup(function() {
     model.setInput($("#txtExpr").val());
-  });
-
-  $("#txtSchedule").keyup(function() {
-    model.input.schedule = $("#txtSchedule").val();
   });
 
   var panelKernelsView = {
@@ -679,8 +783,8 @@ function demo() {
       var tempCommand = c + "-";
       var valid = true; 
 
-      for (var j = 0; j < tblCommandsView.commands[c]; ++j) {
-        var param = $("#param" + j + "-" + i).val().replace(" ", "");
+      for (var j in tblCommandsView.commands[c]["parameters"]) {
+        var param = $("#param" + i + "-" + j).val().replace(" ", "");
         if (!param) {
           valid = false; 
           break; 
@@ -694,7 +798,6 @@ function demo() {
       }
     }
     command += "q";
-    console.log(command);
 
     var req = $.ajax({
         type: "POST",
@@ -822,8 +925,24 @@ function demo() {
     var commandId = $(this).parent().parent().attr("for");
     var id = commandId.substring(7);
 
+    // reset previous
+    model.clearScheduleViews(id);
+    $("#" + commandId + "-contents").html("");
+
     $("#" + commandId).val(command);
     $("#" + commandId + "-contents").html(tblCommandsView.makeParameters(command, id));
     getmdlSelect.init(".getmdl-select");
+  }); 
+
+  $("#tblCommands").on("click", ".options a", function() {
+    var option = $(this).text(); 
+    var inputId = $(this).parent().parent().attr("for");
+    $("#" + inputId).val(option);
+    document.getElementById(inputId).parentNode.MaterialTextfield.checkDirty();
+
+    model.updateScheduleViews();
+
+    model.cancelReq();
+    model.setOutput("", "", "", "");
   }); 
 }

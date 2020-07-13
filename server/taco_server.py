@@ -24,8 +24,8 @@ class Handler(BaseHTTPRequestHandler):
 
       prettyCmd = "taco \"" + cmd.replace(" ", "\" ", 1)
       
-      logFile = "/home/ubuntu/success.log"
-      tacoPath = "/home/ubuntu/taco/build/bin/taco"
+      logFile = "/Users/jwshi/Documents/UROP/success.log"
+      tacoPath = "/Users/jwshi/Documents/UROP/taco/build/bin/taco"
 
       prefix = "/tmp/" + str(threading.current_thread().ident) + "_"
       writePath = prefix + "taco_kernel.c"
@@ -54,7 +54,7 @@ class Handler(BaseHTTPRequestHandler):
         else: 
           response['error'] = 'Expression is currently not supported'
         logFile = "/home/ubuntu/errors.log"
-      except:
+      except Exception as e:
         response['error'] = 'Expression is currently not supported'
         logFile = "/home/ubuntu/errors.log"
 

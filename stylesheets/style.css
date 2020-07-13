@@ -218,10 +218,14 @@ ul {
 }
 
 .schedule-input {
-  width: 100px;
+  width: 130px;
 }
 
-.space {
+.space-font {
+  font-family: monospace;
+}
+
+.space-font li {
   font-family: monospace;
 }
 
