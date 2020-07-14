@@ -917,6 +917,8 @@ function demo() {
     command += " -set-schedule=";
     for (var i = 0; i < tblScheduleView.numRows; ++i) {
       var c = $("#schedule" + i).val();
+      if (!c) { continue; }
+
       var tempCommand = c + "-";
       var valid = true; 
 
@@ -932,7 +934,6 @@ function demo() {
       if (valid) {
         // only add if user inputted all parameters
         command += tempCommand; 
-        console.log(tempCommand);
       }
     }
     command += "q";
