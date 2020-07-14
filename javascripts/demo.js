@@ -3,9 +3,12 @@ function demo() {
     input: {
       expression: "",
       tensorOrders: {},
+      error: ""
+    },
+    schedule: {
+      scheduleMsg: "Cannot implement schedule: ",
       indices: [], 
       resultAccesses: [],
-      error: ""
     },
     output: {
       computeLoops: "",
@@ -58,8 +61,8 @@ function demo() {
       } else {
         try {
           model.input.tensorOrders = parser.parse(expression);
-          model.input.indices = [...new Set(parser_indices.parse(expression))];
-          model.input.resultAccesses = [...new Set(parser_accesses.parse(expression))];
+          model.schedule.indices = [...new Set(parser_indices.parse(expression))];
+          model.schedule.resultAccesses = [...new Set(parser_accesses.parse(expression))];
           model.input.error = "";
           for (t in model.input.tensorOrders) {
             if (model.input.tensorOrders[t] < 0) {
@@ -96,6 +99,9 @@ function demo() {
     },
     getError: function() {
       return (model.output.error !== "") ? model.output.error : model.input.error;
+    },
+    hasInputOutputError: function() {
+      return model.getError() && !model.getError().includes(model.schedule.scheduleMsg);
     }
   };
 
@@ -106,11 +112,21 @@ function demo() {
       clearTimeout(txtExprView.timerEvent);
       if (model.getError() !== "") {
         var markError = function() {
-          $("#lblError").html(model.getError());
-          $("#txtExpr").parent().addClass('is-invalid');
+          var scheduleMsg = "Cannot implement schedule: "; 
+          var error = model.getError();
+          if (error.includes(model.schedule.scheduleMsg)) {
+            error = error.substring(error.indexOf(model.schedule.scheduleMsg) 
+                                    + model.schedule.scheduleMsg.length);
+            $("#scheduleError").html(error);
+            $("#scheduleError").parent().addClass('is-invalid');
+          } else {
+            $("#lblError").html(error);
+            $("#txtExpr").parent().addClass('is-invalid');
+          }
         };
         txtExprView.timerEvent = setTimeout(markError, timeout);
       } else {
+        $("#scheduleError").parent().removeClass('is-invalid');
         $("#txtExpr").parent().removeClass('is-invalid');
       }
     }
@@ -225,9 +241,13 @@ function demo() {
     },
     updateView: function(timeout) {
       clearTimeout(tblFormatsView.timerEvent);
-      if (model.getError() !== "") {
-        var hideTable = function() { $("#tblFormats").hide(); };
-        tblFormatsView.timerEvent = setTimeout(hideTable, timeout);
+      if (model.hasInputOutputError()) {
+        var hideTables = function() { 
+          $("#tblFormats").hide(); 
+          $("#tblSchedule").hide(); 
+          tblScheduleView.clear();
+        };
+        tblFormatsView.timerEvent = setTimeout(hideTables, timeout);
       } else {
         var listTensorsBody = "";
         for (t in model.input.tensorOrders) {
@@ -479,17 +499,24 @@ function demo() {
         1: ["index dropdown"],
         2: ["default", "f"]
       },
-      unroll: {
-        parameters: ["Unrolled IndexVar", "Unroll Factor"],
-        0: ["index dropdown"],
-        1: ["number"]
-      },
       parallelize: {
         parameters: ["Parallel IndexVar", "Hardware", "Race Strategy"],
         0: ["index dropdown"],
         1: ["predefined dropdown", "Not Parallel", "Default Unit", "CPU Thread", "CPU Vector"],
         2: ["predefined dropdown", "Ignore Races", "No Races", "Atomics", "Temporary", "Parallel Reduction"]
-      }
+      },
+      bound: {
+        parameters: ["Original IndexVar", "Bounded IndexVar", "Bound", "Bound Type"],
+        0: ["index dropdown"], 
+        1: ["inferred", 0, "bound"],
+        2: ["number"],
+        3: ["predefined dropdown", "Min Exact", "Min Constraint", "Max Exact", "Max Constraint"]
+      },
+      unroll: {
+        parameters: ["Unrolled IndexVar", "Unroll Factor"],
+        0: ["index dropdown"],
+        1: ["number"]
+      },
     },
     commandsCache: {},
     inputsCache: {},
@@ -555,7 +582,7 @@ function demo() {
         parameter += "<div class=\"schedule-input mdl-textfield mdl-js-textfield ";
         parameter += "mdl-textfield--floating-label getmdl-select\">";
         parameter += "<input class=\"space-font mdl-textfield__input\" "
-        parameter += "type=\"text\" value = \"";
+        parameter += "type=\"text\" autocomplete=\"off\" value = \"";
         parameter += input; 
         parameter += "\" id=\""; 
         parameter += inputId; 
@@ -598,7 +625,7 @@ function demo() {
       // a dropdown where user can choose from input index variables
       function indexDropdown(parameterName, inputId, input) {
         var parameter = dropdown(parameterName, inputId, input);
-        for (var index of model.input.indices) {
+        for (var index of model.schedule.indices) {
           parameter += "<li><a>"; 
           parameter += index; 
           parameter += "</a></li>";
@@ -617,7 +644,7 @@ function demo() {
       // a dropdown where user can choose from argument tensors
       function accessDropdown(parameterName, inputId, input) {
         var parameter = dropdown(parameterName, inputId, input);
-        for (var access of model.input.resultAccesses) {
+        for (var access of model.schedule.resultAccesses) {
           parameter += "<li><a>"; 
           parameter += access; 
           parameter += "</a></li>";
@@ -731,11 +758,13 @@ function demo() {
 
         scheduleBody += row; 
       }
-      scheduleBody += ""
 
-      $("#tblSchedule").html(scheduleBody);
       if (scheduleBody !== "") { 
+        $("#tblSchedule").html(scheduleBody);
         getmdlSelect.init(".getmdl-select");
+        $("#tblSchedule").show();
+      } else {
+        $("#tblSchedule").hide();
       }
 
       $("tbody").sortable({ 
@@ -745,6 +774,9 @@ function demo() {
         update: function(ev, ui) {
           tblScheduleView.swapRows(ui.item.startPos, ui.item.index());
           tblScheduleView.updateView(0);
+
+          model.cancelReq();
+          model.setOutput("", "", "", "");
         }
       });
 
@@ -765,6 +797,9 @@ function demo() {
 
         tblScheduleView.insertInputsCacheEntry(row, param, $(this).val()); 
         tblScheduleView.updateView(0);
+
+        model.cancelReq();
+        model.setOutput("", "", "", "");
       });
 
       $(".options a").on("click", function(e) {
@@ -775,6 +810,9 @@ function demo() {
 
         tblScheduleView.insertInputsCacheEntry(row, param, option);
         tblScheduleView.updateView(0);
+
+        model.cancelReq();
+        model.setOutput("", "", "", "");
       }); 
 
       $(".remove-row").each(function() {
@@ -782,6 +820,9 @@ function demo() {
           var row = $(this).attr("id")[8];
           tblScheduleView.deleteRow(row);
           tblScheduleView.updateView(0);
+
+          model.cancelReq();
+          model.setOutput("", "", "", "");
         });
       });
     }
@@ -797,11 +838,6 @@ function demo() {
   model.addInputView(txtExprView.updateView);
   model.addInputView(tblFormatsView.updateView);
   model.addInputView(btnGetKernelView.updateView);
-
-  model.addInputView(function(timeout) {
-    tblScheduleView.clear();
-  });
-  model.addInputView(tblScheduleView.updateView);
 
   $("#txtExpr").keyup(function() {
     model.setInput($("#txtExpr").val());
@@ -885,7 +921,7 @@ function demo() {
       var valid = true; 
 
       for (var j in tblScheduleView.commands[c]["parameters"]) {
-        var param = $("#param" + i + "-" + j).val();
+        var param = $("#param" + i + "-" + j).val().replace(" ", "");
         if (!param) {
           valid = false; 
           break; 
@@ -896,6 +932,7 @@ function demo() {
       if (valid) {
         // only add if user inputted all parameters
         command += tempCommand; 
+        console.log(tempCommand);
       }
     }
     command += "q";
