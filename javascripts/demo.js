@@ -234,8 +234,11 @@ function demo() {
           if (order > 0) {
             var listId = "dims" + t;
             var formatNameId = "format" + t;
-            var formatName = tblFormatsView.namesCache.hasOwnProperty(t) ? 
-                             tblFormatsView.namesCache[t] : "Dense array";
+            var namesList = tblFormatsView.getFormatNamesList(order);
+
+            var nameCached = (cached && tblFormatsView.namesCache.hasOwnProperty(t) &&
+                              namesList.concat(["Custom"]).includes(tblFormatsView.namesCache[t]));
+            var formatName = nameCached ? tblFormatsView.namesCache[t] : "Dense array";
 
             listTensorsBody += "<tr>";
             listTensorsBody += "<td class=\"mdl-data-table__cell--non-numeric\" ";
@@ -265,7 +268,7 @@ function demo() {
             listTensorsBody += formatNameId;
             listTensorsBody += "\">";
 
-            for (var name of tblFormatsView.getFormatNamesList(order)) {
+            for (var name of namesList) {
               listTensorsBody += "<li><a id=\"";
               listTensorsBody += formatNameId + "_" + name + "\" >";
               listTensorsBody += name + "</a></li>";
@@ -380,6 +383,7 @@ function demo() {
 
           for (t in model.input.tensorOrders) {
             if (model.input.tensorOrders[t] > 0) {
+              tblFormatsView.insertNamesCacheEntry(t, $("#format" + t).val());
               tblFormatsView.insertLevelsCacheEntry(t, 
                   tblFormatsView.createEntryFromId("dims" + t));
             }
