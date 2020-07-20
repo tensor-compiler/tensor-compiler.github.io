@@ -6,7 +6,6 @@ function demo() {
       error: ""
     },
     schedule: {
-      scheduleMsg: "Cannot implement schedule: ",
       indices: [], 
       resultAccesses: [],
     },
@@ -99,9 +98,6 @@ function demo() {
     },
     getError: function() {
       return (model.output.error !== "") ? model.output.error : model.input.error;
-    },
-    hasInputOutputError: function() {
-      return model.getError() && !model.getError().includes(model.schedule.scheduleMsg);
     }
   };
 
@@ -111,22 +107,12 @@ function demo() {
     updateView: function(timeout) {
       clearTimeout(txtExprView.timerEvent);
       if (model.getError() !== "") {
-        var markError = function() {
-          var scheduleMsg = "Cannot implement schedule: "; 
-          var error = model.getError();
-          if (error.includes(model.schedule.scheduleMsg)) {
-            error = error.substring(error.indexOf(model.schedule.scheduleMsg) 
-                                    + model.schedule.scheduleMsg.length);
-            $("#scheduleError").html(error);
-            $("#scheduleError").parent().addClass('is-invalid');
-          } else {
-            $("#lblError").html(error);
-            $("#txtExpr").parent().addClass('is-invalid');
-          }
-        };
+        var markError = function() { 
+          $("#lblError").html(model.getError());
+          $("#txtExpr").parent().addClass('is-invalid');
+        }
         txtExprView.timerEvent = setTimeout(markError, timeout);
       } else {
-        $("#scheduleError").parent().removeClass('is-invalid');
         $("#txtExpr").parent().removeClass('is-invalid');
       }
     }
@@ -241,7 +227,7 @@ function demo() {
     },
     updateView: function(timeout) {
       clearTimeout(tblFormatsView.timerEvent);
-      if (model.hasInputOutputError()) {
+      if (model.getError() !== "") {
         var hideTables = function() { 
           $("#tblFormats").hide(); 
           $("#tblSchedule").hide(); 
