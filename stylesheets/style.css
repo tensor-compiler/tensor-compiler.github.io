@@ -245,3 +245,7 @@ ul {
 .horizontal li {
   display: inline;
 }
+
+.add-reorder {
+  line-height: 60px;
+}

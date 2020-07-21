@@ -3,12 +3,11 @@ function demo() {
     input: {
       expression: "",
       tensorOrders: {},
-      error: ""
-    },
-    schedule: {
+      error: "",
       indices: [], 
-      resultAccesses: [],
+      accesses: []
     },
+    schedule: [],
     output: {
       computeLoops: "",
       assemblyLoops: "",
@@ -18,6 +17,7 @@ function demo() {
     req: null,
 
     inputViews: [],
+    scheduleView: null,
     outputViews: [],
     reqViews: [],
 
@@ -29,6 +29,10 @@ function demo() {
       for (v in model.inputViews) {
         model.inputViews[v](400);
       }
+    },
+    updateScheduleView: function() {
+      model.removeInvalidIndices();
+      model.scheduleView(0);
     },
     addOutputView: function(newView) {
       model.outputViews.push(newView);
@@ -60,8 +64,8 @@ function demo() {
       } else {
         try {
           model.input.tensorOrders = parser.parse(expression);
-          model.schedule.indices = [...new Set(parser_indices.parse(expression))];
-          model.schedule.resultAccesses = [...new Set(parser_accesses.parse(expression))];
+          model.input.indices = [...new Set(parser_indices.parse(expression))];
+          model.input.accesses = [...new Set(parser_accesses.parse(expression))];
           model.input.error = "";
           for (t in model.input.tensorOrders) {
             if (model.input.tensorOrders[t] < 0) {
@@ -98,6 +102,113 @@ function demo() {
     },
     getError: function() {
       return (model.output.error !== "") ? model.output.error : model.input.error;
+    },
+
+    setSchedule: function(schedule) {
+      model.schedule = schedule; 
+      model.updateScheduleView();   
+    },
+    resetSchedule: function() {
+      model.schedule = [];
+      model.updateScheduleView();   
+    },
+    addScheduleRow: function() {
+      model.schedule.push({command: "", parameters: []});
+      
+      model.updateScheduleView();
+    },
+    deleteScheduleRow: function(row) {
+      model.schedule.splice(row, 1);
+      
+      model.cancelReq();
+      model.setOutput("", "", "", "");
+      model.updateScheduleView();
+    },
+    swapScheduleRows: function(row1, row2) {
+      [model.schedule[row1], model.schedule[row2]] = [model.schedule[row2], model.schedule[row1]];
+      
+      model.cancelReq();
+      model.setOutput("", "", "", "");
+      model.updateScheduleView();
+    },
+    addScheduleCommand: function(row, command) {
+      model.schedule[row]["command"] =  command;
+      model.schedule[row]["parameters"] = [];
+      
+      for (var i = 0; i < scheduleCommands[command]["parameters"].length; ++i) {
+        var parameterInfo = scheduleCommands[command][i];
+        var defaultValue = "";
+
+        if (parameterInfo[0] === "default") {
+          defaultValue = parameterInfo[1];
+        }
+        model.schedule[row]["parameters"].push(defaultValue);
+      }
+
+      if (command === "reorder") {
+        model.schedule[row]["numReordered"] = 2; 
+      }
+      
+      model.updateScheduleView();
+    },
+    addScheduleParameter: function(row, index, value) {
+      model.schedule[row]["parameters"][index] = value; 
+
+      var command = model.schedule[row]["command"];  
+      model.updateInferred(row, command, index, value); 
+      
+      model.cancelReq();
+      model.setOutput("", "", "", "");
+      model.updateScheduleView();
+    },
+    addReorderedVar: function(row) {
+      model.schedule[row]["parameters"].push("");
+      model.schedule[row]["numReordered"]++;
+
+      model.updateScheduleView(); 
+    },
+    getScheduleCommand: function(row) {
+      return model.schedule[row]["command"];
+    },
+    getScheduleParameter: function(row, index) {
+      return model.schedule[row]["parameters"][index];
+    },
+    getIndices: function(row) {
+      var indices = model.input.indices.slice(0);
+      for (var i = 0; i < row; ++i) {
+        var command = model.schedule[i]["command"];
+        var parameters = model.schedule[i]["parameters"];
+        for (var j = 0; j < parameters.length; ++j) {
+          if (parameters[j] && model.isParameterType(command, j, "default")) {
+            indices.push(parameters[j]); 
+          }
+        }
+      }
+      return indices; 
+    },
+    removeInvalidIndices: function() {
+      for (var row = 0; row < model.schedule.length; ++row) {
+        var indices = model.getIndices(row);
+        for (var index = 0; index < model.schedule[row]["parameters"].length; ++index) {
+          var command = model.schedule[row]["command"];
+          var value = model.schedule[row]["parameters"][index];
+          if (model.isParameterType(command, index, "index dropdown") && !indices.includes(value)) {
+            model.schedule[row]["parameters"][index] = "";
+            model.updateInferred(row, command, index, "");
+          }
+        }
+      }
+    },
+    isParameterType: function(command, index, parameterType) {
+      return scheduleCommands[command][index] && scheduleCommands[command][index][0] === parameterType;
+    },
+    updateInferred: function(row, command, index, value) {
+      var parameterInfo = scheduleCommands[command][index];
+      if (parameterInfo && parameterInfo[0] === "index dropdown") {
+        for (var inferred of parameterInfo.slice(1)) {
+          model.schedule[row]["parameters"][inferred[0]] = value ? value + inferred[1] : value;
+        }
+      }   
     }
   };
 
@@ -451,116 +562,59 @@ function demo() {
     }
   };
 
+  var scheduleCommands = {
+    split: {
+      parameters: ["Split IndexVar", "Outer IndexVar", "Inner IndexVar", "Split Factor"],
+      0: ["index dropdown", [1, "0"], [2, "1"]],
+      1: ["default", ""],
+      2: ["default", ""],
+      3: ["number"]
+    },
+    divide: {
+      parameters: ["Divided IndexVar", "Outer IndexVar", "Inner IndexVar", "Divide Factor"],
+      0: ["index dropdown", [1, "0"], [2, "1"]],
+      1: ["default", ""],
+      2: ["default", ""],
+      3: ["number"]
+    },
+    reorder: {
+      parameters: ["Reordered IndexVar", "Reordered IndexVar"],
+      0: ["index dropdown"],
+      1: ["index dropdown"]
+    },
+    pos: {
+      parameters: ["Original IndexVar", "Derived IndexVar", "Accessed Tensor"], 
+      0: ["index dropdown", [1, "pos"]],
+      1: ["default", ""],
+      2: ["access dropdown"]
+    },
+    fuse: {
+      parameters: ["Outer IndexVar", "Inner IndexVar", "Fused IndexVar"],
+      0: ["index dropdown"], 
+      1: ["index dropdown"],
+      2: ["default", "f"]
+    },
+    parallelize: {
+      parameters: ["Parallel IndexVar", "Hardware", "Race Strategy"],
+      0: ["index dropdown"],
+      1: ["predefined dropdown", "CPU Thread", "Not Parallel", "Default Unit", "CPU Thread", "CPU Vector"],
+      2: ["predefined dropdown", "No Races", "Ignore Races", "No Races", "Atomics", "Temporary", "Parallel Reduction"]
+    },
+    bound: {
+      parameters: ["Original IndexVar", "Bounded IndexVar", "Bound", "Bound Type"],
+      0: ["index dropdown", [1, "bound"]], 
+      1: ["default", ""],
+      2: ["number"],
+      3: ["predefined dropdown", "Max Exact", "Min Exact", "Min Constraint", "Max Exact", "Max Constraint"]
+    },
+    unroll: {
+      parameters: ["Unrolled IndexVar", "Unroll Factor"],
+      0: ["index dropdown"],
+      1: ["number"]
+    }
+  };
+
   var tblScheduleView = {
-    numRows: 0,
-    commands: {
-      split: {
-        parameters: ["Split IndexVar", "Outer IndexVar", "Inner IndexVar", "Split Factor"],
-        0: ["index dropdown"],
-        1: ["inferred", 0, "0"],
-        2: ["inferred", 0, "1"],
-        3: ["number"]
-      },
-      divide: {
-        parameters: ["Divided IndexVar", "Outer IndexVar", "Inner IndexVar", "Divide Factor"],
-        0: ["index dropdown"],
-        1: ["inferred", 0, "0"],
-        2: ["inferred", 0, "1"],
-        3: ["number"]
-      },
-      reorder: {
-        parameters: ["Reordered IndexVar", "Reordered IndexVar"],
-        0: ["index dropdown"],
-        1: ["index dropdown"],
-      },
-      pos: {
-        parameters: ["Original IndexVar", "Derived IndexVar", "Accessed Tensor"], 
-        0: ["index dropdown"],
-        1: ["inferred", 0, "pos"],
-        2: ["access dropdown"]
-      },
-      fuse: {
-        parameters: ["Outer IndexVar", "Inner IndexVar", "Fused IndexVar"],
-        0: ["index dropdown"], 
-        1: ["index dropdown"],
-        2: ["default", "f"]
-      },
-      parallelize: {
-        parameters: ["Parallel IndexVar", "Hardware", "Race Strategy"],
-        0: ["index dropdown"],
-        1: ["predefined dropdown", "Not Parallel", "Default Unit", "CPU Thread", "CPU Vector"],
-        2: ["predefined dropdown", "Ignore Races", "No Races", "Atomics", "Temporary", "Parallel Reduction"]
-      },
-      bound: {
-        parameters: ["Original IndexVar", "Bounded IndexVar", "Bound", "Bound Type"],
-        0: ["index dropdown"], 
-        1: ["inferred", 0, "bound"],
-        2: ["number"],
-        3: ["predefined dropdown", "Min Exact", "Min Constraint", "Max Exact", "Max Constraint"]
-      },
-      unroll: {
-        parameters: ["Unrolled IndexVar", "Unroll Factor"],
-        0: ["index dropdown"],
-        1: ["number"]
-      },
-    },
-    commandsCache: {},
-    inputsCache: {},
-    indicesCache: {},
-
-    clear: function() {
-      tblScheduleView.numRows = 0; 
-      tblScheduleView.commandsCache = {}; 
-      tblScheduleView.inputsCache = {};
-      tblScheduleView.indicesCache = {};
-    },
-    addRow: function() {
-      tblScheduleView.commandsCache[tblScheduleView.numRows] = "";
-      tblScheduleView.inputsCache[tblScheduleView.numRows] = [];
-      tblScheduleView.indicesCache[tblScheduleView.numRows] = [];
-      tblScheduleView.numRows++; 
-    },
-    swapRows: function(row1, row2) {
-      [tblScheduleView.commandsCache[row1], tblScheduleView.commandsCache[row2]] = 
-        [tblScheduleView.commandsCache[row2], tblScheduleView.commandsCache[row1]];
-
-      [tblScheduleView.inputsCache[row1], tblScheduleView.inputsCache[row2]] = 
-        [tblScheduleView.inputsCache[row2], tblScheduleView.inputsCache[row1]];
-
-      [tblScheduleView.indicesCache[row1], tblScheduleView.indicesCache[row2]] = 
-        [tblScheduleView.indicesCache[row2], tblScheduleView.indicesCache[row1]];
-    },
-    deleteRow: function(row) {
-      row = parseInt(row);
-      for (var i = row + 1; i < tblScheduleView.numRows; ++i) {
-        tblScheduleView.commandsCache[i - 1] = tblScheduleView.commandsCache[i];
-        tblScheduleView.inputsCache[i - 1] = tblScheduleView.inputsCache[i].slice();
-        tblScheduleView.indicesCache[i - 1] = tblScheduleView.indicesCache[i].slice();
-      }
-      delete tblScheduleView.commandsCache[tblScheduleView.numRows - 1];
-      delete tblScheduleView.inputsCache[tblScheduleView.numRows - 1];
-      delete tblScheduleView.indicesCache[tblScheduleView.numRows - 1];
-
-      tblScheduleView.numRows--; 
-    },
-    insertCommandsCacheEntry: function(row, command) {
-      tblScheduleView.commandsCache[row] = command; 
-
-      var inputs = [];
-      for (var i = 0; i < tblScheduleView.commands[command]["parameters"].length; ++i) {
-        inputs.push("");
-      }
-      tblScheduleView.inputsCache[row] = inputs; 
-    },
-    insertInputsCacheEntry: function(row, param, input) {
-      tblScheduleView.inputsCache[row][param] = input; 
-    },  
-    clearIndicesCacheEntry: function(row) {
-      tblScheduleView.indicesCache[row] = [];
-    },
-    insertIndicesCacheEntry: function(row, index) {
-      tblScheduleView.indicesCache[row].push(index); 
-    },
     makeParameters: function(row, command) {
       // a normal textfield
       function empty(parameterName, inputId, input) {
@@ -579,7 +633,7 @@ function demo() {
         return parameter
       }
 
-      function dropdown(paramterName, inputId, input, useMonospace = true) {
+      function dropdown(paramterName, inputId, input, defaultValue = "", useMonospace = true) {
         var parameter = "<li>";
         parameter += "<div class=\"schedule-input dropdown mdl-textfield mdl-js-textfield ";
         parameter += "mdl-textfield--floating-label getmdl-select\">";
@@ -590,7 +644,7 @@ function demo() {
         parameter += "\" data-toggle=\"dropdown\" id=\"";
         parameter += inputId; 
         parameter += "\" type=\"text\" readonly value=\""; 
-        parameter += input;
+        parameter += input ? input : defaultValue;
         parameter += "\"><label data-toggle=\"dropdown\">";
         parameter += "<i class=\"mdl-icon-toggle__label ";
         parameter += "material-icons\">keyboard_arrow_down</i>";
@@ -611,18 +665,12 @@ function demo() {
       // a dropdown where user can choose from input index variables
       function indexDropdown(parameterName, inputId, input) {
         var parameter = dropdown(parameterName, inputId, input);
-        for (var index of model.schedule.indices) {
+        for (var index of model.getIndices(row)) {
           parameter += "<li><a>"; 
           parameter += index; 
           parameter += "</a></li>";
         }
-        for (var i = 0; i < row; ++i) {
-          for (var index of tblScheduleView.indicesCache[i]) {
-            parameter += "<li><a>"; 
-            parameter += index; 
-            parameter += "</a></li>";
-          }
-        }
+
         parameter += "</ul></div></li>";
         return parameter; 
       }
@@ -630,7 +678,7 @@ function demo() {
       // a dropdown where user can choose from argument tensors
       function accessDropdown(parameterName, inputId, input) {
         var parameter = dropdown(parameterName, inputId, input);
-        for (var access of model.schedule.resultAccesses) {
+        for (var access of model.input.accesses) {
           parameter += "<li><a>"; 
           parameter += access; 
           parameter += "</a></li>";
@@ -641,8 +689,8 @@ function demo() {
 
       // a dropdown where user can choose from a set of predefined options
       function predefinedDropdown(parameterName, inputId, input, options) {
-        var parameter = dropdown(parameterName, inputId, input, false);
-        for (var option of options) {
+        var parameter = dropdown(parameterName, inputId, input, options[0], false);
+        for (var option of options.slice(1)) {
           parameter += "<li><a>"; 
           parameter += option; 
           parameter += "</a></li>";
@@ -651,16 +699,14 @@ function demo() {
         return parameter; 
       }
 
-      tblScheduleView.clearIndicesCacheEntry(row);
-      var commandInfo = tblScheduleView.commands[command];
+      var commandInfo = scheduleCommands[command];
       var parametersList = commandInfo["parameters"];
 
       var parameters = "<ul class=\"ui-state-default schedule-list\">";
-      for (var p in parametersList) {
+      for (var p = 0; p < parametersList.length; ++p) {
         var parameterName = parametersList[p]; 
         var inputId = "param" + row + "-" + p; 
-        var input = tblScheduleView.inputsCache[row].hasOwnProperty(p) ? 
-                    tblScheduleView.inputsCache[row][p] : "";
+        var input = model.getScheduleParameter(row, p);
 
         var parameterInfo = commandInfo[p];
         switch(parameterInfo[0]) {
@@ -673,22 +719,7 @@ function demo() {
           case "predefined dropdown":
             parameters += predefinedDropdown(parameterName, inputId, input, parameterInfo.slice(1));
             break; 
-          case "inferred": 
-            var from = parameterInfo[1];
-            if (input === "" && tblScheduleView.inputsCache[row].hasOwnProperty(from)) {
-              var fromInput = tblScheduleView.inputsCache[row][from]; 
-              input = (fromInput !== "") ? fromInput + parameterInfo[2] : input;  
-            }
-
-            if (input !== "") {
-              tblScheduleView.insertIndicesCacheEntry(row, input);
-            }
-
-            parameters += empty(parameterName, inputId, input); 
-            break;
           case "default":
-            input = (input === "") ? parameterInfo[1] : input;
-            tblScheduleView.insertIndicesCacheEntry(row, input);
             parameters += empty(parameterName, inputId, input); 
             break;
           case "number":
@@ -696,16 +727,34 @@ function demo() {
             break;
         }
       }
+
+      if (command === "reorder") {
+        for (var p = 2; p < model.schedule[row]["numReordered"]; ++p) {
+          var parameterName = parametersList[0];
+          var inputId = "param" + row + "-" + p;
+          var input = model.getScheduleParameter(row, p); 
+
+          parameters += indexDropdown(parameterName, inputId, input);
+        }
+
+        var reorderId = "reorder" + row; 
+        parameters += "<li class=\"add-reorder\" id=\""; 
+        parameters += reorderId;  
+        parameters += "\"><button class=\"mdl-button mdl-js-button mdl-button--raised demo-btn\">"; 
+        parameters += "Add";
+        parameters += "</button></li>";
+      }
+
       parameters += "</ul>";
       return parameters; 
     },
+
     updateView: function(timeout) {
       var scheduleBody = "";
-      for (var r = 0; r < tblScheduleView.numRows; ++r) {
+      for (var r = 0; r < model.schedule.length; ++r) {
         var rowId = "schedule" + r;
-        var command = tblScheduleView.commandsCache.hasOwnProperty(r) ?
-                      tblScheduleView.commandsCache[r] : ""; 
-
+        var command = model.getScheduleCommand(r)
+        
         var row = "<tr style=\"cursor: move\">";
         row += "<td class=\"remove-row mdl-data-table__cell--non-numeric\" id=\""; 
         row += rowId + "-button\">"; 
@@ -731,7 +780,7 @@ function demo() {
         row += "<ul class=\"commands dropdown-menu\" for=\"";
         row += rowId;
         row += "\">";
-        for (var c in tblScheduleView.commands) {
+        for (var c in scheduleCommands) {
           row += "<li><a>" + c + "</a></li>"
         }
         row += "</ul></div></td>";
@@ -742,7 +791,7 @@ function demo() {
         }
         row += "</td></tr>";
 
-        scheduleBody += row; 
+        scheduleBody += row;
       }
 
       if (scheduleBody !== "") { 
@@ -752,67 +801,59 @@ function demo() {
       } else {
         $("#tblSchedule").hide();
       }
-
-      $("tbody").sortable({ 
-        start: function(ev, ui) {
-          ui.item.startPos = ui.item.index();
-        },
-        update: function(ev, ui) {
-          tblScheduleView.swapRows(ui.item.startPos, ui.item.index());
-          tblScheduleView.updateView(0);
-
-          model.cancelReq();
-          model.setOutput("", "", "", "");
-        }
-      });
-
+    
       $(".commands a").on("click", function(e) {
         var command = $(this).text();
         var rowId = $(this).parent().parent().attr("for");
-        var row = rowId.substring(8);
+        var row = rowId.substring(("schedule").length);
 
         $("#" + rowId).val(command);
-        tblScheduleView.insertCommandsCacheEntry(row, command);
-        tblScheduleView.updateView(0);
-      }); 
+        model.addScheduleCommand(row, command, );
+      });
 
       $(".schedule-input input").on("change", function(e) {
         var inputId = $(this).attr("id");
         var row = inputId[inputId.indexOf("-") - 1];
-        var param = inputId.slice(-1);
+        var index = inputId.slice(-1);
 
-        tblScheduleView.insertInputsCacheEntry(row, param, $(this).val()); 
-        tblScheduleView.updateView(0);
-
-        model.cancelReq();
-        model.setOutput("", "", "", "");
+        model.addScheduleParameter(row, index, $(this).val()); 
       });
 
       $(".options a").on("click", function(e) {
         var option = $(this).text();
         var inputId = $(this).parent().parent().attr("for");
         var row = inputId[inputId.indexOf("-") - 1];
-        var param = inputId.slice(-1);
+        var index = inputId.slice(-1);
 
-        tblScheduleView.insertInputsCacheEntry(row, param, option);
-        tblScheduleView.updateView(0);
-
-        model.cancelReq();
-        model.setOutput("", "", "", "");
+        model.addScheduleParameter(row, index, option);
       }); 
+
+      $("tbody").sortable({ 
+        start: function(ev, ui) {
+          ui.item.startPos = ui.item.index();
+        },
+        update: function(ev, ui) {
+          model.swapScheduleRows(ui.item.startPos, ui.item.index());
+        }
+      });
 
       $(".remove-row").each(function() {
         $(this).click(function() {
-          var row = $(this).attr("id")[8];
-          tblScheduleView.deleteRow(row);
-          tblScheduleView.updateView(0);
-
-          model.cancelReq();
-          model.setOutput("", "", "", "");
+          var row = $(this).attr("id")[("schedule").length];
+          model.deleteScheduleRow(row);
         });
       });
+
+      $(".add-reorder").each(function() {
+        $(this).click(function() {
+          var row = $(this).attr("id")[("reorder").length];
+          model.addReorderedVar(row);
+        }); 
+      });
     }
-  }
+  };
+
+  model.scheduleView = tblScheduleView.updateView; 
 
   var btnGetKernelView = {
     updateView: function(timeout) {
@@ -827,6 +868,7 @@ function demo() {
 
   $("#txtExpr").keyup(function() {
     model.setInput($("#txtExpr").val());
+    model.resetSchedule();
   });
 
   var panelKernelsView = {
@@ -901,20 +943,24 @@ function demo() {
     }
 
     command += " -set-schedule=";
-    for (var i = 0; i < tblScheduleView.numRows; ++i) {
-      var c = $("#schedule" + i).val();
-      if (!c) { continue; }
+    for (var i = 0; i < model.schedule.length; ++i) {
+      var scheduleCommand = model.schedule[i]["command"];
+      if (!scheduleCommand) { continue; }
 
-      var tempCommand = c + "-";
+      var tempCommand = scheduleCommand + "-";
       var valid = true; 
 
-      for (var j in tblScheduleView.commands[c]["parameters"]) {
-        var param = $("#param" + i + "-" + j).val().replace(" ", "");
+      if (scheduleCommand === "reorder") {
+        tempCommand += model.schedule[i]["numReordered"] + "-";
+      }
+
+      for (var param of model.schedule[i]["parameters"]) {
+        param = param.toString().replace(" ", "");
         if (!param) {
           valid = false; 
           break; 
-        } 
-        tempCommand += param + "-"; 
+        }
+        tempCommand += param + "-";
       }
 
       if (valid) {
@@ -953,7 +999,22 @@ function demo() {
           y: { name: "Dense array", levels: { formats: ["d"], ordering: [0] } },
           A: { name: "CSR", levels: { formats: ["d", "s"], ordering: [0, 1] } },
           x: { name: "Dense array", levels: { formats: ["d"], ordering: [0] } }
-        }
+        },
+        schedule: [
+          { 
+            command: "split", 
+            parameters: ["i", "i0", "i1", 32]
+          }, 
+          {
+            command: "reorder",
+            numReordered: 3,
+            parameters: ["i0", "i1", "j"]
+          },
+          {
+            command: "parallelize", 
+            parameters: ["i0", "CPU Thread", "No Races"]
+          }
+        ]
       },
       add: { name: "Sparse matrix addition", 
         code: "A(i,j) = B(i,j) + C(i,j)",
@@ -961,7 +1022,8 @@ function demo() {
           A: { name: "CSR", levels: { formats: ["d", "s"], ordering: [0, 1] } },
           B: { name: "CSR", levels: { formats: ["d", "s"], ordering: [0, 1] } },
           C: { name: "CSR", levels: { formats: ["d", "s"], ordering: [0, 1] } },
-        }
+        },
+        schedule: []
       },
       ttv: { name: "Tensor-times-vector", 
         code: "A(i,j) = B(i,j,k) * c(k)",
@@ -969,7 +1031,30 @@ function demo() {
           A: { name: "DCSR", levels: { formats: ["s", "s"], ordering: [0, 1] } },
           B: { name: "CSF", levels: { formats: ["s", "s", "s"], ordering: [0, 1, 2] } },
           c: { name: "Dense array", levels: { formats: ["d"], ordering: [0] } },
-        }
+        },
+        schedule: [
+          { 
+            command: "fuse",
+            parameters: ["i", "j", "f"]
+          },
+          {
+            command: "pos",
+            parameters: ["f", "fpos", "B"]
+          },
+          {
+            command: "split",
+            parameters: ["fpos", "chunk", "fpos2", 8]
+          },
+          {
+            command: "reorder", 
+            numReordered: 3,
+            parameters: ["chunk", "fpos2", "k"]
+          },
+          {
+            command: "parallelize", 
+            parameters: ["chunk", "CPU Thread", "No Races"]
+          }
+        ]
       },
       mttkrp: { name: "MTTKRP", 
         code: "A(i,j) = B(i,k,l) * C(k,j) * D(l,j)",
@@ -978,7 +1063,8 @@ function demo() {
           B: { name: "CSF", levels: { formats: ["s", "s", "s"], ordering: [0, 1, 2] } },
           C: { name: "Dense array", levels: { formats: ["d", "d"], ordering: [0, 1] } },
           D: { name: "Dense array", levels: { formats: ["d", "d"], ordering: [0, 1] } },
-        }
+        },
+        schedule: []
       }
   };
 
@@ -1012,7 +1098,7 @@ function demo() {
   }
 
   for (var e in examples) {
-    (function(code, formats) {
+    (function(code, formats, schedule) {
       var setExample = function() {
         $("#txtExpr").val(code);
         for (var tensor in formats) {
@@ -1020,6 +1106,7 @@ function demo() {
           tblFormatsView.insertNamesCacheEntry(tensor, formats[tensor].name);
         }
         model.setInput(code);
+        model.setSchedule(schedule);
       };
       $("#example_" + e).click(setExample);
 
@@ -1027,7 +1114,7 @@ function demo() {
       if (e === demo) {
         setExample();
       }
-    })(examples[e].code, examples[e].formats);
+    })(examples[e].code, examples[e].formats, examples[e].schedule);
   }
 
   var urlPrefix = "http://tensor-compiler.org/examples/" + demo;
@@ -1041,7 +1128,6 @@ function demo() {
   });
 
   $("#btnSchedule").click(function() {    
-    tblScheduleView.addRow();
-    tblScheduleView.updateView(0);
+    model.addScheduleRow();
   });
 }
