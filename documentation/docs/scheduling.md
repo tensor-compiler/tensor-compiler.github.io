@@ -7,7 +7,7 @@ Tensor<double> A("A", {512, 64}, csr);
 Tensor<double> x("x", {64}, {Dense});
 Tensor<double> y("y", {512}, {Dense});
 
-IndexVar i, j; 
+IndexVar i("i"), j("j"); 
 y(i) = A(i, j) * x(j);
 IndexStmt stmt = y.getAssignment().concretize();
 ```

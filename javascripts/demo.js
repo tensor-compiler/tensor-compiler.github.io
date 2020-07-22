@@ -563,6 +563,18 @@ function demo() {
   };
 
   var scheduleCommands = {
+    pos: {
+      parameters: ["Original IndexVar", "Derived IndexVar", "Accessed Tensor"], 
+      0: ["index dropdown", [1, "pos"]],
+      1: ["default", ""],
+      2: ["access dropdown"]
+    },
+    fuse: {
+      parameters: ["Outer IndexVar", "Inner IndexVar", "Fused IndexVar"],
+      0: ["index dropdown"], 
+      1: ["index dropdown"],
+      2: ["default", "f"]
+    },
     split: {
       parameters: ["Split IndexVar", "Outer IndexVar", "Inner IndexVar", "Split Factor"],
       0: ["index dropdown", [1, "0"], [2, "1"]],
@@ -577,28 +589,15 @@ function demo() {
       2: ["default", ""],
       3: ["number"]
     },
+    precompute: {
+      parameters: ["Original IndexVar", "Workspace IndexVar"],
+      0: ["index dropdown", [1, ""]],
+      1: ["default", ""]
+    },
     reorder: {
       parameters: ["Reordered IndexVar", "Reordered IndexVar"],
       0: ["index dropdown"],
       1: ["index dropdown"]
-    },
-    pos: {
-      parameters: ["Original IndexVar", "Derived IndexVar", "Accessed Tensor"], 
-      0: ["index dropdown", [1, "pos"]],
-      1: ["default", ""],
-      2: ["access dropdown"]
-    },
-    fuse: {
-      parameters: ["Outer IndexVar", "Inner IndexVar", "Fused IndexVar"],
-      0: ["index dropdown"], 
-      1: ["index dropdown"],
-      2: ["default", "f"]
-    },
-    parallelize: {
-      parameters: ["Parallel IndexVar", "Hardware", "Race Strategy"],
-      0: ["index dropdown"],
-      1: ["predefined dropdown", "CPU Thread", "Not Parallel", "Default Unit", "CPU Thread", "CPU Vector"],
-      2: ["predefined dropdown", "No Races", "Ignore Races", "No Races", "Atomics", "Temporary", "Parallel Reduction"]
     },
     bound: {
       parameters: ["Original IndexVar", "Bounded IndexVar", "Bound", "Bound Type"],
@@ -611,6 +610,12 @@ function demo() {
       parameters: ["Unrolled IndexVar", "Unroll Factor"],
       0: ["index dropdown"],
       1: ["number"]
+    },
+    parallelize: {
+      parameters: ["Parallel IndexVar", "Hardware", "Race Strategy"],
+      0: ["index dropdown"],
+      1: ["predefined dropdown", "CPU Thread", "Not Parallel", "Default Unit", "CPU Thread", "CPU Vector"],
+      2: ["predefined dropdown", "No Races", "Ignore Races", "No Races", "Atomics", "Temporary", "Parallel Reduction"]
     }
   };
 
@@ -963,12 +968,15 @@ function demo() {
         tempCommand += param + "-";
       }
 
+      console.log(tempCommand);
+
       if (valid) {
         // only add if user inputted all parameters
         command += tempCommand; 
       }
     }
     command += "q";
+    console.log(command);
 
     var req = $.ajax({
         type: "POST",
@@ -1064,7 +1072,25 @@ function demo() {
           C: { name: "Dense array", levels: { formats: ["d", "d"], ordering: [0, 1] } },
           D: { name: "Dense array", levels: { formats: ["d", "d"], ordering: [0, 1] } },
         },
-        schedule: []
+        schedule: [
+          {
+            command: "reorder",
+            numReordered: 4,
+            parameters: ["i", "k", "l", "j"]
+          },
+          {
+            command: "precompute",
+            parameters: ["j", "j"]
+          },
+          {
+            command: "split",
+            parameters: ["i", "i0", "i1", 32]
+          },
+          {
+            command: "parallelize",
+            parameters: ["i0", "CPU Thread", "No Races"]
+          }
+        ]
       }
   };
 
