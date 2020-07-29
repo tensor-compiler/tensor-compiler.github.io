@@ -218,7 +218,11 @@ ul {
 }
 
 .schedule-input {
-  width: 170px;
+  width: 120px;
+}
+
+.schedule-input-long {
+  width: 200px;
 }
 
 .schedule-list {

@@ -139,7 +139,7 @@ function demo() {
         var parameterInfo = scheduleCommands[command][i];
         var defaultValue = "";
 
-        if (parameterInfo[0] === "default") {
+        if (parameterInfo[0] === "default" || parameterInfo[0] === "predefined dropdown") {
           defaultValue = parameterInfo[1];
         }
         model.schedule[row]["parameters"].push(defaultValue);
@@ -580,19 +580,20 @@ function demo() {
       0: ["index dropdown", [1, "0"], [2, "1"]],
       1: ["default", ""],
       2: ["default", ""],
-      3: ["number"]
+      3: ["text"]
     },
     divide: {
       parameters: ["Divided IndexVar", "Outer IndexVar", "Inner IndexVar", "Divide Factor"],
       0: ["index dropdown", [1, "0"], [2, "1"]],
       1: ["default", ""],
       2: ["default", ""],
-      3: ["number"]
+      3: ["text"]
     },
     precompute: {
-      parameters: ["Original IndexVar", "Workspace IndexVar"],
+      parameters: ["Original IndexVar", "Workspace IndexVar", "Precomputed Expr"],
       0: ["index dropdown", [1, ""]],
-      1: ["default", ""]
+      1: ["default", ""],
+      2: ["long text"]
     },
     reorder: {
       parameters: ["Reordered IndexVar", "Reordered IndexVar"],
@@ -603,13 +604,13 @@ function demo() {
       parameters: ["Original IndexVar", "Bounded IndexVar", "Bound", "Bound Type"],
       0: ["index dropdown", [1, "bound"]], 
       1: ["default", ""],
-      2: ["number"],
+      2: ["text"],
       3: ["predefined dropdown", "Max Exact", "Min Exact", "Min Constraint", "Max Exact", "Max Constraint"]
     },
     unroll: {
       parameters: ["Unrolled IndexVar", "Unroll Factor"],
       0: ["index dropdown"],
-      1: ["number"]
+      1: ["text"]
     },
     parallelize: {
       parameters: ["Parallel IndexVar", "Hardware", "Race Strategy"],
@@ -622,12 +623,13 @@ function demo() {
   var tblScheduleView = {
     makeParameters: function(row, command) {
       // a normal textfield
-      function empty(parameterName, inputId, input) {
+      function empty(parameterName, inputId, input, long = false) {
         var parameter = "<li>"
         parameter += "<div class=\"schedule-input mdl-textfield mdl-js-textfield ";
-        parameter += "mdl-textfield--floating-label getmdl-select\">";
-        parameter += "<input class=\"space-font mdl-textfield__input\" "
-        parameter += "type=\"text\" autocomplete=\"off\" value = \"";
+        parameter += "mdl-textfield--floating-label getmdl-select has-placeholder "; 
+        parameter += long ? "schedule-input-long" : "";
+        parameter += "\"><input class=\"space-font mdl-textfield__input\""
+        parameter += "type=\"text\" autocomplete=\"off\" placeholder=\"\" value = \"";
         parameter += input; 
         parameter += "\" id=\""; 
         parameter += inputId; 
@@ -641,14 +643,14 @@ function demo() {
       function dropdown(paramterName, inputId, input, defaultValue = "", useMonospace = true) {
         var parameter = "<li>";
         parameter += "<div class=\"schedule-input dropdown mdl-textfield mdl-js-textfield ";
-        parameter += "mdl-textfield--floating-label getmdl-select\">";
+        parameter += "mdl-textfield--floating-label getmdl-select has-placeholder\">";
         parameter += "<input class=\"mdl-textfield__input ";
         if (useMonospace) {
           parameter += "space-font";
         } 
         parameter += "\" data-toggle=\"dropdown\" id=\"";
         parameter += inputId; 
-        parameter += "\" type=\"text\" readonly value=\""; 
+        parameter += "\" type=\"text\" readonly placeholder=\"\" value=\""; 
         parameter += input ? input : defaultValue;
         parameter += "\"><label data-toggle=\"dropdown\">";
         parameter += "<i class=\"mdl-icon-toggle__label ";
@@ -727,8 +729,11 @@ function demo() {
           case "default":
             parameters += empty(parameterName, inputId, input); 
             break;
-          case "number":
+          case "text":
             parameters += empty(parameterName, inputId, input);
+            break;
+          case "long text":
+            parameters += empty(parameterName, inputId, input, true);
             break;
         }
       }
@@ -947,36 +952,36 @@ function demo() {
       }
     }
 
-    command += " -set-schedule=";
     for (var i = 0; i < model.schedule.length; ++i) {
+      tempCommand = " -s=\"";
+
       var scheduleCommand = model.schedule[i]["command"];
       if (!scheduleCommand) { continue; }
 
-      var tempCommand = scheduleCommand + "-";
+      tempCommand += scheduleCommand + "(";
       var valid = true; 
 
       if (scheduleCommand === "reorder") {
-        tempCommand += model.schedule[i]["numReordered"] + "-";
+        tempCommand += model.schedule[i]["numReordered"] + ",";
       }
 
       for (var param of model.schedule[i]["parameters"]) {
-        param = param.toString().replace(" ", "");
+        param = param.toString().replace(/ /g, "");
         if (!param) {
           valid = false; 
           break; 
         }
-        tempCommand += param + "-";
+        tempCommand += param + ",";
       }
 
-      console.log(tempCommand);
+      tempCommand = tempCommand.substring(0, tempCommand.length - 1)
+      tempCommand += ")\"";
 
       if (valid) {
         // only add if user inputted all parameters
         command += tempCommand; 
       }
     }
-    command += "q";
-    console.log(command);
 
     var req = $.ajax({
         type: "POST",
@@ -1065,7 +1070,7 @@ function demo() {
         ]
       },
       mttkrp: { name: "MTTKRP", 
-        code: "A(i,j) = B(i,k,l) * C(k,j) * D(l,j)",
+        code: "A(i,j) = B(i,k,l) * D(l,j) * C(k,j)",
         formats: {
           A: { name: "Dense array", levels: { formats: ["d", "d"], ordering: [0, 1] } },
           B: { name: "CSF", levels: { formats: ["s", "s", "s"], ordering: [0, 1, 2] } },
@@ -1080,7 +1085,7 @@ function demo() {
           },
           {
             command: "precompute",
-            parameters: ["j", "j"]
+            parameters: ["j", "j", "B(i,k,l) * D(l,j)"]
           },
           {
             command: "split",
