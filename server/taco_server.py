@@ -32,7 +32,7 @@ class Handler(BaseHTTPRequestHandler):
       computePath = prefix + "taco_compute.c"
       assemblyPath = prefix + "taco_assembly.c"
       cmd = tacoPath + " " + cmd + " -write-source=" + writePath + " -write-compute=" + computePath + " -write-assembly=" + assemblyPath
-
+      
       try:
         subprocess.check_output(str.split(cmd), timeout=3, stderr=subprocess.STDOUT)
         with open(writePath, 'r') as f:
@@ -52,10 +52,10 @@ class Handler(BaseHTTPRequestHandler):
         if search is not None: 
           response['error'] = search.group()[3:-1]
         else: 
-          response['error'] = 'Expression is currently not supported'
+          response['error'] = 'Expression and/or schedule is currently not supported'
         logFile = "/home/ubuntu/errors.log"
-      except Exception as e:
-        response['error'] = 'Expression is currently not supported'
+      except:
+        response['error'] = 'Expression and/or schedule is currently not supported'
         logFile = "/home/ubuntu/errors.log"
 
       ip = ".".join(self.client_address[0].split('.')[0:-2]) + ".*.*"
