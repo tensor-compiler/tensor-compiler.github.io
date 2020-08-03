@@ -615,8 +615,14 @@ function demo() {
     parallelize: {
       parameters: ["Parallel IndexVar", "Hardware", "Race Strategy"],
       0: ["index dropdown"],
-      1: ["predefined dropdown", "CPU Thread", "Not Parallel", "Default Unit", "CPU Thread", "CPU Vector"],
-      2: ["predefined dropdown", "No Races", "Ignore Races", "No Races", "Atomics", "Temporary", "Parallel Reduction"]
+      1: ["predefined multi-dropdown", "CPU Thread", 
+          {"Not Parallel": [], 
+           "Default Unit": [], 
+           "CPU": ["CPU Thread", "CPU Vector", "CPU Thread Group Reduction"],
+           "GPU": ["GPU Block", "GPU Thread", "GPU Block Reduction", "GPU Warp Reduction"]
+          }],
+      2: ["predefined dropdown", "No Races", 
+          "Ignore Races", "No Races", "Atomics", "Temporary", "Parallel Reduction"]
     }
   };
 
@@ -626,9 +632,9 @@ function demo() {
       function empty(parameterName, inputId, input, long = false) {
         var parameter = "<li>"
         parameter += "<div class=\"schedule-input mdl-textfield mdl-js-textfield ";
-        parameter += "mdl-textfield--floating-label getmdl-select has-placeholder "; 
-        parameter += long ? "schedule-input-long" : "";
-        parameter += "\"><input class=\"space-font mdl-textfield__input\""
+        parameter += "mdl-textfield--floating-label getmdl-select has-placeholder\" "; 
+        parameter += long ? "style=\"width:200px\"" : "";
+        parameter += "><input class=\"space-font mdl-textfield__input\""
         parameter += "type=\"text\" autocomplete=\"off\" placeholder=\"\" value = \"";
         parameter += input; 
         parameter += "\" id=\""; 
@@ -640,11 +646,12 @@ function demo() {
         return parameter
       }
 
-      function dropdown(paramterName, inputId, input, defaultValue = "", useMonospace = true) {
+      function dropdown(paramterName, inputId, input, defaultValue = "", useMonospace = true, length = "120px") {
         var parameter = "<li>";
         parameter += "<div class=\"schedule-input dropdown mdl-textfield mdl-js-textfield ";
-        parameter += "mdl-textfield--floating-label getmdl-select has-placeholder\">";
-        parameter += "<input class=\"mdl-textfield__input ";
+        parameter += "mdl-textfield--floating-label getmdl-select has-placeholder\" "; 
+        parameter += "style=\"width:" + length + "\"";
+        parameter += "><input class=\"mdl-textfield__input ";
         if (useMonospace) {
           parameter += "space-font";
         } 
@@ -696,15 +703,46 @@ function demo() {
 
       // a dropdown where user can choose from a set of predefined options
       function predefinedDropdown(parameterName, inputId, input, options) {
-        var parameter = dropdown(parameterName, inputId, input, options[0], false);
+        var parameter = dropdown(parameterName, inputId, input, options[0], false, "160px");
         for (var option of options.slice(1)) {
-          parameter += "<li><a>"; 
+          parameter += "<li style=\"width:160px\"><a>"; 
           parameter += option; 
           parameter += "</a></li>";
         }
         parameter += "</ul></div></li>";
         return parameter; 
       }
+
+      function predefinedMultiDropdown(parameterName, inputId, input, info) {
+        var parameter = dropdown(parameterName, inputId, input, info[0], false, "245px");
+
+        options = info[1];
+        for (var option in options) {
+          if (options[option].length > 0) {
+            parameter += "<li style=\"width:245px\" ";
+            parameter += "class=\"dropdown-submenu ";
+            parameter += option;
+            parameter += "\"><a>" + option;
+            parameter += "<i class=\"material-icons\" style=\"float:right\">";
+            parameter += "keyboard_arrow_right</i></a>";
+            parameter += "<ul class=\"options dropdown-menu\" for=\""; 
+            parameter += inputId;
+            parameter += "\">";
+            for (suboption of options[option]) {
+              parameter += "<li style=\"width:245px\">";
+              parameter += "<a>" + suboption + "</a></li>";
+            }
+            parameter += "</ul></li>";   
+          } else {
+            parameter += "<li style=\"width:245px\"><a>"; 
+            parameter += option; 
+            parameter += "</a></li>";
+          }
+        }
+        parameter += "</ul></div></li>";
+        return parameter; 
+      }
+
 
       var commandInfo = scheduleCommands[command];
       var parametersList = commandInfo["parameters"];
@@ -725,6 +763,9 @@ function demo() {
             break;
           case "predefined dropdown":
             parameters += predefinedDropdown(parameterName, inputId, input, parameterInfo.slice(1));
+            break; 
+          case "predefined multi-dropdown":
+            parameters += predefinedMultiDropdown(parameterName, inputId, input, parameterInfo.slice(1));
             break; 
           case "default":
             parameters += empty(parameterName, inputId, input); 
@@ -859,6 +900,18 @@ function demo() {
           var row = $(this).attr("id")[("reorder").length];
           model.addReorderedVar(row);
         }); 
+      });
+
+      $('.dropdown-submenu a').on("mouseover", function(e){
+        $(this).next('ul').show();
+      });
+
+      // hardcoded currently?
+      $('.CPU').on("mouseleave", function(e){
+        $(this).find('ul').hide();
+      });
+      $('.GPU').on("mouseleave", function(e){
+        $(this).find('ul').hide();
       });
     }
   };

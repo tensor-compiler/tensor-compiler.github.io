@@ -46,6 +46,15 @@ for (int32_t i = 0; i < A1_dimension; i++) {
 } 
 ```
 
+# Fuse
+
+The `fuse(i, j, f)` transformation takes in two index variables `i` and `j`, where `j` is directly nested under `i`, and collapses them into a fused index variable `f` that iterates over the product of the coordinates `i` and `j`. 
+
+For the SpMV example, we could have: 
+```c++
+stmt = stmt.fuse(i, j, IndexVar("f"));
+```
+
 # Split 
 
 The `split(i, i0, i1, splitFactor)` transformation splits (strip-mines) an index variable `i` into two nested index variables `i0` and `i1`. The size of the inner index variable `i1` is then held constant at `splitFactor`, which must be a positive integer.
@@ -69,6 +78,10 @@ for (int32_t i0 = 0; i0 < ((A1_dimension + 15) / 16); i0++) {
 }
 ```
 
+# Divide
+
+# Precompute
+
 # Reorder
 
 The `reorder(vars)` transformation takes in a new ordering for a set of index variables in the expression that are directly nested in the iteration order. 
@@ -85,6 +98,14 @@ for (int32_t jA = A2_pos[iA]; jA < A2_pos[(iA + 1)]; jA++) {
     }
  }
 ```
+
+# Bound
+
+# Unroll
+
+# Parallelize
+
+
 
 
 

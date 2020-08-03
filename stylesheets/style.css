@@ -141,7 +141,7 @@ ul {
 
 .sortable li {
   float: left;
-  width: 155px; 
+  width: 160px; 
   padding: 0.5em;
   padding-top: 0px;
   padding-bottom: 0px;
@@ -219,10 +219,6 @@ ul {
 
 .schedule-input {
   width: 120px;
-}
-
-.schedule-input-long {
-  width: 200px;
 }
 
 .schedule-list {
