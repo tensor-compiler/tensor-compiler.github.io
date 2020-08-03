@@ -1006,7 +1006,7 @@ function demo() {
     }
 
     for (var i = 0; i < model.schedule.length; ++i) {
-      tempCommand = " -s=\"";
+      tempCommand = " -s=";
 
       var scheduleCommand = model.schedule[i]["command"];
       if (!scheduleCommand) { continue; }
@@ -1028,7 +1028,7 @@ function demo() {
       }
 
       tempCommand = tempCommand.substring(0, tempCommand.length - 1)
-      tempCommand += ")\"";
+      tempCommand += ")";
 
       if (valid) {
         // only add if user inputted all parameters
