@@ -104,8 +104,24 @@ function demo() {
       return (model.output.error !== "") ? model.output.error : model.input.error;
     },
 
+    setExampleSchedule: function(e, schedule) {
+      if (schedule.length == 0) {
+        $("#btnDefaults").hide();
+      } else {
+        $("#btnDefaults").show();
+        $("#btnCPU").attr('data-val', e);
+        $("#btnCPU").text(e + " CPU");
+
+        $("#btnGPU").attr('data-val', e);
+        $("#btnGPU").text(e + " GPU");
+      }
+      model.setSchedule(schedule);
+    },
     setSchedule: function(schedule) {
       model.schedule = schedule; 
+
+      model.cancelReq();
+      model.setOutput("", "", "", "");
       model.updateScheduleView();   
     },
     resetSchedule: function() {
@@ -582,13 +598,13 @@ function demo() {
       2: ["default", ""],
       3: ["text"]
     },
-    divide: {
-      parameters: ["Divided IndexVar", "Outer IndexVar", "Inner IndexVar", "Divide Factor"],
-      0: ["index dropdown", [1, "0"], [2, "1"]],
-      1: ["default", ""],
-      2: ["default", ""],
-      3: ["text"]
-    },
+    // divide: {
+    //   parameters: ["Divided IndexVar", "Outer IndexVar", "Inner IndexVar", "Divide Factor"],
+    //   0: ["index dropdown", [1, "0"], [2, "1"]],
+    //   1: ["default", ""],
+    //   2: ["default", ""],
+    //   3: ["text"]
+    // },
     precompute: {
       parameters: ["Original IndexVar", "Workspace IndexVar", "Precomputed Expr"],
       0: ["index dropdown", [1, ""]],
@@ -615,12 +631,9 @@ function demo() {
     parallelize: {
       parameters: ["Parallel IndexVar", "Hardware", "Race Strategy"],
       0: ["index dropdown"],
-      1: ["predefined multi-dropdown", "CPU Thread", 
-          {"Not Parallel": [], 
-           "Default Unit": [], 
-           "CPU": ["CPU Thread", "CPU Vector", "CPU Thread Group Reduction"],
-           "GPU": ["GPU Block", "GPU Thread", "GPU Block Reduction", "GPU Warp Reduction"]
-          }],
+      1: ["predefined dropdown", "CPU Thread", 
+          "Not Parallel", "CPU Thread", "CPU Vector", 
+          "GPU Thread", "GPU Block", "GPU Warp"],
       2: ["predefined dropdown", "No Races", 
           "Ignore Races", "No Races", "Atomics", "Temporary", "Parallel Reduction"]
     }
@@ -713,37 +726,6 @@ function demo() {
         return parameter; 
       }
 
-      function predefinedMultiDropdown(parameterName, inputId, input, info) {
-        var parameter = dropdown(parameterName, inputId, input, info[0], false, "245px");
-
-        options = info[1];
-        for (var option in options) {
-          if (options[option].length > 0) {
-            parameter += "<li style=\"width:245px\" ";
-            parameter += "class=\"dropdown-submenu ";
-            parameter += option;
-            parameter += "\"><a>" + option;
-            parameter += "<i class=\"material-icons\" style=\"float:right\">";
-            parameter += "keyboard_arrow_right</i></a>";
-            parameter += "<ul class=\"options dropdown-menu\" for=\""; 
-            parameter += inputId;
-            parameter += "\">";
-            for (suboption of options[option]) {
-              parameter += "<li style=\"width:245px\">";
-              parameter += "<a>" + suboption + "</a></li>";
-            }
-            parameter += "</ul></li>";   
-          } else {
-            parameter += "<li style=\"width:245px\"><a>"; 
-            parameter += option; 
-            parameter += "</a></li>";
-          }
-        }
-        parameter += "</ul></div></li>";
-        return parameter; 
-      }
-
-
       var commandInfo = scheduleCommands[command];
       var parametersList = commandInfo["parameters"];
 
@@ -763,9 +745,6 @@ function demo() {
             break;
           case "predefined dropdown":
             parameters += predefinedDropdown(parameterName, inputId, input, parameterInfo.slice(1));
-            break; 
-          case "predefined multi-dropdown":
-            parameters += predefinedMultiDropdown(parameterName, inputId, input, parameterInfo.slice(1));
             break; 
           case "default":
             parameters += empty(parameterName, inputId, input); 
@@ -912,6 +891,10 @@ function demo() {
       });
       $('.GPU').on("mouseleave", function(e){
         $(this).find('ul').hide();
+      });
+
+      $("#btnCPU").click(function() {
+
       });
     }
   };
@@ -1065,22 +1048,7 @@ function demo() {
           y: { name: "Dense array", levels: { formats: ["d"], ordering: [0] } },
           A: { name: "CSR", levels: { formats: ["d", "s"], ordering: [0, 1] } },
           x: { name: "Dense array", levels: { formats: ["d"], ordering: [0] } }
-        },
-        schedule: [
-          { 
-            command: "split", 
-            parameters: ["i", "i0", "i1", 32]
-          }, 
-          {
-            command: "reorder",
-            numReordered: 3,
-            parameters: ["i0", "i1", "j"]
-          },
-          {
-            command: "parallelize", 
-            parameters: ["i0", "CPU Thread", "No Races"]
-          }
-        ]
+        }
       },
       add: { name: "Sparse matrix addition", 
         code: "A(i,j) = B(i,j) + C(i,j)",
@@ -1088,8 +1056,7 @@ function demo() {
           A: { name: "CSR", levels: { formats: ["d", "s"], ordering: [0, 1] } },
           B: { name: "CSR", levels: { formats: ["d", "s"], ordering: [0, 1] } },
           C: { name: "CSR", levels: { formats: ["d", "s"], ordering: [0, 1] } },
-        },
-        schedule: []
+        }
       },
       ttv: { name: "Tensor-times-vector", 
         code: "A(i,j) = B(i,j,k) * c(k)",
@@ -1097,30 +1064,7 @@ function demo() {
           A: { name: "DCSR", levels: { formats: ["s", "s"], ordering: [0, 1] } },
           B: { name: "CSF", levels: { formats: ["s", "s", "s"], ordering: [0, 1, 2] } },
           c: { name: "Dense array", levels: { formats: ["d"], ordering: [0] } },
-        },
-        schedule: [
-          { 
-            command: "fuse",
-            parameters: ["i", "j", "f"]
-          },
-          {
-            command: "pos",
-            parameters: ["f", "fpos", "B"]
-          },
-          {
-            command: "split",
-            parameters: ["fpos", "chunk", "fpos2", 8]
-          },
-          {
-            command: "reorder", 
-            numReordered: 3,
-            parameters: ["chunk", "fpos2", "k"]
-          },
-          {
-            command: "parallelize", 
-            parameters: ["chunk", "CPU Thread", "No Races"]
-          }
-        ]
+        }
       },
       mttkrp: { name: "MTTKRP", 
         code: "A(i,j) = B(i,k,l) * D(l,j) * C(k,j)",
@@ -1129,26 +1073,7 @@ function demo() {
           B: { name: "CSF", levels: { formats: ["s", "s", "s"], ordering: [0, 1, 2] } },
           C: { name: "Dense array", levels: { formats: ["d", "d"], ordering: [0, 1] } },
           D: { name: "Dense array", levels: { formats: ["d", "d"], ordering: [0, 1] } },
-        },
-        schedule: [
-          {
-            command: "reorder",
-            numReordered: 4,
-            parameters: ["i", "k", "l", "j"]
-          },
-          {
-            command: "precompute",
-            parameters: ["j", "j", "B(i,k,l) * D(l,j)"]
-          },
-          {
-            command: "split",
-            parameters: ["i", "i0", "i1", 32]
-          },
-          {
-            command: "parallelize",
-            parameters: ["i0", "CPU Thread", "No Races"]
-          }
-        ]
+        }
       }
   };
 
@@ -1182,7 +1107,7 @@ function demo() {
   }
 
   for (var e in examples) {
-    (function(code, formats, schedule) {
+    (function(e, code, formats) {
       var setExample = function() {
         $("#txtExpr").val(code);
         for (var tensor in formats) {
@@ -1190,7 +1115,9 @@ function demo() {
           tblFormatsView.insertNamesCacheEntry(tensor, formats[tensor].name);
         }
         model.setInput(code);
-        model.setSchedule(schedule);
+
+        var schedule = default_CPU_schedules[e]; 
+        model.setExampleSchedule(e, schedule);        
       };
       $("#example_" + e).click(setExample);
 
@@ -1198,7 +1125,7 @@ function demo() {
       if (e === demo) {
         setExample();
       }
-    })(examples[e].code, examples[e].formats, examples[e].schedule);
+    })(e, examples[e].code, examples[e].formats);
   }
 
   var urlPrefix = "http://tensor-compiler.org/examples/" + demo;
@@ -1213,5 +1140,13 @@ function demo() {
 
   $("#btnSchedule").click(function() {    
     model.addScheduleRow();
+  });
+
+  $("#btnCPU").click(function() {
+    model.setSchedule(default_CPU_schedules[$(this).attr('data-val')]);
+  });
+
+  $("#btnGPU").click(function() {
+    model.setSchedule(default_GPU_schedules[$(this).attr('data-val')]);
   });
 }

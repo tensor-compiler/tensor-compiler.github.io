@@ -23,6 +23,7 @@
     <script src="javascripts/parser.js"></script>
     <script src="javascripts/parser-indices.js"></script>
     <script src="javascripts/parser-accesses.js"></script>
+    <script src="javascripts/default-schedules.js"></script>
     <script src="javascripts/demo.js"></script>
     <script type="text/x-mathjax-config">
       MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
@@ -132,12 +133,22 @@
           <div class="mdl-grid" style="padding-top: 6px">
             <div class="mdl-layout-spacer"></div>
             <div class="mdl-cell mdl-cell--9-col">
+              <!-- <div>
+                <span style="font-size: 14px;margin-left: 50px">Documentation on the scheduling language can be found here [URL to come].</span>
+              </div> -->
               <div>
-                <button id="btnSchedule" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect demo-btn" style="margin-bottom:10px; width: 30%">
+                <button id="btnSchedule" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect demo-btn" style="margin-bottom: 10px; width: 30%">
                   Add Scheduling Command
                 </button>
-                <div class="mdl-textfield" style="width: 69%">
-                  <span style="font-size: 14px;margin-left: 50px">Documentation on the scheduling language can be found here [URL to come].</span>
+
+                <div id="btnDefaults" style="float: right">
+                  <button id="btnCPU" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect demo-btn" style="margin-right: 10px; width: inherit">
+                    SpMV CPU
+                  </button>
+
+                  <button id="btnGPU" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect demo-btn" style="width: inherit">
+                    SpMV GPU
+                  </button>
                 </div>
               </div>
               <table class="mdl-data-table mdl-js-data-table" style="width: 100%; 

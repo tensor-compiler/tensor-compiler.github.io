@@ -249,3 +249,12 @@ ul {
 .add-reorder {
   line-height: 60px;
 }
+
+.mdl-switch.is-checked .mdl-switch__track {
+  background: rgba(0,0,0,.26);
+}
+
+.mdl-switch.is-checked .mdl-switch__thumb {
+  background: #fafafa
+}
+}

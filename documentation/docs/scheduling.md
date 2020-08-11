@@ -92,17 +92,16 @@ for (int32_t i0 = 0; i0 < ((A1_dimension + 15) / 16); i0++) {
 }
 ```
 
-# Divide
+<!-- (not yet implemented) -->
+<!-- # Divide
 
-The `divide(i, i0, i1, divideFactor)` transformation divides an index variable `i` into two nested index variables `i0` and `i1`. The size of the outer index variable `i0` is then held constant at `divideFactor`, which must be a positive integer. 
-
-[TODO example, divide not implemented yet.]
+The `divide(i, i0, i1, divideFactor)` transformation divides an index variable `i` into two nested index variables `i0` and `i1`. The size of the outer index variable `i0` is then held constant at `divideFactor`, which must be a positive integer.  -->
 
 # Precompute
 
 The `precompute(expr, i, iw, workspace)` transformation, which is described in more detail [here](http://tensor-compiler.org/taco-workspaces.pdf), leverages scratchpad memories and reorders computations to  increase locality. 
 
-Given a subexpression `expr` to precompute, an index variable `i` to precompute over, and an index variable `iw` (can be the same or different as `i`) to precompute with, the precomputed results are stored in the tensor variable `workspace`. 
+Given a subexpression `expr` to precompute, an index variable `i` to precompute over, and an index variable `iw` (which can be the same or different as `i`) to precompute with, the precomputed results are stored in the tensor variable `workspace`. 
 
 For the SpMV example, if `rhs` is the right hand side of the original statement, we could have: 
 ```c++
@@ -165,31 +164,54 @@ for (int32_t ibound = 0; ibound < 100; ibound++) {
 
 The `unroll(i, unrollFactor)` transformation unrolls the loop corresponding to an index variable `i` by `unrollFactor` number of iterations, where `unrollFactor` is a positive integer. 
 
-[TODO example, can't get unroll to work?]
+For the SpMV example, we could have
+```c++
+stmt = stmt.split(i, i0, i1, 32);
+stmt = stmt.unroll(i0, 4);
+```
+```c
+if ((((A1_dimension + 31) / 32) * 32 + 32) + (((A1_dimension + 31) / 32) * 32 + 32) >= A1_dimension) {
+    for (int32_t i0 = 0; i0 < ((A1_dimension + 31) / 32); i0++) {
+        for (int32_t i1 = 0; i1 < 32; i1++) {
+            int32_t i = i0 * 32 + i1;
+            if (i >= A1_dimension)
+                continue;
+
+            for (int32_t jA = A2_pos[i]; jA < A2_pos[(i + 1)]; jA++) {
+                int32_t j = A2_crd[jA];
+                y_vals[i] = y_vals[i] + A_vals[jA] * x_vals[j];
+            }
+        }
+    }
+}
+else {
+    #pragma unroll 4
+    for (int32_t i0 = 0; i0 < ((A1_dimension + 31) / 32); i0++) {
+        for (int32_t i1 = 0; i1 < 32; i1++) {
+            int32_t i = i0 * 32 + i1;
+            for (int32_t jA = A2_pos[i]; jA < A2_pos[(i + 1)]; jA++) {
+                int32_t j = A2_crd[jA];
+                y_vals[i] = y_vals[i] + A_vals[jA] * x_vals[j];
+            }
+        }
+    }
+}
+```
 
 # Parallelize
 
-The `parallelize(i, parallel_unit, output_race_strategy)` transformation tags an index variable `i` for parallel execution on hardware type `parallel_unit`. Data races are handled by an `output_race_strategy`. 
+The `parallelize(i, parallel_unit, output_race_strategy)` transformation tags an index variable `i` for parallel execution on hardware type `parallel_unit`. Data races are handled by an `output_race_strategy`. Since the other transformations expect serial code, `parallelize` must come last in a series of transformations. 
 
-Since the other transformations expect serial code, `parallelize` must come last in a series of transformations. For the SpMV example, we could have
+For the SpMV example, we could have
 ```c++
-IndexVar i0("i0"), i1("i1");
-stmt = stmt.split(i, i0, i1, 32);
-stmt = stmt.reorder({i0, i1, j});
-stmt = stmt.parallelize(i0, ParallelUnit::CPUThread, OutputRaceStrategy::NoRaces);
+stmt = stmt.parallelize(i, ParallelUnit::CPUThread, OutputRaceStrategy::NoRaces);
 ```
 ```c
 #pragma omp parallel for schedule(runtime)
-for (int32_t i0 = 0; i0 < ((A1_dimension + 31) / 32); i0++) {
-    for (int32_t i1 = 0; i1 < 32; i1++) {
-        int32_t i = i0 * 32 + i1;
-        if (i >= A1_dimension)
-            continue;
-
-        for (int32_t jA = A2_pos[i]; jA < A2_pos[(i + 1)]; jA++) {
-            int32_t j = A2_crd[jA];
-            y_vals[i] = y_vals[i] + A_vals[jA] * x_vals[j];
-        }
+for (int32_t i = 0; i < A1_dimension; i++) {
+    for (int32_t jA = A2_pos[i]; jA < A2_pos[(i + 1)]; jA++) {
+        int32_t j = A2_crd[jA];
+        y_vals[i] = y_vals[i] + A_vals[jA] * x_vals[j];
     }
 }
 ```
