@@ -1,8 +1,4 @@
 
-var NNZ_PER_THREAD = 8; 
-var WARP_SIZE = 32; 
-var BLOCK_SIZE = 256; 
-
 var default_CPU_schedules = {
   spmv: [
           { 
@@ -11,7 +7,6 @@ var default_CPU_schedules = {
           }, 
           {
             command: "reorder",
-            numReordered: 3,
             parameters: ["i0", "i1", "j"]
           },
           {
@@ -35,7 +30,6 @@ var default_CPU_schedules = {
           },
           {
             command: "reorder", 
-            numReordered: 3,
             parameters: ["chunk", "fpos2", "k"]
           },
           {
@@ -46,12 +40,11 @@ var default_CPU_schedules = {
   mttkrp: [
             {
               command: "reorder",
-              numReordered: 4,
               parameters: ["i", "k", "l", "j"]
             },
             {
               command: "precompute",
-              parameters: ["j", "j", "B(i,k,l) * D(l,j)"]
+              parameters: ["B(i,k,l) * D(l,j)", "j", "j"]
             },
             {
               command: "split",
@@ -63,6 +56,7 @@ var default_CPU_schedules = {
             }
           ]
 }
+
 
 var default_GPU_schedules = {
   spmv: [
@@ -76,28 +70,27 @@ var default_GPU_schedules = {
         },
         {
           command: "split", 
-          parameters: ["fpos", "block", "fpos1", NNZ_PER_THREAD * BLOCK_SIZE]
+          parameters: ["fpos", "block", "fpos1", 2048]
         },
         {
           command: "split", 
-          parameters: ["fpos1", "warp", "fpos2", NNZ_PER_THREAD * WARP_SIZE]
+          parameters: ["fpos1", "warp", "fpos2", 216]
         },
         {
           command: "split", 
-          parameters: ["fpos2", "thread", "thr_nz", NNZ_PER_THREAD]
+          parameters: ["fpos2", "thread", "thr_nz", 8]
         },
         {
           command: "reorder", 
-          numReordered: 4,
           parameters: ["block", "warp", "thread", "thr_nz"]
         },
         {
           command: "precompute",
-          parameters: ["thr_nz", "thr_nz_pre", "A(i, j) * x(j)"]
+          parameters: ["A(i, j) * x(j)", "thr_nz", "thr_nz_pre"]
         },
         {
           command: "unroll",
-          parameters: ["thr_nz_pre", NNZ_PER_THREAD]
+          parameters: ["thr_nz_pre", 8]
         },
         {
           command: "parallelize",
@@ -111,5 +104,106 @@ var default_GPU_schedules = {
           command: "parallelize",
           parameters: ["thread", "GPU Thread", "Atomics"]
         }
-      ]
+      ],
+  add: [],
+  ttv:  [ 
+        {
+          command: "fuse",
+          parameters: ["j", "k", "jk"]
+        },
+        {
+          command: "fuse",
+          parameters: ["i", "jk", "f"]
+        },
+        {
+          command: "pos",
+          parameters: ["f", "fpos", "B"]
+        },
+        {
+          command: "split", 
+          parameters: ["fpos", "block", "fpos1", 2048]
+        },
+        {
+          command: "split", 
+          parameters: ["fpos1", "warp", "fpos2", 256]
+        },
+        {
+          command: "split", 
+          parameters: ["fpos2", "thread", "thr_nz", 8] 
+        },
+        {
+          command: "reorder",
+          parameters: ["block", "warp", "thread", "thr_nz"]
+        },
+        {
+          command: "precompute",
+          parameters: ["B(i, j, k) * c(k)", "thr_nz", "thr_nz_pre"]
+        },
+        {
+          command: "unroll",
+          parameters: ["thr_nz_pre", 8]
+        },
+        {
+          command: "parallelize",
+          parameters: ["block", "GPU Block", "Ignore Races"]
+        },
+        {
+          command: "parallelize",
+          parameters: ["warp", "GPU Warp", "Ignore Races"]
+        },
+        {
+          command: "parallelize",
+          parameters: ["thread", "GPU Thread", "Atomics"]
+        }
+        ],
+  mttkrp: [
+          {
+            command: "reorder",
+            parameters: ["i", "k", "l", "j"]
+          },
+          {
+            command: "fuse",
+            parameters: ["k", "l", "kl"]
+          },
+          {
+            command: "fuse",
+            parameters: ["i", "kl", "f"]
+          },
+          {
+            command: "pos",
+            parameters: ["f", "fpos", "B"]
+          },
+          {
+            command: "split", 
+            parameters: ["fpos", "block", "fpos1", 128]
+          },
+          {
+            command: "split", 
+            parameters: ["fpos1", "warp", "nnz", 16]
+          },
+          {
+            command: "split", 
+            parameters: ["j", "dense_un", "thread", 32]
+          },
+          {
+            command: "bound", 
+            parameters: ["dense_un", "dense_val", 1, "Max Exact"]
+          },
+          {
+            command: "reorder",
+            parameters: ["block", "warp", "dense_val", "thread", "nnz"]
+          },
+          {
+            command: "parallelize",
+            parameters: ["block", "GPU Block", "Ignore Races"]
+          },
+          {
+            command: "parallelize",
+            parameters: ["warp", "GPU Warp", "Ignore Races"]
+          },
+          {
+            command: "parallelize",
+            parameters: ["thread", "GPU Thread", "Atomics"]
+          }
+        ],
 }

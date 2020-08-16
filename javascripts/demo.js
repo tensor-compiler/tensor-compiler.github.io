@@ -105,7 +105,7 @@ function demo() {
     },
 
     setExampleSchedule: function(e, schedule) {
-      if (schedule.length == 0) {
+      if (schedule.length === 0) {
         $("#btnDefaults").hide();
       } else {
         $("#btnDefaults").show();
@@ -118,7 +118,7 @@ function demo() {
       model.setSchedule(schedule);
     },
     setSchedule: function(schedule) {
-      model.schedule = schedule; 
+      model.schedule = JSON.parse(JSON.stringify(schedule)); // deep
 
       model.cancelReq();
       model.setOutput("", "", "", "");
@@ -160,10 +160,6 @@ function demo() {
         }
         model.schedule[row]["parameters"].push(defaultValue);
       }
-
-      if (command === "reorder") {
-        model.schedule[row]["numReordered"] = 2; 
-      }
       
       model.updateScheduleView();
     },
@@ -179,8 +175,6 @@ function demo() {
     },
     addReorderedVar: function(row) {
       model.schedule[row]["parameters"].push("");
-      model.schedule[row]["numReordered"]++;
-
       model.updateScheduleView(); 
     },
     getScheduleCommand: function(row) {
@@ -275,7 +269,7 @@ function demo() {
       var rule = tblFormatsView.getFormatNameRule(name, order);
       for (var i = 0; i < order; ++i) {
         formats.push(rule(i));
-        if (name == "CSC" || name == "DCSC") {
+        if (name === "CSC" || name === "DCSC") {
           ordering.push(order - i - 1);
         } else {
           ordering.push(i);
@@ -293,10 +287,10 @@ function demo() {
           return function(i) { return 's'; };
         case "CSR":
         case "CSC":
-          return function(i) { return (i == 0) ? 'd' : 's'; }; 
+          return function(i) { return (i === 0) ? 'd' : 's'; }; 
         case "Sorted COO": 
           return function(i) { 
-            if (i == 0) {
+            if (i === 0) {
               return 'u';
             } else if (i < order - 1) {
               return 'c';
@@ -312,9 +306,9 @@ function demo() {
     getFormatNamesList : function(order) {
       var names = ["Dense array"];
 
-      if (order == 1) {
+      if (order === 1) {
         names.push("Sparse array");
-      } else if (order == 2) {
+      } else if (order === 2) {
         names.push("Sorted COO");
         names.push("CSR");
         names.push("CSC");
@@ -330,7 +324,7 @@ function demo() {
       var names = tblFormatsView.getFormatNamesList(order);
       for (var name of names) {
         var entry = tblFormatsView.createEntryFromName(name, order);
-        if (JSON.stringify(entry) == JSON.stringify(currentEntry)) {
+        if (JSON.stringify(entry) === JSON.stringify(currentEntry)) {
           return name;
         } 
       }
@@ -366,7 +360,7 @@ function demo() {
         for (t in model.input.tensorOrders) {
           var order = model.input.tensorOrders[t];
           var cached = (tblFormatsView.levelsCache.hasOwnProperty(t) && 
-                        tblFormatsView.levelsCache[t].formats.length == order);
+                        tblFormatsView.levelsCache[t].formats.length === order);
 
           if (order > 0) {
             var listId = "dims" + t;
@@ -416,7 +410,7 @@ function demo() {
             listTensorsBody += "style=\"padding: 0px\">";
             listTensorsBody += "<ul id=\"";
             listTensorsBody += listId;
-            listTensorsBody += "\" class=\"ui-state-default level-sortable sortable\">";
+            listTensorsBody += "\" class=\"ui-state-default sortable\">";
             listTensorsBody += "<li class=\"ui-state-default\" ";
             listTensorsBody += "style=\"width: 0px; padding: 0px\"></li>";
 
@@ -606,15 +600,14 @@ function demo() {
     //   3: ["text"]
     // },
     precompute: {
-      parameters: ["Original IndexVar", "Workspace IndexVar", "Precomputed Expr"],
-      0: ["index dropdown", [1, ""]],
-      1: ["default", ""],
-      2: ["long text"]
+      parameters: ["Precomputed Expr", "Original IndexVar", "Workspace IndexVar"],
+      0: ["long text"],
+      1: ["index dropdown", [2, ""]],
+      2: ["default", ""]
     },
     reorder: {
-      parameters: ["Reordered IndexVar", "Reordered IndexVar"],
-      0: ["index dropdown"],
-      1: ["index dropdown"]
+      parameters: ["Reordered IndexVar"],
+      0: ["index dropdown"]
     },
     bound: {
       parameters: ["Original IndexVar", "Bounded IndexVar", "Bound", "Bound Type"],
@@ -759,7 +752,7 @@ function demo() {
       }
 
       if (command === "reorder") {
-        for (var p = 2; p < model.schedule[row]["numReordered"]; ++p) {
+        for (var p = 1; p < model.schedule[row]["parameters"].length; ++p) {
           var parameterName = parametersList[0];
           var inputId = "param" + row + "-" + p;
           var input = model.getScheduleParameter(row, p); 
@@ -786,7 +779,7 @@ function demo() {
         var command = model.getScheduleCommand(r)
         
         var row = "<tr style=\"cursor: move\">";
-        row += "<td class=\"remove-row mdl-data-table__cell--non-numeric\" id=\""; 
+        row += "<td class=\"removable-row mdl-data-table__cell--non-numeric\" id=\""; 
         row += rowId + "-button\">"; 
         row += "<button class=\"mdl-button mdl-js-button mdl-button--icon\">"; 
         row += "<i class=\"material-icons\" style=\"font-size:16px\">clear</i>";
@@ -867,7 +860,7 @@ function demo() {
         }
       });
 
-      $(".remove-row").each(function() {
+      $(".removable-row").each(function() {
         $(this).click(function() {
           var row = $(this).attr("id")[("schedule").length];
           model.deleteScheduleRow(row);
@@ -970,7 +963,7 @@ function demo() {
     var command = model.input.expression.replace(/ /g, "");
     for (t in model.input.tensorOrders) {
       var order = model.input.tensorOrders[t];
-      if (order == 0) {
+      if (order === 0) {
         continue;
       }
 
@@ -989,34 +982,26 @@ function demo() {
     }
 
     for (var i = 0; i < model.schedule.length; ++i) {
-      tempCommand = " -s=";
+      command += " -s=";
 
       var scheduleCommand = model.schedule[i]["command"];
       if (!scheduleCommand) { continue; }
 
-      tempCommand += scheduleCommand + "(";
-      var valid = true; 
-
-      if (scheduleCommand === "reorder") {
-        tempCommand += model.schedule[i]["numReordered"] + ",";
-      }
+      command += scheduleCommand + "(";
 
       for (var param of model.schedule[i]["parameters"]) {
         param = param.toString().replace(/ /g, "");
         if (!param) {
-          valid = false; 
-          break; 
+          errorMsg = "Schedule is missing arguments";
+          model.cancelReq();
+          model.setOutput("", "", "", errorMsg); 
+          return; 
         }
-        tempCommand += param + ",";
+        command += param + ",";
       }
 
-      tempCommand = tempCommand.substring(0, tempCommand.length - 1)
-      tempCommand += ")";
-
-      if (valid) {
-        // only add if user inputted all parameters
-        command += tempCommand; 
-      }
+      command = command.substring(0, command.length - 1)
+      command += ")";
     }
 
     var req = $.ajax({
@@ -1143,6 +1128,7 @@ function demo() {
   });
 
   $("#btnCPU").click(function() {
+    console.log(default_CPU_schedules[$(this).attr('data-val')]);
     model.setSchedule(default_CPU_schedules[$(this).attr('data-val')]);
   });
 
