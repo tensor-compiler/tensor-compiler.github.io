@@ -74,7 +74,7 @@ var default_GPU_schedules = {
         },
         {
           command: "split", 
-          parameters: ["fpos1", "warp", "fpos2", 216]
+          parameters: ["fpos1", "warp", "fpos2", 256]
         },
         {
           command: "split", 

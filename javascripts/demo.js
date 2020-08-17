@@ -5,7 +5,6 @@ function demo() {
       tensorOrders: {},
       error: "",
       indices: [], 
-      accesses: []
     },
     schedule: [],
     output: {
@@ -31,7 +30,9 @@ function demo() {
       }
     },
     updateScheduleView: function() {
+      console.log(model.schedule);
       model.removeInvalidIndices();
+      model.removeInvalidAccesses();
       model.scheduleView(0);
     },
     addOutputView: function(newView) {
@@ -65,7 +66,6 @@ function demo() {
         try {
           model.input.tensorOrders = parser.parse(expression);
           model.input.indices = [...new Set(parser_indices.parse(expression))];
-          model.input.accesses = [...new Set(parser_accesses.parse(expression))];
           model.input.error = "";
           for (t in model.input.tensorOrders) {
             if (model.input.tensorOrders[t] < 0) {
@@ -126,7 +126,7 @@ function demo() {
     },
     resetSchedule: function() {
       model.schedule = [];
-      model.updateScheduleView();   
+      model.updateScheduleView();
     },
     addScheduleRow: function() {
       model.schedule.push({command: "", parameters: []});
@@ -209,7 +209,24 @@ function demo() {
         }
       }
     },
+    removeInvalidAccesses: function() {
+      for (var row = 0; row < model.schedule.length; ++row) {
+        for (var index = 0; index < model.schedule[row]["parameters"].length; ++index) {
+          var command = model.schedule[row]["command"];
+          var value = model.schedule[row]["parameters"][index];
+          if (model.isParameterType(command, index, "access dropdown") 
+              && !model.input.tensorOrders.hasOwnProperty(value)) {
+            model.schedule[row]["parameters"][index] = "";
+            model.updateInferred(row, command, index, "");
+          }
+        }
+      }
+    },
     isParameterType: function(command, index, parameterType) {
+      if (command === "reorder") {
+        return parameterType === "index dropdown";
+      }
+
       return scheduleCommands[command][index] && scheduleCommands[command][index][0] === parameterType;
     },
     updateInferred: function(row, command, index, value) {
@@ -352,7 +369,7 @@ function demo() {
         var hideTables = function() { 
           $("#tblFormats").hide(); 
           $("#tblSchedule").hide(); 
-          tblScheduleView.clear();
+          model.resetSchedule()
         };
         tblFormatsView.timerEvent = setTimeout(hideTables, timeout);
       } else {
@@ -698,10 +715,13 @@ function demo() {
       // a dropdown where user can choose from argument tensors
       function accessDropdown(parameterName, inputId, input) {
         var parameter = dropdown(parameterName, inputId, input);
-        for (var access of model.input.accesses) {
-          parameter += "<li><a>"; 
-          parameter += access; 
-          parameter += "</a></li>";
+        for (var access in model.input.tensorOrders) {
+          if (model.input.tensorOrders[access] > 0 
+              && model.input.expression.indexOf(access) > model.input.expression.indexOf("=")) {
+            parameter += "<li><a>"; 
+            parameter += access; 
+            parameter += "</a></li>";
+          }
         }
         parameter += "</ul></div></li>";
         return parameter; 
@@ -907,7 +927,7 @@ function demo() {
 
   $("#txtExpr").keyup(function() {
     model.setInput($("#txtExpr").val());
-    model.resetSchedule();
+    model.updateScheduleView();
   });
 
   var panelKernelsView = {

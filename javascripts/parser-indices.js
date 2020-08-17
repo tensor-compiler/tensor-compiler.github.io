@@ -171,12 +171,15 @@ parser_indices = /*
         peg$c15 = ")",
         peg$c16 = peg$literalExpectation(")", false),
         peg$c17 = function(tensor, indices) {
-            return indices;
+            if (indices) {
+              return indices; 
+            }
+            return []; 
         },
         peg$c18 = "_",
         peg$c19 = peg$literalExpectation("_", false),
         peg$c20 = function() {
-            return 1;
+            return [];
         },
         peg$c21 = "{",
         peg$c22 = peg$literalExpectation("{", false),
@@ -188,11 +191,11 @@ parser_indices = /*
         peg$c26 = ",",
         peg$c27 = peg$literalExpectation(",", false),
         peg$c28 = function(head, tail) {
-        	var ret = [head];
+            var ret = [head];
             for (var i = 0; i < tail.length; ++i) {
-            	for (var t of tail[i]) {
-                	if (t && t !== ",") {
-                    	ret.push(t); 
+                for (var t of tail[i]) {
+                    if (t && t !== ",") {
+                        ret.push(t); 
                     }
                 }
             }
@@ -210,12 +213,12 @@ parser_indices = /*
         peg$c36 = ".",
         peg$c37 = peg$literalExpectation(".", false),
         peg$c38 = function() {
-            return ""; 
+            return []; 
         },
         peg$c39 = /^[ \t\n\r]/,
         peg$c40 = peg$classExpectation([" ", "\t", "\n", "\r"], false, false),
         peg$c41 = function() {
-        	return ""; 
+            return ""; 
         },
 
         peg$currPos          = 0,

@@ -34,11 +34,14 @@ NegFactor = "-" _ tensors:Factor {
 }
 
 Access = tensor:Var _ indices:(UnderscoreVar / UnderscoreVarList / ParenVarList / _) {
-    return indices;
+    if (indices) {
+        return indices; 
+    }
+    return []; 
 }
 
 UnderscoreVar = "_" _ Var {
-    return 1;
+    return [];
 }
 
 UnderscoreVarList = "_" _ "{" _ indices:VarList _ "}" {
@@ -66,7 +69,7 @@ Var = [a-z]i [a-z/0-9]i* {
 }
 
 Literal = [0-9]+ ("." [0-9]*)? {
-    return ""; 
+    return []; 
 }
 
 _ = [ \t\n\r]* {
