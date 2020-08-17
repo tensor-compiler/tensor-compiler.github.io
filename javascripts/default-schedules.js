@@ -70,15 +70,15 @@ var default_GPU_schedules = {
         },
         {
           command: "split", 
-          parameters: ["fpos", "block", "fpos1", 2048]
+          parameters: ["fpos", "block", "fpos1", 3584]
         },
         {
           command: "split", 
-          parameters: ["fpos1", "warp", "fpos2", 256]
+          parameters: ["fpos1", "warp", "fpos2", 224]
         },
         {
           command: "split", 
-          parameters: ["fpos2", "thread", "thr_nz", 8]
+          parameters: ["fpos2", "thread", "thr_nz", 7]
         },
         {
           command: "reorder", 
@@ -90,7 +90,7 @@ var default_GPU_schedules = {
         },
         {
           command: "unroll",
-          parameters: ["thr_nz_pre", 8]
+          parameters: ["thr_nz_pre", 7]
         },
         {
           command: "parallelize",
@@ -121,15 +121,15 @@ var default_GPU_schedules = {
         },
         {
           command: "split", 
-          parameters: ["fpos", "block", "fpos1", 2048]
+          parameters: ["fpos", "block", "fpos1", 256]
         },
         {
           command: "split", 
-          parameters: ["fpos1", "warp", "fpos2", 256]
+          parameters: ["fpos1", "warp", "fpos2", 16]
         },
         {
           command: "split", 
-          parameters: ["fpos2", "thread", "thr_nz", 8] 
+          parameters: ["fpos2", "thread", "thr_nz", 1] 
         },
         {
           command: "reorder",
@@ -141,7 +141,7 @@ var default_GPU_schedules = {
         },
         {
           command: "unroll",
-          parameters: ["thr_nz_pre", 8]
+          parameters: ["thr_nz_pre", 1]
         },
         {
           command: "parallelize",
@@ -175,11 +175,11 @@ var default_GPU_schedules = {
           },
           {
             command: "split", 
-            parameters: ["fpos", "block", "fpos1", 128]
+            parameters: ["fpos", "block", "fpos1", 64]
           },
           {
             command: "split", 
-            parameters: ["fpos1", "warp", "nnz", 16]
+            parameters: ["fpos1", "warp", "nnz", 4]
           },
           {
             command: "split", 
