@@ -24,15 +24,15 @@ class Handler(BaseHTTPRequestHandler):
 
       prettyCmd = "taco \"" + cmd.replace(" ", "\" ", 1)
       
-      logFile = "/Users/jwshi/Documents/UROP/success.log"
-      tacoPath = "/Users/jwshi/Documents/UROP/taco/build/bin/taco"
+      logFile = "/home/ubuntu/success.log"
+      tacoPath = "/home/ubuntu/taco/build/bin/taco"
 
       prefix = "/tmp/" + str(threading.current_thread().ident) + "_"
       writePath = prefix + "taco_kernel.c"
       computePath = prefix + "taco_compute.c"
       assemblyPath = prefix + "taco_assembly.c"
       cmd = tacoPath + " " + cmd + " -write-source=" + writePath + " -write-compute=" + computePath + " -write-assembly=" + assemblyPath
-      
+
       try:
         subprocess.check_output(str.split(cmd), timeout=3, stderr=subprocess.STDOUT)
         with open(writePath, 'r') as f:
