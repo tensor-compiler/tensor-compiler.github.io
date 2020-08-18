@@ -1088,7 +1088,7 @@ function demo() {
       }
     }
     return "";
-  }
+  };
 
   var demo = getURLParam("demo");
   if (!(demo in examples)) {
