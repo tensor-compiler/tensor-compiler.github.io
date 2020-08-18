@@ -189,8 +189,9 @@ function demo() {
         var command = model.schedule[i]["command"];
         var parameters = model.schedule[i]["parameters"];
         for (var j = 0; j < parameters.length; ++j) {
-          if (parameters[j] && model.isParameterType(command, j, "default")) {
-            indices.push(parameters[j]); 
+          var index = parameters[j]; 
+          if (index && model.isParameterType(command, j, "default") && !indices.includes(index)) {
+            indices.push(index); 
           }
         }
       }
