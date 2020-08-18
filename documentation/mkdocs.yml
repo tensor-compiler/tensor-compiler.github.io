@@ -15,7 +15,6 @@ pages:
     - C++ Library:
         - 'Defining Tensors': 'tensors.md'
         - 'Computing on Tensors': 'computations.md'
-        - 'Providing a Schedule': 'scheduling.md'
     - Python Library:
         - 'Tutorial': 'tutorial.md'
         - 'Defining Tensors': 'pytensors.md'
