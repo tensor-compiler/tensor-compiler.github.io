@@ -369,7 +369,7 @@ function demo() {
         var hideTables = function() { 
           $("#tblFormats").hide(); 
           $("#tblSchedule").hide(); 
-          model.resetSchedule()
+          model.resetSchedule();
         };
         tblFormatsView.timerEvent = setTimeout(hideTables, timeout);
       } else {
@@ -824,7 +824,7 @@ function demo() {
         row += rowId;
         row += "\">";
         for (var c in scheduleCommands) {
-          row += "<li><a>" + c + "</a></li>"
+          row += "<li><a>" + c + "</a></li>";
         }
         row += "</ul></div></td>";
         row += "<td class=\"mdl-data-table__cell--non-numeric\"";
@@ -892,22 +892,6 @@ function demo() {
           var row = $(this).attr("id")[("reorder").length];
           model.addReorderedVar(row);
         });
-      });
-
-      $('.dropdown-submenu a').on("mouseover", function(e){
-        $(this).next('ul').show();
-      });
-
-      // hardcoded currently?
-      $('.CPU').on("mouseleave", function(e){
-        $(this).find('ul').hide();
-      });
-      $('.GPU').on("mouseleave", function(e){
-        $(this).find('ul').hide();
-      });
-
-      $("#btnCPU").click(function() {
-
       });
     }
   };
@@ -1020,13 +1004,13 @@ function demo() {
         command += param + ",";
       }
 
-      command = command.substring(0, command.length - 1)
+      command = command.substring(0, command.length - 1);
       command += ")";
     }
 
     var req = $.ajax({
         type: "POST",
-        url: "http://localhost:80",
+        url: "http://tensor-compiler-online.csail.mit.edu",
         data: escape(command),
         async: true,
         cache: false,
@@ -1104,7 +1088,7 @@ function demo() {
       }
     }
     return "";
-  };
+  }
 
   var demo = getURLParam("demo");
   if (!(demo in examples)) {
