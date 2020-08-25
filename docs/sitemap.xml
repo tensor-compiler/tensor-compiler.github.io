@@ -4,7 +4,7 @@
     
     <url>
      <loc>/index.html</loc>
-     <lastmod>2020-07-25</lastmod>
+     <lastmod>2020-08-25</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -13,13 +13,19 @@
         
     <url>
      <loc>/tensors/index.html</loc>
-     <lastmod>2020-07-25</lastmod>
+     <lastmod>2020-08-25</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/computations/index.html</loc>
-     <lastmod>2020-07-25</lastmod>
+     <lastmod>2020-08-25</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>/scheduling/index.html</loc>
+     <lastmod>2020-08-25</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -29,25 +35,25 @@
         
     <url>
      <loc>/tutorial/index.html</loc>
-     <lastmod>2020-07-25</lastmod>
+     <lastmod>2020-08-25</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/pytensors/index.html</loc>
-     <lastmod>2020-07-25</lastmod>
+     <lastmod>2020-08-25</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/pycomputations/index.html</loc>
-     <lastmod>2020-07-25</lastmod>
+     <lastmod>2020-08-25</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/pyreference/index.html</loc>
-     <lastmod>2020-07-25</lastmod>
+     <lastmod>2020-08-25</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -57,19 +63,19 @@
         
     <url>
      <loc>/scientific_computing/index.html</loc>
-     <lastmod>2020-07-25</lastmod>
+     <lastmod>2020-08-25</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/data_analytics/index.html</loc>
-     <lastmod>2020-07-25</lastmod>
+     <lastmod>2020-08-25</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>/machine_learning/index.html</loc>
-     <lastmod>2020-07-25</lastmod>
+     <lastmod>2020-08-25</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -78,7 +84,7 @@
     
     <url>
      <loc>/optimization/index.html</loc>
-     <lastmod>2020-07-25</lastmod>
+     <lastmod>2020-08-25</lastmod>
      <changefreq>daily</changefreq>
     </url>
     

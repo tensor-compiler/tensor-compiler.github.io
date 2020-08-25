@@ -119,7 +119,7 @@ for (int32_t i = 0; i < A1_dimension; i++) {
         int32_t j = A2_crd[jA];
         workspace[j] = A_vals[jA] * x_vals[j];
     }
-    for (int32_t j = 0; j < ; j++) {
+    for (int32_t j = 0; j < 64; j++) {
         y_vals[i] = y_vals[i] + workspace[j];
     }
     free(workspace);
