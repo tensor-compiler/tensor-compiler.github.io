@@ -6,7 +6,7 @@
 }
 
 .formats li {
-  width: 155px;
+  width: 160px;
 }
 
 .level-formats {
@@ -14,7 +14,7 @@
 }
 
 .level-formats li {
-  width: 155px; 
+  width: 160px; 
 }
 
 .dropdown li {
@@ -35,4 +35,12 @@
   top: 0;
   left: 100%;
   margin-top: -1px;
+}
+
+.commands li {
+  width: 120px;
+}
+
+.schedule-input li {
+  width: 120px;
 }
