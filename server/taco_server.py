@@ -39,10 +39,10 @@ class Handler(BaseHTTPRequestHandler):
           fullKernel = f.read().replace(tacoPath, "taco", 1).replace(prefix, "", 3)
           response['full-kernel'] = fullKernel
         with open(computePath, 'r') as f:
-          computeKernel = f.read()
+          computeKernel = f.read().replace(tacoPath, "taco", 1).replace(prefix, "", 3)
           response['compute-kernel'] = computeKernel
         with open(assemblyPath, 'r') as f:
-          assemblyKernel = f.read()
+          assemblyKernel = f.read().replace(tacoPath, "taco", 1).replace(prefix, "", 3)
           response['assembly-kernel'] = assemblyKernel
       except subprocess.TimeoutExpired:
         response['error'] = 'Server is unable to process the request in a timely manner'
@@ -61,7 +61,8 @@ class Handler(BaseHTTPRequestHandler):
       ip = ".".join(self.client_address[0].split('.')[0:-2]) + ".*.*"
       curTime = datetime.now().isoformat(' ')
       with open(logFile, 'a') as f:
-        f.write(curTime + " (" + ip + "): " + prettyCmd + "\n")
+        #f.write(curTime + " (" + ip + "): " + prettyCmd + "\n")
+        f.write(curTime + ": " + prettyCmd + "\n")
 
       self.send_response(200)
     except:
