@@ -1013,9 +1013,10 @@ function demo() {
       command += ")";
     }
 
-    // if (model.input.prefix) {
-    //   command += " -prefix=\"" + model.input.prefix + "\""; 
-    // }
+    var prefix = model.input.prefix.replaceAll(" ", "");
+    if (prefix) {
+      command += " -prefix=" + prefix;
+    }
 
     var req = $.ajax({
         type: "POST",
