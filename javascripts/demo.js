@@ -4,7 +4,8 @@ function demo() {
       expression: "",
       tensorOrders: {},
       error: "",
-      indices: []
+      indices: [],
+      prefix: ""
     },
     schedule: [],
     output: {
@@ -30,7 +31,6 @@ function demo() {
       }
     },
     updateScheduleView: function() {
-      console.log(model.schedule);
       model.removeInvalidIndices();
       model.removeInvalidAccesses();
       model.scheduleView(0);
@@ -80,6 +80,11 @@ function demo() {
         }
       }
       model.updateInputViews();
+    },
+    setPrefix: function(prefix) {
+      model.cancelReq();
+      model.setOutput("", "", "", "");
+      model.input.prefix = prefix;
     },
     setOutput: function(computeLoops, assemblyLoops, fullCode, error) {
       model.output = { computeLoops: computeLoops,
@@ -1008,6 +1013,10 @@ function demo() {
       command += ")";
     }
 
+    // if (model.input.prefix) {
+    //   command += " -prefix=\"" + model.input.prefix + "\""; 
+    // }
+
     var req = $.ajax({
         type: "POST",
         url: "http://tensor-compiler-online.csail.mit.edu",
@@ -1137,5 +1146,9 @@ function demo() {
 
   $("#btnGPU").click(function() {
     model.setSchedule(default_GPU_schedules[$(this).attr('data-val')]);
+  });
+
+  $("#prefix").keyup(function() {
+    model.setPrefix($("#prefix").val());
   });
 }
