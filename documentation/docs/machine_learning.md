@@ -10,7 +10,7 @@ and \(\circ\) denotes component-wise multiplication. This operation can also be
 expressed in [index
 notation](pycomputations.md#specifying-tensor-algebra-computations) as 
 
-$$A_{ij} = B_{ij} \cdot C_{ik} \cdot C_{kj}.$$
+$$A_{ij} = B_{ij} \cdot C_{ik} \cdot D_{kj}.$$
 
 You can use the taco C++ library to easily and efficiently compute the SDDMM, as
 shown here:
