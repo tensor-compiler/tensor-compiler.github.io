@@ -986,7 +986,7 @@ function demo() {
 
   model.addReqView(btnGetKernelView.updateView);
 
-  $("#btnGetKernel").click(function() {
+  var getKernel = function() {
     model.setOutput("", "", "", "");
 
     var command = model.input.expression.replace(/ /g, "");
@@ -1047,6 +1047,13 @@ function demo() {
       command += " -prefix=" + prefix;
     }
 
+    var url = window.location.pathname + "?expr=" 
+                  + model.input.expression + "&format=" + formats;
+    if (schedule !== "") {
+      url += "&sched=" + schedule;
+    }
+    history.replaceState(null, "", url);
+
     var req = $.ajax({
         type: "POST",
         url: "http://tensor-compiler-online.csail.mit.edu",
@@ -1059,13 +1066,6 @@ function demo() {
                           response['full-kernel'], 
                           response['error']);
           model.setReq(null);
-
-          var url = window.location.pathname + "?expr=" 
-                  + model.input.expression + "&format=" + formats;
-          if (schedule !== "") {
-            url += "&sched=" + schedule;
-          }
-          history.replaceState(null, "", url);
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
           var errorMsg = "Unable to connect to the taco online server";
@@ -1074,7 +1074,8 @@ function demo() {
         }
     });
     model.setReq(req);
-  });
+  };
+  $("#btnGetKernel").click(getKernel);
 
   var examples = {
       spmv: { name: "SpMV", 
@@ -1198,7 +1199,9 @@ function demo() {
     })(e, examples[e].code, examples[e].formats);
   }
 
-  if (!inited) {
+  if (inited) {
+    getKernel();
+  } else {
     var urlPrefix = "http://tensor-compiler.org/examples/" + demo;
     var computeGet = $.get(urlPrefix + "_compute.c");
     var assemblyGet = $.get(urlPrefix + "_assembly.c");
