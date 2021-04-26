@@ -22,7 +22,8 @@ class Handler(BaseHTTPRequestHandler):
       if len(cmd) > 1024:
         raise Exception
 
-      prettyCmd = "taco \"" + cmd.replace(" ", "\" ", 1)
+      prettyCmd = "taco " + cmd
+      cmd = cmd.replace("\"", "")
       
       logFile = "/home/ubuntu/success.log"
       tacoPath = "/home/ubuntu/taco/build/bin/taco"
