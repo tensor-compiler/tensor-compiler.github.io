@@ -989,7 +989,7 @@ function demo() {
   var getKernel = function() {
     model.setOutput("", "", "", "");
 
-    var command = model.input.expression.replace(/ /g, "");
+    var command = "\"" + model.input.expression.replace(/ /g, "") + "\"";
 
     var formats = "";
     for (t in model.input.tensorOrders) {
@@ -1022,7 +1022,7 @@ function demo() {
       var scheduleCommand = model.schedule[i]["command"];
       if (!scheduleCommand) { continue; }
 
-      command += " -s=" + scheduleCommand + "(";
+      command += " -s=\"" + scheduleCommand + "(";
       schedule += ((schedule === "") ? "" : ";") + scheduleCommand + ":";
 
       for (var param of model.schedule[i]["parameters"]) {
@@ -1038,7 +1038,7 @@ function demo() {
       }
 
       command = command.substring(0, command.length - 1);
-      command += ")";
+      command += ")\"";
       schedule = schedule.substring(0, schedule.length - 1);
     }
 
