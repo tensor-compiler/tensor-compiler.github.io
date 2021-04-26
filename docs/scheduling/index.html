@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../favicon.ico">
+  
+  <title>Providing a Schedule - Documentation - The Tensor Algebra Compiler (TACO)</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  <link href="../extra.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Providing a Schedule";
+    var mkdocs_page_input_path = "scheduling.md";
+    var mkdocs_page_url = "/scheduling/index.html";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="../index.html" class="icon icon-home"> Documentation - The Tensor Algebra Compiler (TACO)</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../index.html">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">C++ Library</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../tensors/index.html">Defining Tensors</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../computations/index.html">Computing on Tensors</a>
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="index.html">Providing a Schedule</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#pos">Pos</a></li>
+    
+
+    <li class="toctree-l3"><a href="#fuse">Fuse</a></li>
+    
+
+    <li class="toctree-l3"><a href="#split">Split</a></li>
+    
+
+    <li class="toctree-l3"><a href="#precompute">Precompute</a></li>
+    
+
+    <li class="toctree-l3"><a href="#reorder">Reorder</a></li>
+    
+
+    <li class="toctree-l3"><a href="#bound">Bound</a></li>
+    
+
+    <li class="toctree-l3"><a href="#unroll">Unroll</a></li>
+    
+
+    <li class="toctree-l3"><a href="#parallelize">Parallelize</a></li>
+    
+
+    </ul>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Python Library</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../tutorial/index.html">Tutorial</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../pytensors/index.html">Defining Tensors</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../pycomputations/index.html">Computing on Tensors</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../pyreference/index.html">Reference Manual</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Example Applications</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../scientific_computing/index.html">Scientific Computing: SpMV</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../data_analytics/index.html">Data Analytics: MTTKRP</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../machine_learning/index.html">Machine Learning: SDDMM</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../optimization/index.html">Strategies for Optimization</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Documentation - The Tensor Algebra Compiler (TACO)</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>C++ Library &raquo;</li>
+        
+      
+    
+    <li>Providing a Schedule</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p>The scheduling language enables users to specify and compose transformations to further optimize the code generated by taco. </p>
+<p>Consider the following SpMV computation and associated code, which we will transform below:
+<pre class="highlight"><code class="language-c++">Format csr({Dense,Sparse});
+Tensor&lt;double&gt; A("A", {512, 64}, csr);
+Tensor&lt;double&gt; x("x", {64}, {Dense});
+Tensor&lt;double&gt; y("y", {512}, {Dense});
+
+IndexVar i("i"), j("j"); 
+Access matrix = A(i, j);
+y(i) = matrix * x(j);
+IndexStmt stmt = y.getAssignment().concretize();</code></pre>
+<pre class="highlight"><code class="language-c">for (int32_t i = 0; i &lt; A1_dimension; i++) {
+    for (int32_t jA = A2_pos[i]; jA &lt; A2_pos[(i + 1)]; jA++) {
+        int32_t j = A2_crd[jA];
+        y_vals[i] = y_vals[i] + A_vals[jA] * x_vals[j];
+    }
+}</code></pre></p>
+<h1 id="pos">Pos</h1>
+<p>The <code>pos(i, ipos, access)</code> transformation takes in an index variable <code>i</code> that iterates over the coordinate space of <code>access</code> and replaces it with a derived index variable <code>ipos</code> that iterates over the same iteration range, but with respect to the the position space. </p>
+<p>Since the <code>pos</code> transformation is not valid for dense level formats, for the SpMV example, the following would result in an error:
+<pre class="highlight"><code class="language-c++">stmt = stmt.pos(i, IndexVar("ipos"), matrix);</code></pre></p>
+<p>We could instead have: 
+<pre class="highlight"><code class="language-c++">stmt = stmt.pos(j, IndexVar("jpos"), matrix);</code></pre>
+<pre class="highlight"><code class="language-c">for (int32_t i = 0; i &lt; A1_dimension; i++) {
+    for (int32_t jposA = A2_pos[i]; jposA &lt; A2_pos[(i + 1)]; jposA++) {
+        if (jposA &lt; A2_pos[i] || jposA &gt;= A2_pos[(i + 1)])
+            continue;
+
+        int32_t j = A2_crd[jposA];
+        y_vals[i] = y_vals[i] + A_vals[jposA] * x_vals[j];
+    }
+} </code></pre></p>
+<h1 id="fuse">Fuse</h1>
+<p>The <code>fuse(i, j, f)</code> transformation takes in two index variables <code>i</code> and <code>j</code>, where <code>j</code> is directly nested under <code>i</code>, and collapses them into a fused index variable <code>f</code> that iterates over the product of the coordinates <code>i</code> and <code>j</code>. </p>
+<p><code>fuse</code> helps facilitate other transformations, such as iterating over the position space of several index variables, as in this SpMV example: 
+<pre class="highlight"><code class="language-c++">IndexVar f("f");
+stmt = stmt.fuse(i, j, f);
+stmt = stmt.pos(f, IndexVar("fpos"), matrix);</code></pre>
+<pre class="highlight"><code class="language-c">for (int32_t fposA = 0; fposA &lt; A2_pos[A1_dimension]; fposA++) {
+    if (fposA &gt;= A2_pos[A1_dimension])
+        continue;
+
+    int32_t f = A2_crd[fposA];
+    while (fposA == A2_pos[(i_pos + 1)]) {
+        i_pos++;
+        i = i_pos;
+    }
+    y_vals[i] = y_vals[i] + A_vals[fposA] * x_vals[f];
+}</code></pre></p>
+<h1 id="split">Split</h1>
+<p>The <code>split(i, i0, i1, splitFactor)</code> transformation splits (strip-mines) an index variable <code>i</code> into two nested index variables <code>i0</code> and <code>i1</code>. The size of the inner index variable <code>i1</code> is then held constant at <code>splitFactor</code>, which must be a positive integer.</p>
+<p>For the SpMV example, we could have: 
+<pre class="highlight"><code class="language-c++">stmt = stmt.split(i, IndexVar("i0"), IndexVar("i1"), 16);</code></pre>
+<pre class="highlight"><code class="language-c">for (int32_t i0 = 0; i0 &lt; ((A1_dimension + 15) / 16); i0++) {
+    for (int32_t i1 = 0; i1 &lt; 16; i1++) {
+        int32_t i = i0 * 16 + i1;
+        if (i &gt;= A1_dimension)
+            continue;
+
+        for (int32_t jA = A2_pos[i]; jA &lt; A2_pos[(i + 1)]; jA++) {
+            int32_t j = A2_crd[jA];
+            y_vals[i] = y_vals[i] + A_vals[jA] * x_vals[j];
+        }
+    }
+}</code></pre></p>
+<!-- (not yet implemented) -->
+
+<!-- # Divide
+
+The `divide(i, i0, i1, divideFactor)` transformation divides an index variable `i` into two nested index variables `i0` and `i1`. The size of the outer index variable `i0` is then held constant at `divideFactor`, which must be a positive integer.  -->
+
+<h1 id="precompute">Precompute</h1>
+<p>The <code>precompute(expr, i, iw, workspace)</code> transformation, which is described in more detail <a href="http://tensor-compiler.org/taco-workspaces.pdf">here</a>, leverages scratchpad memories and reorders computations to  increase locality. </p>
+<p>Given a subexpression <code>expr</code> to precompute, an index variable <code>i</code> to precompute over, and an index variable <code>iw</code> (which can be the same or different as <code>i</code>) to precompute with, the precomputed results are stored in the tensor variable <code>workspace</code>. </p>
+<p>For the SpMV example, if <code>rhs</code> is the right hand side of the original statement, we could have: 
+<pre class="highlight"><code class="language-c++">TensorVar workspace("workspace", Type(Float64, {Dimension(64)}), taco::dense);
+stmt = stmt.precompute(rhs, j, j, workspace);</code></pre>
+<pre class="highlight"><code class="language-c">for (int32_t i = 0; i &lt; A1_dimension; i++) {
+    double* restrict workspace = 0;
+    workspace = (double*)malloc(sizeof(double) * 64);
+    for (int32_t pworkspace = 0; pworkspace &lt; 64; pworkspace++) {
+        workspace[pworkspace] = 0.0;
+    }
+    for (int32_t jA = A2_pos[i]; jA &lt; A2_pos[(i + 1)]; jA++) {
+        int32_t j = A2_crd[jA];
+        workspace[j] = A_vals[jA] * x_vals[j];
+    }
+    for (int32_t j = 0; j &lt; 64; j++) {
+        y_vals[i] = y_vals[i] + workspace[j];
+    }
+    free(workspace);
+  }</code></pre></p>
+<h1 id="reorder">Reorder</h1>
+<p>The <code>reorder(vars)</code> transformation takes in a new ordering for a set of index variables in the expression that are directly nested in the iteration order. </p>
+<p>For the SpMV example, we could have: 
+<pre class="highlight"><code class="language-c++">stmt = stmt.reorder({j, i});</code></pre>
+<pre class="highlight"><code class="language-c">for (int32_t jA = A2_pos[iA]; jA &lt; A2_pos[(iA + 1)]; jA++) {
+    int32_t j = A2_crd[jA];
+    for (int32_t i = 0; i &lt; A1_dimension; i++) {
+        y_vals[i] = y_vals[i] + A_vals[jA] * x_vals[j];
+    }
+ }</code></pre></p>
+<h1 id="bound">Bound</h1>
+<p>The <code>bound(i, ibound, bound, bound_type)</code> transformation replaces an index variable <code>i</code> with an index variable <code>ibound</code> that obeys a compile-time constraint on its iteration space, incorporating knowledge about the size or structured sparsity pattern of the corresponding input. The meaning of <code>bound</code> depends on the <code>bound_type</code>.</p>
+<p>For the SpMV example, we could have
+<pre class="highlight"><code class="language-c++">stmt = stmt.bound(i, IndexVar("ibound"), 100, BoundType::MaxExact); </code></pre>
+<pre class="highlight"><code class="language-c">for (int32_t ibound = 0; ibound &lt; 100; ibound++) {
+    for (int32_t jA = A2_pos[ibound]; jA &lt; A2_pos[(ibound + 1)]; jA++) {
+        int32_t j = A2_crd[jA];
+        y_vals[ibound] = y_vals[ibound] + A_vals[jA] * x_vals[j];
+    }
+}</code></pre></p>
+<h1 id="unroll">Unroll</h1>
+<p>The <code>unroll(i, unrollFactor)</code> transformation unrolls the loop corresponding to an index variable <code>i</code> by <code>unrollFactor</code> number of iterations, where <code>unrollFactor</code> is a positive integer. </p>
+<p>For the SpMV example, we could have
+<pre class="highlight"><code class="language-c++">stmt = stmt.split(i, i0, i1, 32);
+stmt = stmt.unroll(i0, 4);</code></pre>
+<pre class="highlight"><code class="language-c">if ((((A1_dimension + 31) / 32) * 32 + 32) + (((A1_dimension + 31) / 32) * 32 + 32) &gt;= A1_dimension) {
+    for (int32_t i0 = 0; i0 &lt; ((A1_dimension + 31) / 32); i0++) {
+        for (int32_t i1 = 0; i1 &lt; 32; i1++) {
+            int32_t i = i0 * 32 + i1;
+            if (i &gt;= A1_dimension)
+                continue;
+
+            for (int32_t jA = A2_pos[i]; jA &lt; A2_pos[(i + 1)]; jA++) {
+                int32_t j = A2_crd[jA];
+                y_vals[i] = y_vals[i] + A_vals[jA] * x_vals[j];
+            }
+        }
+    }
+}
+else {
+    #pragma unroll 4
+    for (int32_t i0 = 0; i0 &lt; ((A1_dimension + 31) / 32); i0++) {
+        for (int32_t i1 = 0; i1 &lt; 32; i1++) {
+            int32_t i = i0 * 32 + i1;
+            for (int32_t jA = A2_pos[i]; jA &lt; A2_pos[(i + 1)]; jA++) {
+                int32_t j = A2_crd[jA];
+                y_vals[i] = y_vals[i] + A_vals[jA] * x_vals[j];
+            }
+        }
+    }
+}</code></pre></p>
+<h1 id="parallelize">Parallelize</h1>
+<p>The <code>parallelize(i, parallel_unit, output_race_strategy)</code> transformation tags an index variable <code>i</code> for parallel execution on hardware type <code>parallel_unit</code>. Data races are handled by an <code>output_race_strategy</code>. Since the other transformations expect serial code, <code>parallelize</code> must come last in a series of transformations. </p>
+<p>For the SpMV example, we could have
+<pre class="highlight"><code class="language-c++">stmt = stmt.parallelize(i, ParallelUnit::CPUThread, OutputRaceStrategy::NoRaces);</code></pre>
+<pre class="highlight"><code class="language-c">#pragma omp parallel for schedule(runtime)
+for (int32_t i = 0; i &lt; A1_dimension; i++) {
+    for (int32_t jA = A2_pos[i]; jA &lt; A2_pos[(i + 1)]; jA++) {
+        int32_t j = A2_crd[jA];
+        y_vals[i] = y_vals[i] + A_vals[jA] * x_vals[j];
+    }
+}</code></pre></p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../tutorial/index.html" class="btn btn-neutral float-right" title="Tutorial">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../computations/index.html" class="btn btn-neutral" title="Computing on Tensors"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../computations/index.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../tutorial/index.html" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="../search/require.js"></script>
+      <script src="../search/search.js"></script>
+
+</body>
+</html>

@@ -1,7 +1,7 @@
 <html>
   <head>
     <!-- Title -->
-    <title>Publications - The Tensor Algebra Compiler (taco)</title>
+    <title>Publications - TACO: The Tensor Algebra Compiler</title>
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="stylesheets/collapsible.css">
     <!-- Compiled and minified JavaScript -->
@@ -23,14 +23,14 @@
       <header class="mdl-layout__header">
         <div class="mdl-layout__header-row">
           <!-- Title -->
-          <a class="menu-title" href="index.html"> <span class="mdl-layout-title">The Tensor Algebra Compiler (taco)</span> </a>
+          <a class="menu-title" href="index.html"> <span class="mdl-layout-title">TACO: The Tensor Algebra Compiler</span> </a>
           <!-- Add spacer, to align navigation to the right -->
           <div class="mdl-layout-spacer"></div>
           <!-- Navigation -->
           <nav class="mdl-navigation">
             <a class="mdl-navigation__link" href="docs/index.html">Docs</a>
             <a class="mdl-navigation__link" href="publications.html">Publications</a>
-            <a class="mdl-navigation__link" href="codegen.html">Demo</a>
+            <a class="mdl-navigation__link" href="codegen.html">Web Tool</a>
             <a class="mdl-navigation__link" href="https://github.com/tensor-compiler/taco">GitHub</a>
           </nav>
         </div>        
@@ -41,8 +41,451 @@
           <div class="mdl-grid">
             <!-- Three Line List with secondary info and action -->
             <div class="mdl-layout-spacer"></div>
-            <div class="mdl-cell mdl-cell--9-col">
-              <p class="mdl-typography mdl-typography--headline">Publications</p>
+            <div class="mdl-cell mdl-cell--10-col">
+              <h3>Publications<h3>
+              <h4>2020</h4>
+              <ul class="collapsible" data-collapsible="accordion">
+                <li>
+                  <div class="collapsible-header"><i class="material-icons">library_books</i>A Sparse Iteration Space Transformation Framework for Sparse Tensor Algebra &nbsp;<span class="mdl-typography--caption-color-contrast right">Ryan Senanayake, Changwan Hong, Ziheng Wang, Amalee Wilson, Stephen Chou, Shoaib Kamil, Saman Amarasinghe, and Fredrik Kjolstad</span></div>
+                  <div class="collapsible-body">
+                    <span>
+                      <div class="mdl-grid" style="padding: 0px">
+                      <div class="mdl-cell mdl-cell--12-col" style="margin-top: 0px; margin-bottom: 0px">
+                      <a href="senanayake-oopsla20-taco-scheduling.pdf"><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent getpdf">Download Paper</button></a></div>
+                      </div>
+                      <h5>Abstract</h5>
+                        <div class="body-text"> 
+  We address the problem of optimizing sparse tensor algebra in a compiler and show how to define standard loop transformations---split, collapse, and reorder---on sparse iteration spaces. The key idea is to track the transformation functions that map the original iteration space to derived iteration spaces. These functions are needed by the code generator to emit code that maps coordinates between iteration spaces at runtime, since the coordinates in the sparse data structures remain in the original iteration space. We further demonstrate that derived iteration spaces can tile both the universe of coordinates and the subset of nonzero coordinates: the former is analogous to tiling dense iteration spaces, while the latter tiles sparse iteration spaces into statically load-balanced blocks of nonzeros. Tiling the space of nonzeros lets the generated code efficiently exploit heterogeneous compute resources such as threads, vector units, and GPUs.
+<br><br>We implement these concepts by extending the sparse iteration theory implementation in the TACO system. The associated scheduling API can be used by performance engineers or it can be the target of an automatic scheduling system. We outline one heuristic autoscheduling system, but other systems are possible. Using the scheduling API, we show how to optimize mixed sparse-dense tensor algebra expressions on CPUs and GPUs. Our results show that the sparse transformations are sufficient to generate code with competitive performance to hand-optimized implementations from the literature, while generalizing to all of the tensor algebra.</div>
+                      <div>
+                      <h5>BibTex</h5>
+                        <pre class="bibtex" ><code>@article{senanayake:2020:scheduling,
+  author = {Senanayake, Ryan and Hong, Changwan and Wang, Ziheng and Wilson, Amalee and Chou, Stephen and Kamil, Shoaib and Amarasinghe, Saman and Kjolstad, Fredrik},
+  title = {A Sparse Iteration Space Transformation Framework for Sparse Tensor Algebra},
+  year = {2020},
+  issue_date = {November 2020},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  volume = {4},
+  number = {OOPSLA},
+  url = {https://doi.org/10.1145/3428226},
+  doi = {10.1145/3428226},
+  journal = {Proc. ACM Program. Lang.},
+  month = nov,
+  articleno = {158},
+  numpages = {30},
+  keywords = {Sparse Tensor Algebra, Sparse Iteration Spaces, Optimizing Transformations}
+}</code></pre>
+                      </div>
+                    </span>
+                  </div>
+                </li>
+                <li>
+                  <div class="collapsible-header"><i class="material-icons">library_books</i>Automatic Generation of Efficient Sparse Tensor Format Conversion Routines &nbsp;<span class="mdl-typography--caption-color-contrast right">Stephen Chou, Fredrik Kjolstad, and Saman Amarasinghe</span></div>
+                  <div class="collapsible-body">
+                    <span>
+                      <div class="mdl-grid" style="padding: 0px">
+                      <div class="mdl-cell mdl-cell--12-col" style="margin-top: 0px; margin-bottom: 0px">
+                      <a href="chou-pldi20-taco-conversion.pdf"><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent getpdf">Download Paper</button></a></div>
+                      <h5>Abstract</h5>
+                        <div class="body-text">
+This paper shows how to generate code that efficiently converts sparse tensors between disparate storage formats (data layouts) such as CSR, DIA, ELL, and many others. We decompose sparse tensor conversion into three logical phases: coordinate remapping, analysis, and assembly. We then develop a language that precisely describes how different formats group together and order a tensor’s nonzeros in memory. This lets a compiler emit code that performs complex remappings of nonzeros when converting between formats. We also develop a query language that can extract statistics about sparse tensors, and we show how to emit efficient analysis code that computes such queries. Finally, we define an abstract interface that captures how data structures for storing a tensor can be efficiently assembled given specific statistics about the tensor. Disparate formats can implement this common interface, thus letting a compiler emit optimized sparse tensor conversion code for arbitrary combinations of many formats without hard-coding for any specific combination.
+<br><br>
+Our evaluation shows that the technique generates sparse tensor conversion routines with performance between 1.00 and 2.01× that of hand-optimized versions in SPARSKIT and Intel MKL, two popular sparse linear algebra libraries. And by emitting code that avoids materializing temporaries, which both libraries need for many combinations of source and target formats, our technique outperforms those libraries by 1.78 to 4.01× for CSC/COO to DIA/ELL conversion.</div>
+                      <div>
+                      <h5>BibTex</h5>
+                        <pre class="bibtex" ><code>@inproceedings{chou:2020:conversion,
+  author = {Chou, Stephen and Kjolstad, Fredrik and Amarasinghe, Saman},
+  title = {Automatic Generation of Efficient Sparse Tensor Format Conversion Routines},
+  year = {2020},
+  isbn = {9781450376136},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  url = {https://doi.org/10.1145/3385412.3385963},
+  doi = {10.1145/3385412.3385963},
+  booktitle = {Proceedings of the 41st ACM SIGPLAN Conference on Programming Language Design and Implementation},
+  pages = {823–838},
+  numpages = {16},
+  keywords = {coordinate remapping notation, attribute query language, sparse tensor formats, sparse tensor conversion, sparse tensor assembly, sparse tensor algebra},
+  location = {London, UK},
+  series = {PLDI 2020}
+}</code></pre>
+                      </div>
+                    </span>
+                  </div>
+                </li>
+                <li>
+                  <div class="collapsible-header"><i class="material-icons">library_books</i>Sparse Tensor Transpositions
+ &nbsp;<span class="mdl-typography--caption-color-contrast right">Suzanne Mueller, Peter Ahrens, Stephen Chou, Fredrik Kjolstad, and Saman Amarasinghe</span></div>
+                  <div class="collapsible-body">
+                    <span>
+                      <div class="mdl-grid" style="padding: 0px">
+                      <div class="mdl-cell mdl-cell--12-col" style="margin-top: 0px; margin-bottom: 0px">
+                      <a href="mueller-spaa20-taco-transpositions.pdf"><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent getpdf">Download Paper</button></a></div>
+                      <h5>Abstract</h5>
+                        <div class="body-text">
+We present a new algorithm for transposing sparse tensors called Quesadilla. The algorithm converts the sparse tensor data structure to a list of coordinates and sorts it with a fast multi-pass radix algorithm that exploits knowledge of the requested transposition and the tensors input partial coordinate ordering to provably minimize the number of parallel partial sorting passes. We evaluate both a serial and a parallel implementation of Quesadilla on a set of 19 tensors from the FROSTT collection, a set of tensors taken from scientific and data analytic applications. We compare Quesadilla and a generalization, Top-2-sadilla to several state of the art approaches, including the tensor transposition routine used in the SPLATT tensor factorization library. In serial tests, Quesadilla was the best strategy for 60% of all tensor and transposition combinations and improved over SPLATT by at least 19% in half of the combinations. In parallel tests, at least one of Quesadilla or Top-2-sadilla was the best strategy for 52% of all tensor and transposition combinations.
+</div>
+                      <div>
+                      <h5>BibTex</h5>
+                        <pre class="bibtex" ><code>@inproceedings{10.1145/3350755.3400245,
+  author = {Mueller, Suzanne and Ahrens, Peter and Chou, Stephen and Kjolstad, Fredrik and Amarasinghe, Saman},
+  title = {Sparse Tensor Transpositions},
+  year = {2020},
+  isbn = {9781450369350},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  url = {https://doi.org/10.1145/3350755.3400245},
+  doi = {10.1145/3350755.3400245},
+  booktitle = {Proceedings of the 32nd ACM Symposium on Parallelism in Algorithms and Architectures},
+  pages = {559–561},
+  numpages = {3},
+  keywords = {COO, sorting, radix sort, transposition, sparse tensors},
+  location = {Virtual Event, USA},
+  series = {SPAA '20}
+}</code></pre>
+                      </div>
+                    </span>
+                  </div>
+                </li>
+                <li>
+                  <div class="collapsible-header"><i class="material-icons">library_books</i>A Framework for Computing on Sparse Tensors based on Operator Properties &nbsp;<span class="mdl-typography--caption-color-contrast right">Rawn Henry</span></div>
+                  <div class="collapsible-body">
+                    <span>
+                      <div class="mdl-grid" style="padding: 0px">
+                      <div class="mdl-cell mdl-cell--12-col" style="margin-top: 0px; margin-bottom: 0px">
+                      <a href="http://groups.csail.mit.edu/commit/papers/2020/rawn_2020.pdf"><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent getpdf">Download Thesis</button></a></div>
+                      <h5>Abstract</h5>
+                        <div class="body-text">
+Tensor operations have been traditionally limited to addition and multiplication operations. For operations of sparse tensors, these semantics were extended to account for the fact that tensors usually omit zero values. However, there are many operators with a rich semantics of operator properties that can be used in dense and sparse tensor computations.
+<br><br>This work addresses the problem of generating code for computing on a mix of sparseand dense tensors based on the properties of the operators on those tensors. I introduce the concept of a fill value to each tensor so that the data can be sparse on non-zeros. I show how to reason about the operator properties, along with the fillvalues of the input tensors in order to construct an IR describing how to iterate overthese tensors. I show how we can take advantage of the operator properties to perform useful optimizations for both iterating over tensors and performing reductions. Lastly, I show how a user can leverage set notation to directly describe to a compiler how it should iterate over sparse tensors.
+<br><br>The ideas discussed in this work have been prototyped in the open-source TACOsystem. The API used makes operator properties and tensor fill values have to beexplicitly provided by the user. However, it makes the TACO system much more flexible. I show how the primitives exposed in this work allows one to efficiently performseveral graph algorithms by drawing on the literature about GraphBLAS. In the evaluation section, we benchmark this system against the SuiteSparse implementation ofGraphBLAS on a variety of graph algorithms to demonstrate its performance.</div>
+                      <div>
+                      <h5>BibTex</h5>
+                        <pre class="bibtex" ><code>@MastersThesis{henry:2020:thesis,
+  title = "A Framework for Computing on Sparse Tensors based on Operator Properties",
+  author = "Rawn Henry",
+  month = "May",
+  year = "2020",
+  url = "http://groups.csail.mit.edu/commit/papers/2020/rawn_2020.pdf",
+  type = "M.Eng. Thesis",
+  address = "Cambridge, MA",
+  school = "Massachusetts Institute of Technology",
+}</code></pre>
+                      </div>
+                    </span>
+                  </div>
+                </li>
+                <li>
+                  <div class="collapsible-header"><i class="material-icons">library_books</i>Automatic Optimization of Sparse Tensor Algebra Programs &nbsp;<span class="mdl-typography--caption-color-contrast right">Ziheng Wang</span></div>
+                  <div class="collapsible-body">
+                    <span>
+                      <div class="mdl-grid" style="padding: 0px">
+                      <div class="mdl-cell mdl-cell--12-col" style="margin-top: 0px; margin-bottom: 0px">
+                      <a href="http://groups.csail.mit.edu/commit/papers/2020/tony_2020.pdf"><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent getpdf">Download Thesis</button></a></div>
+                      <h5>Abstract</h5>
+                        <div class="body-text">
+In this thesis, I attempt to give some guidance on how to automatically optimize programs using a domain-specific-language (DSLs) compiler that exposes a set of scheduling commands.  These DSLs have proliferated as of late, including Halide, TACO, Tiramisu and TVM, to name a few. The scheduling commands allow succinct expression of the programmer’s desire to perform certain loop transformations,such as strip-mining, tiling, collapsing and parallelization, which the compiler proceeds to carry out. I explore if we can automatically generate schedules with good performance.
+<br>The main difficulty in searching for good schedules is the astronomical number of valid schedules for a particular program. I describe a system which generates a list of candidate schedules through a set of modular stages. Different optimization decisions are made at each stage, to trim down the number of schedules considered. I argue that certain sequences of scheduling commands are equivalent in their effect in partitioning the iteration space, and introduce heuristics that limit the number of permutations of variables. I implement these ideas for the open-source TACO system. I demonstrate several orders of magnitude reduction in the effective schedule search space. I also show that for most of the problems considered, we can generate schedules better than or equal to hand-tuned schedules in terms of performance.</div>
+                      <div>
+                      <h5>BibTex</h5>
+                        <pre class="bibtex" >@MastersThesis{wang:2020:thesis,
+  title = "Automatic Optimization of Sparse Tensor Algebra Programs",
+  author = "Ziheng Wang",
+  month = "May",
+  year = "2020",
+  url = "http://groups.csail.mit.edu/commit/papers/2020/tony_2020.pdf",
+  type = "M.Eng. Thesis",
+  address = "Cambridge, MA",
+  school = "Massachusetts Institute of Technology",
+}</code></pre>
+                      </div>
+                    </span>
+                  </div>
+                </li>
+                <li>
+                  <div class="collapsible-header"><i class="material-icons">library_books</i>A Unified Iteration Space Transformation Framework for Sparse and Dense Tensor Algebra &nbsp;<span class="mdl-typography--caption-color-contrast right">Ryan Senanayake</span></div>
+                  <div class="collapsible-body">
+                    <span>
+                      <div class="mdl-grid" style="padding: 0px">
+                      <div class="mdl-cell mdl-cell--12-col" style="margin-top: 0px; margin-bottom: 0px">
+                      <a href="http://groups.csail.mit.edu/commit/papers/2020/ryan_2020.pdf"><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent getpdf">Download Thesis</button></a></div>
+                      <h5>Abstract</h5>
+                        <div class="body-text">
+This work addresses the problem of optimizing mixed sparse and dense tensor algebra in a compiler. I show that standard loop transformations, such as strip-mining, tiling, collapsing, parallelization and vectorization, can be applied to irregular loops over sparse iteration spaces. I also show how these transformations can be applied to the contiguous value arrays of sparse tensor data structures, which I call their position spaces, to unlock load-balanced tiling and parallelism.
+<br>These concepts have been prototyped in the open-source TACO system, where they are exposed as a scheduling API similar to the Halide domain-specific language for dense computations. Using this scheduling API, I show how to optimize mixed sparse/dense tensor algebra expressions, how to generate load-balanced code by scheduling sparse tensor algebra in position space, and how to generate sparse tensor algebra GPU code. As shown in the evaluation, these transformations allow us to generate code that is competitive with many hand-optimized implementations from the literature.</div>
+                      <div>
+                      <h5>BibTex</h5>
+                        <pre class="bibtex" ><code>@MastersThesis{senanayake:2020:thesis,
+  title = "A Unified Iteration Space Transformation Framework for Sparse and Dense Tensor Algebra",
+  author = "Ryan Senanayake",
+  month = "Feb",
+  year = "2020",
+  url = "http://groups.csail.mit.edu/commit/papers/2020/ryan_2020.pdf",
+  type = "M.Eng. Thesis",
+  address = "Cambridge, MA",
+  school = "Massachusetts Institute of Technology",
+}</code></pre>
+                      </div>
+                    </span>
+                  </div>
+                </li>
+                <li>
+                  <div class="collapsible-header"><i class="material-icons">library_books</i>Sparse Tensor Transpositions in the Tensor Algebra Compiler &nbsp;<span class="mdl-typography--caption-color-contrast right">Suzanne Mueller</span></div>
+                  <div class="collapsible-body">
+                    <span>
+                      <div class="mdl-grid" style="padding: 0px">
+                      <div class="mdl-cell mdl-cell--12-col" style="margin-top: 0px; margin-bottom: 0px">
+                      <a href="http://groups.csail.mit.edu/commit/papers/2020/suzanne_2020.pdf"><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent getpdf">Download Thesis</button></a></div>
+                      <h5>Abstract</h5>
+                        <div class="body-text">
+The current state of the art for transposing sparse tensors involves converting the sparse tensor into a list of coordinates, sorting the list of coordinates and finally packing the list of coordinates into the desired sparse tensor format. This thesis explores the potential for faster methodologies. Its main contributions are an algorithm that exploits partial sortedness to minimize sorting passes and an implementation that demonstrates that this transposition algorithm is competitive with state of the art. In particular the algorithm takes advantage of the ordering that already exists to apply selective sorting passes and thereby reduce the amount of work that needsto be done to reorder the tensor.</div>
+                      <div>
+                      <h5>BibTex</h5>
+                        <pre class="bibtex" ><code>@MastersThesis{mueller:2020:thesis,
+  title = "Sparse Tensor Transpositions in the Tensor Algebra Compiler",
+  author = "Suzanne Mueller",
+  month = "Feb",
+  year = "2020",
+  url = "http://groups.csail.mit.edu/commit/papers/2020/suzanne_2020.pdf",
+  type = "M.Eng. Thesis",
+  address = "Cambridge, MA",
+  school = "Massachusetts Institute of Technology",
+}</code></pre>
+                      </div>
+                    </span>
+                  </div>
+                </li>
+                <li>
+                  <div class="collapsible-header"><i class="material-icons">library_books</i>Sparse Tensor Algebra Compilation &nbsp;<span class="mdl-typography--caption-color-contrast right">Fredrik Kjolstad</span></div>
+                  <div class="collapsible-body">
+                    <span>
+                      <div class="mdl-grid" style="padding: 0px">
+                      <div class="mdl-cell mdl-cell--12-col" style="margin-top: 0px; margin-bottom: 0px">
+                      <a href="http://groups.csail.mit.edu/commit/papers/2020/kjolstad-thesis.pdf"><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent getpdf">Download Thesis</button></a></div>
+                      <h5>Abstract</h5>
+                        <div class="body-text">
+This dissertation shows how to compile any sparse tensor algebra expression to CPU and GPU code that matches the performance of hand-optimized implementations. A tensor algebra expression is sparse if at least one of its tensor operands is sparse, and a tensor is sparse if most of its values are zero.  If a tensor is sparse, then we can store its nonzero values in a compressed data structure, and omit the zeros. Indeed, as the matrices and tensors in many important applications are extremely sparse, compressed data structures provide the only practical means to store them. A sparse tensor algebra expression may contain any number of operations, which must be compiled to fused sparse loops that compute the entire expression simultaneously.  It is not viable to support only binary expressions, because their composition may result in worse asymptotic complexity than the fused implementation. I present compiler techniques to generate fused loops that coiterate over any number of tensors stored in different types of data structures. By design, these loops avoid computing values known to be zero due to the algebraic properties of their operators.
+<br>Sparse tensor algebra compilation is made possible by a sparse iteration theory that formulates sparse iteration spaces as set expressions of the coordinates of nonzero values. By ordering iteration space dimensions hierarchically, the compiler recursively generates loops that coiterate over tensor data structures one dimension at a time. By organizing per-dimension coiteration into regions based on algebraic operator properties, it removes operations that will result in zero. And by transforming the sparse iteration spaces, it optimizes the generated code. The result is the first sparse iteration compiler, called the Tensor Algebra Compiler (taco). Taco can compile any tensor algebra expressions, with tensors stored in different types of sparse and dense data structures, to code that matches the performance of hand-optimized implementations on CPUs and GPUs.</div>
+                      <div>
+                      <h5>BibTex</h5>
+                        <pre class="bibtex" ><code>@PhDThesis{kjolstad:2020:thesis,
+  title = "Sparse Tensor Algebra Compilation",
+  author = "Fredrik Kjolstad",
+  month = "Feb",
+  year = "2020",
+  url = "http://groups.csail.mit.edu/commit/papers/2020/kjolstad-thesis.pdf",
+  type = "Ph.D. Thesis",
+  address = "Cambridge, MA",
+  school = "Massachusetts Institute of Technology",
+}</code></pre>
+                      </div>
+                    </span>
+                  </div>
+                </li>
+              </ul>
+
+              <h4>2019</h4>
+              <ul class="collapsible" data-collapsible="accordion">
+                <li>
+                  <div class="collapsible-header"><i class="material-icons">library_books</i>A Tensor Algebra Compiler Library Interface and Runtime &nbsp;<span class="mdl-typography--caption-color-contrast right">Patricio Noyola</span></div>
+                  <div class="collapsible-body">
+                    <span>
+                      <div class="mdl-grid" style="padding: 0px">
+                      <div class="mdl-cell mdl-cell--12-col" style="margin-top: 0px; margin-bottom: 0px">
+                      <a href="http://groups.csail.mit.edu/commit/papers/2019/Patricio_thesis.pdf"><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent getpdf">Download Thesis</button></a></div>
+                      <h5>Abstract</h5>
+                        <div class="body-text">
+Tensor algebra is a powerful tool for computing on multidimensional data and has applications in many fields. The number of possible tensor operations is infinite, so it is impossible to manually implement all of them to operate on different tensor dimensions. The Tensor Algebra Compiler (taco) introduced a compiler approach to automatically generate kernels for any compound tensor algebra operation on any input tensor formats.
+<br><br>In this thesis, we present a new API for the taco library. The API removes the need to call compiler methods with the introduction of a delayed execution framework. Additionally, the API introduces multiple important tensor algebra features previously unavailable in taco. Finally, we propose extensions to taco’s code generation algorithm to automatically generate tensor API methods for any tensor format.
+<br><br>The proposed API makes taco code cleaner, shorter and more elegant. Furthermore, the extensions to its code generation algorithm make the API scalable to new formats and operations.</div>
+                      <div>
+                      <h5>BibTex</h5>
+                        <pre class="bibtex" ><code>@MastersThesis{noyola:2019:thesis,
+  title = "A Tensor Algebra Compiler Library Interface and Runtime",
+  author = "Patricio Noyola",
+  month = "May",
+  year = "2019",
+  url = "http://groups.csail.mit.edu/commit/papers/2019/Patricio_thesis.pdf",
+  type = "M.Eng. Thesis",
+  address = "Cambridge, MA",
+  school = "Massachusetts Institute of Technology",
+}</code></pre>
+                      </div>
+                    </span>
+                  </div>
+                </li>
+                <li>
+                  <div class="collapsible-header"><i class="material-icons">library_books</i>SuperTaco: Taco Tensor Algebra Kernels on Distributed Systems Using Legion &nbsp;<span class="mdl-typography--caption-color-contrast right">Sachin Dilip Shinde</span></div>
+                  <div class="collapsible-body">
+                    <span>
+                      <div class="mdl-grid" style="padding: 0px">
+                      <div class="mdl-cell mdl-cell--12-col" style="margin-top: 0px; margin-bottom: 0px">
+                      <a href="http://groups.csail.mit.edu/commit/papers/2019/thesis-shinde.pdf"><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent getpdf">Download Thesis</button></a></div>
+                      <h5>Abstract</h5>
+                        <div class="body-text">
+Tensor algebra is a powerful language for expressing computation on multidimensional data.  While many tensor datasets are sparse, most tensor algebra libraries have limited support for handling sparsity. The Tensor Algebra Compiler (Taco) has introduced a taxonomy for sparse tensor formats that has allowed them to compile sparse tensor algebra expressions to performant C code, but they have not taken advantage of distributed systems.
+<br><br>This work provides a code generation technique for creating Legion programs that distribute the computation of Taco tensor algebra kernels across distributed systems, and a scheduling language for controlling how this distributed computation is structured.  This technique is implemented in the form of a command-line tool called SuperTaco.  We perform a strong scaling analysis for the SpMV and TTM kernels under a row blocking distribution schedule, and find speedups of 9-10x when using 20 cores on a single node. For multi-node systems using 20 cores per node, SpMV achieves a 33.3x speedup at 160 cores and TTM achieves a 42.0x speedup at 140 cores.</div>
+                      <div>
+                      <h5>BibTex</h5>
+                        <pre class="bibtex" ><code>@MastersThesis{shinde:2019:thesis,
+  title = "SuperTaco: Taco Tensor Algebra Kernels on Distributed Systems Using Legion",
+  author = "Sachin Dilip Shinde",
+  month = "Feb",
+  year = "2019",
+  url = "http://groups.csail.mit.edu/commit/papers/2019/thesis-shinde.pdf",
+  type = "M.Eng. Thesis",
+  address = "Cambridge, MA",
+  school = "Massachusetts Institute of Technology",
+}</code></pre>
+                      </div>
+                    </span>
+                  </div>
+                </li>
+                <li>
+                  <div class="collapsible-header"><i class="material-icons">library_books</i>Tensor Algebra Compilation with Workspaces &nbsp;<span class="mdl-typography--caption-color-contrast right">Fredrik Kjolstad, Peter Ahrens, Shoaib Kamil, and Saman Amarasinghe</span></div>
+                  <div class="collapsible-body">
+                    <span>
+                      <div class="mdl-grid" style="padding: 0px">
+                      <div class="mdl-cell mdl-cell--12-col" style="margin-top: 0px; margin-bottom: 0px">
+                      <a href="taco-workspaces.pdf"><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent getpdf">Download Paper</button></a></div>
+                      <h5>Abstract</h5>
+                        <div class="body-text">
+This paper shows how to extend sparse tensor algebra compilers to introduce
+temporary tensors called workspaces to avoid inefficient sparse data structures
+accesses.  We develop an intermediate representation (IR) for tensor operations
+called concrete index notation that specifies when sub-computations occur and
+where they are stored.  We then describe the workspace transformation in this
+IR, how to programmatically invoke it, and how the IR is compiled to sparse
+code.  Finally, we show how the transformation can be used to optimize sparse
+tensor kernels, including sparse matrix multiplication, sparse tensor addition,
+and the matricized tensor times Khatri-Rao product (MTTKRP).
+<br><br>
+Our results show that the workspace transformation brings the performance of
+these kernels on par with hand-optimized implementations. For example, we
+improve the performance of MTTKRP with dense output by up to 35\%, and enable
+generating sparse matrix multiplication and MTTKRP with sparse output, neither
+of which were supported by prior tensor algebra compilers.
+This paper shows how to optimize sparse tensor algebraic expressions by
+introducing temporary tensors, called workspaces, into the resulting loop
+nests.  We develop a new intermediate language for tensor operations called
+concrete index notation that extends tensor index notation.  Concrete index
+notation expresses when and where sub-computations occur and what tensor they
+are stored into.  We then describe the workspace optimization in this language,
+and how to compile it to sparse code by building on prior work in the
+literature.</div>
+                      <div>
+                      <h5>BibTex</h5>
+                        <pre class="bibtex" ><code>@article{kjolstad:2018:workspaces,
+ author = {Kjolstad, Fredrik and Ahrens, Peter and Kamil, Shoaib and Amarasinghe, Saman},
+ title = {Tensor Algebra Compilation with Workspaces},
+ booktitle = {Proceedings of the 2019 IEEE/ACM International Symposium on Code Generation and Optimization},
+ series = {CGO 2019},
+ year = {2019},
+ isbn = {978-1-7281-1436-1},
+ location = {Washington, DC, USA},
+ pages = {180--192},
+ numpages = {13},
+ url = {http://dl.acm.org/citation.cfm?id=3314872.3314894},
+ acmid = {3314894},
+ publisher = {IEEE Press},
+ address = {Piscataway, NJ, USA},
+ keywords = {code optimization, concrete index notation, sparse tensor algebra, temporaries, workspaces},
+}</code></pre>
+                      </div>
+                    </span>
+                  </div>
+                </li>
+              </ul>
+
+              <h4>2018</h4>
+              <ul class="collapsible" data-collapsible="accordion">
+                <li>
+                  <div class="collapsible-header"><i class="material-icons">library_books</i>Format Abstraction for Sparse Tensor Algebra Compilers &nbsp;<span class="mdl-typography--caption-color-contrast right">Stephen Chou, Fredrik Kjolstad, and Saman Amarasinghe</span></div>
+                  <div class="collapsible-body">
+                    <span>
+                      <div class="mdl-grid" style="padding: 0px">
+                      <div class="mdl-cell mdl-cell--12-col" style="margin-top: 0px; margin-bottom: 0px">
+                      <a href="chou-oopsla18-taco-formats.pdf"><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent getpdf">Download Paper</button></a></div>
+                      <h5>Abstract</h5>
+                        <div class="body-text">
+  This paper shows how to build a sparse tensor algebra compiler that is
+  agnostic to tensor formats (data layouts).  We develop an interface that
+  describes formats in terms of their capabilities and properties, and show how
+  to build a modular code generator where new formats can be added as plugins.
+  We then describe six implementations of the interface that compose to form
+  the dense, CSR/CSF, COO, DIA, ELL, and HASH tensor formats and countless
+  variants thereof.  With these implementations at hand, our code generator can
+  generate code to compute any tensor algebra expression on any combination of
+  the aforementioned formats.
+<br><br>
+  To demonstrate our technique, we have implemented it in the taco tensor
+  algebra compiler.  Our modular code generator design makes it simple to add
+  support for new tensor formats, and the performance of the generated code is
+  competitive with hand-optimized implementations.  Furthermore, by
+  extending taco to support a wider range of formats specialized for
+  different application and data characteristics, we can improve end-user 
+  application performance.  For example, if input data is provided in the COO
+  format, our technique allows computing a single matrix-vector multiplication
+  directly with the data in COO, which is up to 3.6&times; faster than by
+  first converting the data to CSR.</div>
+                      <div>
+                      <h5>BibTex</h5>
+                        <pre class="bibtex" ><code>@article{chou:2018:formats,
+ author = {Chou, Stephen and Kjolstad, Fredrik and Amarasinghe, Saman},
+ title = {Format Abstraction for Sparse Tensor Algebra Compilers},
+ journal = {Proc. ACM Program. Lang.},
+ issue_date = {November 2018},
+ volume = {2},
+ number = {OOPSLA},
+ month = oct,
+ year = {2018},
+ issn = {2475-1421},
+ pages = {123:1--123:30},
+ articleno = {123},
+ numpages = {30},
+ url = {http://doi.acm.org/10.1145/3276493},
+ doi = {10.1145/3276493},
+ acmid = {3276493},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {modular code generation, sparse tensor algebra compilation, tensor formats},
+}</code></pre>
+                      </div>
+                    </span>
+                  </div>
+                </li>
+                <li>
+                  <div class="collapsible-header"><i class="material-icons">library_books</i>Unified Sparse Formats for Tensor Algebra Compilers &nbsp;<span class="mdl-typography--caption-color-contrast right">Stephen Chou</span></div>
+                  <div class="collapsible-body">
+                    <span>
+                      <div class="mdl-grid" style="padding: 0px">
+                      <div class="mdl-cell mdl-cell--12-col" style="margin-top: 0px; margin-bottom: 0px">
+                      <a href="http://groups.csail.mit.edu/commit/papers/2018/chou-18-sm-thesis.pdf"><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent getpdf">Download Thesis</button></a></div>
+                      <h5>Abstract</h5>
+                        <div class="body-text">
+Tensor algebra is a powerful tool for computing on multidimensional data and has appli-cations in many fields. Practical applications often deal with tensors that are sparse, and there exists a wide variety of formats for storing such tensors, each suited to specific typesof applications and data. Examples of sparse tensor storage formats include COO, CSR, CSC, DCSR, BCSR, CSF, CSB, ELL, DIA, and hash maps.
+<br><br>In this thesis, we propose a levelized hierarchical abstraction that represents these seemingly disparate formats and countless others, and that hides the details of each format behind a common interface. We show that this tensor representation facilitates automatic generation of efficient compute kernels for tensor algebra expressions with any combination of formats. This is accomplished with a code generation algorithm that generates code level by level, guided by the capabilities and properties of the levels.
+<br><br>The performance of tensor algebra kernels generated using our technique is competitive with that of equivalent hand-implemented kernels in existing sparse linear and tensor algebra libraries. Furthermore, our technique can generate many more kernels for many more formats than exist in libraries or are supported by existing compiler techniques.</div>
+                      <div>
+                      <h5>BibTex</h5>
+                        <pre class="bibtex" ><code>@ScienceThesis{chou:sm-thesis:2018,
+  title = "Unified Sparse Formats for Tensor Algebra Compilers",
+  author = "Stephen Chou",
+  month = "Feb",
+  year = "2018",
+  url = "http://groups.csail.mit.edu/commit/papers/2018/chou-18-sm-thesis.pdf",
+  type = "S.M. Thesis",
+  address = "Cambridge, MA",
+  school = "Massachusetts Institute of Technology",
+}</code></pre>
+                      </div>
+                    </span>
+                  </div>
+                </li>
+              </ul>
+
+              <h4>2017</h4>
               <ul class="collapsible" data-collapsible="accordion">
                 <li>
                   <div class="collapsible-header"><i class="material-icons">library_books</i>The Tensor Algebra Compiler &nbsp;<span class="mdl-typography--caption-color-contrast right">Fredrik Kjolstad, Shoaib Kamil, Stephen Chou, David Lugato, and Saman Amarasinghe</span></div>
@@ -129,110 +572,32 @@
                     </span>
                   </div>
                 </li>
+              </ul>
+
+              <h4>2016</h4>
+              <ul class="collapsible" data-collapsible="accordion">
                 <li>
-                  <div class="collapsible-header"><i class="material-icons">library_books</i>Format Abstraction for Sparse Tensor Algebra Compilers &nbsp;<span class="mdl-typography--caption-color-contrast right">Stephen Chou, Fredrik Kjolstad, and Saman Amarasinghe</span></div>
+                  <div class="collapsible-header"><i class="material-icons">library_books</i>An Investigation of Sparse Tensor Formats for Tensor Libraries &nbsp;<span class="mdl-typography--caption-color-contrast right">Parker Allen Tew</span></div>
                   <div class="collapsible-body">
                     <span>
                       <div class="mdl-grid" style="padding: 0px">
                       <div class="mdl-cell mdl-cell--12-col" style="margin-top: 0px; margin-bottom: 0px">
-                      <a href="chou-oopsla18-taco-formats.pdf"><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent getpdf">Download Paper</button></a></div>
+                      <a href="http://groups.csail.mit.edu/commit/papers/2016/parker-thesis.pdf"><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent getpdf">Download Thesis</button></a></div>
                       <h5>Abstract</h5>
                         <div class="body-text">
-  This paper shows how to build a sparse tensor algebra compiler that is
-  agnostic to tensor formats (data layouts).  We develop an interface that
-  describes formats in terms of their capabilities and properties, and show how
-  to build a modular code generator where new formats can be added as plugins.
-  We then describe six implementations of the interface that compose to form
-  the dense, CSR/CSF, COO, DIA, ELL, and HASH tensor formats and countless
-  variants thereof.  With these implementations at hand, our code generator can
-  generate code to compute any tensor algebra expression on any combination of
-  the aforementioned formats.
-<br><br>
-  To demonstrate our technique, we have implemented it in the taco tensor
-  algebra compiler.  Our modular code generator design makes it simple to add
-  support for new tensor formats, and the performance of the generated code is
-  competitive with hand-optimized implementations.  Furthermore, by
-  extending taco to support a wider range of formats specialized for
-  different application and data characteristics, we can improve end-user 
-  application performance.  For example, if input data is provided in the COO
-  format, our technique allows computing a single matrix-vector multiplication
-  directly with the data in COO, which is up to 3.6&times; faster than by
-  first converting the data to CSR.</div>
+Tensors provide a generalized structure to store arbitrary indexable data, which is applicable in fields such as chemometrics, physics simulations, signal processing and lies at the heart of machine learning. Many naturally occurring tensors are considered sparse as they contain mostly zero values. As with sparse matrices, various techniques can be employed to more efficiently store and compute on these sparse tensors.
+<br><br>This work explores several sparse tensor formats while ultimately evaluating two implementations; one based on explicitly storing coordinates and one that compresses these coordinates. The two formats, Coordinate and CSF2, were evaluated by comparing their execution time of tensor-matrix products and the MTTKRP operation on several datasets. We find that the Coordinate format is superior for uniformly distributed sparse tensors or when used in computation that emits a sparse tensor via a mode dependent operation. In all other considered cases for large sparse tensors, the storage savings of the compressed format provide the best results.</div>
                       <div>
                       <h5>BibTex</h5>
-                        <pre class="bibtex" ><code>@article{chou:2018:formats,
- author = {Chou, Stephen and Kjolstad, Fredrik and Amarasinghe, Saman},
- title = {Format Abstraction for Sparse Tensor Algebra Compilers},
- journal = {Proc. ACM Program. Lang.},
- issue_date = {November 2018},
- volume = {2},
- number = {OOPSLA},
- month = oct,
- year = {2018},
- issn = {2475-1421},
- pages = {123:1--123:30},
- articleno = {123},
- numpages = {30},
- url = {http://doi.acm.org/10.1145/3276493},
- doi = {10.1145/3276493},
- acmid = {3276493},
- publisher = {ACM},
- address = {New York, NY, USA},
- keywords = {modular code generation, sparse tensor algebra compilation, tensor formats},
-}</code></pre>
-                      </div>
-                    </span>
-                  </div>
-                </li>
-                <li>
-                  <div class="collapsible-header"><i class="material-icons">library_books</i>Tensor Algebra Compilation with Workspaces &nbsp;<span class="mdl-typography--caption-color-contrast right">Fredrik Kjolstad, Peter Ahrens, Shoaib Kamil, and Saman Amarasinghe</span></div>
-                  <div class="collapsible-body">
-                    <span>
-                      <div class="mdl-grid" style="padding: 0px">
-                      <div class="mdl-cell mdl-cell--12-col" style="margin-top: 0px; margin-bottom: 0px">
-                      <a href="taco-workspaces.pdf"><button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent getpdf">Download Paper</button></a></div>
-                      <h5>Abstract</h5>
-                        <div class="body-text">
-This paper shows how to extend sparse tensor algebra compilers to introduce
-temporary tensors called workspaces to avoid inefficient sparse data structures
-accesses.  We develop an intermediate representation (IR) for tensor operations
-called concrete index notation that specifies when sub-computations occur and
-where they are stored.  We then describe the workspace transformation in this
-IR, how to programmatically invoke it, and how the IR is compiled to sparse
-code.  Finally, we show how the transformation can be used to optimize sparse
-tensor kernels, including sparse matrix multiplication, sparse tensor addition,
-and the matricized tensor times Khatri-Rao product (MTTKRP).
-<br><br>
-Our results show that the workspace transformation brings the performance of
-these kernels on par with hand-optimized implementations. For example, we
-improve the performance of MTTKRP with dense output by up to 35\%, and enable
-generating sparse matrix multiplication and MTTKRP with sparse output, neither
-of which were supported by prior tensor algebra compilers.
-This paper shows how to optimize sparse tensor algebraic expressions by
-introducing temporary tensors, called workspaces, into the resulting loop
-nests.  We develop a new intermediate language for tensor operations called
-concrete index notation that extends tensor index notation.  Concrete index
-notation expresses when and where sub-computations occur and what tensor they
-are stored into.  We then describe the workspace optimization in this language,
-and how to compile it to sparse code by building on prior work in the
-literature.</div>
-                      <div>
-                      <h5>BibTex</h5>
-                        <pre class="bibtex" ><code>@article{kjolstad:2018:workspaces,
- author = {Kjolstad, Fredrik and Ahrens, Peter and Kamil, Shoaib and Amarasinghe, Saman},
- title = {Tensor Algebra Compilation with Workspaces},
- booktitle = {Proceedings of the 2019 IEEE/ACM International Symposium on Code Generation and Optimization},
- series = {CGO 2019},
- year = {2019},
- isbn = {978-1-7281-1436-1},
- location = {Washington, DC, USA},
- pages = {180--192},
- numpages = {13},
- url = {http://dl.acm.org/citation.cfm?id=3314872.3314894},
- acmid = {3314894},
- publisher = {IEEE Press},
- address = {Piscataway, NJ, USA},
- keywords = {code optimization, concrete index notation, sparse tensor algebra, temporaries, workspaces},
+                        <pre class="bibtex" ><code>@MastersThesis{parker:meng-thesis:2016,
+  title = "An Investigation of Sparse Tensor Formats for Tensor Libraries",
+  author = "Parker Allen Tew",
+  month = "Jun",
+  year = "2016",
+  url = "http://groups.csail.mit.edu/commit/papers/2016/parker-thesis.pdf",
+  type = "M.Eng. Thesis",
+  address = "Cambridge, MA",
+  school = "Massachusetts Institute of Technology",
 }</code></pre>
                       </div>
                     </span>
@@ -243,8 +608,7 @@ literature.</div>
             <div class="mdl-layout-spacer"></div>
             </div>
         </div>
-      </main>
-      <footer class="mdl-mini-footer">
+        <footer class="mdl-mini-footer">
         <div class="mdl-mini-footer__right-section">
           <div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
         </div>
@@ -257,6 +621,8 @@ literature.</div>
           ga('send', 'pageview');
         </script>
       </footer>
+      </main>
+      
     </div>
   </body>
 </html>

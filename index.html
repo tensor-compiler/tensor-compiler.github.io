@@ -1,7 +1,7 @@
 <html>
   <head>
     <!-- Title -->
-    <title>The Tensor Algebra Compiler (taco)</title>
+    <title>TACO: The Tensor Algebra Compiler</title>
     <!-- CSS and JavaScript -->
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-red.min.css">
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
@@ -15,14 +15,14 @@
       <header class="mdl-layout__header">
         <div class="mdl-layout__header-row">
           <!-- Title -->
-          <a class="menu-title" href="index.html"> <span class="mdl-layout-title">The Tensor Algebra Compiler (taco)</span> </a>
+          <a class="menu-title" href="index.html"> <span class="mdl-layout-title">TACO: The Tensor Algebra Compiler</span> </a>
           <!-- Add spacer, to align navigation to the right -->
           <div class="mdl-layout-spacer"></div>
           <!-- Navigation -->
           <nav class="mdl-navigation">
             <a class="mdl-navigation__link" href="docs/index.html">Docs</a>
             <a class="mdl-navigation__link" href="publications.html">Publications</a>
-            <a class="mdl-navigation__link" href="codegen.html">Demo</a>
+            <a class="mdl-navigation__link" href="codegen.html">Web Tool</a>
             <a class="mdl-navigation__link" href="https://github.com/tensor-compiler/taco">GitHub</a>
           </nav>
         </div>
@@ -37,44 +37,12 @@
                 <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Try Online</button>
               </a>              
               <a href="https://github.com/tensor-compiler/taco">
-                <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Github</button>
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent">Download from Github</button>
               </a>
             </div>
-
-            <div class="mdl-cell mdl-cell--6-col demo-card-container">
-              <div class="demo-card-square mdl-card">
-                <div class="mdl-card__title mdl-card--expand">
-                  <iframe width="600" height="267" src="https://www.youtube.com/embed/sQOq3Ci4tB0" frameborder="0" allowfullscreen></iframe>
-                </div>
-                <div class="mdl-card__actions mdl-card--border">
-                  <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" nofollow href="https://www.youtube.com/watch?v=sQOq3Ci4tB0">
-                    Watch our talk on the upcoming formats extension
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div class="mdl-cell mdl-cell--6-col demo-card-container">
-              <div class="demo-card-square mdl-card">
-                <div class="mdl-card__title mdl-card--expand">
-                  <iframe width="600" height="267" src="https://www.youtube.com/embed/Kffbzf9etLE" frameborder="0" allowfullscreen></iframe>
-                </div>
-                <div class="mdl-card__actions mdl-card--border">
-                  <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" nofollow href="https://www.youtube.com/watch?v=Kffbzf9etLE">
-                    Watch our talk at OOPSLA 2017
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="mdl-grid">
             <div class="mdl-cell mdl-cell--12-col">
-              <h1 class="mdl-typography--headline text-center titles-grey home-header">What can taco be used for?</h1>
+              <h1 class="mdl-typography--headline text-center titles-grey home-header">What can TACO be used for?</h1>
             </div>
-          </div>
-
-          <div class="mdl-grid">
             <div class="mdl-cell mdl-cell--3-col demo-card-container">
               <!-- Square card -->
               <div class="demo-card-square mdl-card mdl-shadow--2dp">
@@ -88,7 +56,6 @@
                 </div>
               </div>
             </div>
-
             <div class="mdl-cell mdl-cell--3-col demo-card-container">
               <!-- Square card -->
               <div class="demo-card-square mdl-card mdl-shadow--2dp">
@@ -102,7 +69,6 @@
                 </div>
               </div>
             </div>
-
             <div class="mdl-cell mdl-cell--3-col demo-card-container">
               <!-- Square card -->
               <div class="demo-card-square mdl-card mdl-shadow--2dp">
@@ -116,7 +82,6 @@
                 </div>
               </div>
             </div>
-
             <div class="mdl-cell mdl-cell--3-col demo-card-container">
               <!-- Square card -->
               <div class="demo-card-square mdl-card mdl-shadow--2dp">
@@ -130,20 +95,16 @@
                 </div>
               </div>
             </div>
-          </div>
-          
-          <div class="mdl-grid">
             <div class="mdl-cell mdl-cell--12-col">
-              <h1 class="mdl-typography--headline text-center titles-grey home-header">Why should I use taco?
+              <h1 class="mdl-typography--headline text-center titles-grey home-header">Why should I use TACO?
               </h1>
             </div>
           </div>
-
           <div class="mdl-grid light-bg">
             <div class="mdl-cell mdl-cell--6-col">
               <div class="fast-textbox">
-                <p class="mdl-typography--headline">taco is fast</p>
-                <p class="mdl-typography--body-1 body-text">Under the hood, the taco library employs a novel compiler-based technique to generate kernels that are optimized for the computations you want to perform. This enables taco to achieve performance that exceeds the MATLAB Tensor Toolbox by up to several orders of magnitude and that is competitive with other high-performance sparse linear and tensor algebra libraries like Eigen, Intel MKL, and SPLATT.</p>
+                <p class="mdl-typography--headline">TACO is fast</p>
+                <p class="mdl-typography--body-1 body-text">Under the hood, the TACO library employs a novel compiler-based technique to generate kernels that are optimized for the computations you want to perform. This enables TACO to achieve performance that exceeds the MATLAB Tensor Toolbox by up to several orders of magnitude and that is competitive with other high-performance sparse linear and tensor algebra libraries like Eigen, Intel MKL, and SPLATT.</p>
               </div>
             </div>
             <div class="mdl-cell mdl-cell--6-col parent-center">
@@ -161,8 +122,8 @@
             </div>
             <div class="mdl-cell mdl-cell--6-col">
               <div class="versatile-textbox">
-                <p class="mdl-typography--headline">taco is versatile</p>
-                <p class="mdl-typography--body-1 body-text">The compiler-based technique that underlies taco enables it to support a wide variety of linear and tensor algebra operations, ranging from simpler ones like sparse matrix-vector multiplication to more complex ones like MTTKRP on tensors of any order. Tensors can be stored in a wide range of storage formats, including many commonly used sparse matrix and tensor formats such as CSR.
+                <p class="mdl-typography--headline">TACO is versatile</p>
+                <p class="mdl-typography--body-1 body-text">The compiler-based technique that underlies TACO enables it to support a wide variety of linear and tensor algebra operations, ranging from simpler ones like sparse matrix-vector multiplication to more complex ones like MTTKRP on tensors of any order. Tensors can be stored in a wide range of storage formats, including many commonly used sparse matrix and tensor formats such as CSR.
                 </p>
               </div>
             </div>
@@ -171,8 +132,8 @@
           <div class="mdl-grid light-bg">
             <div class="mdl-cell mdl-cell--6-col">
               <div class="easy-textbox">
-                <p class="mdl-typography--headline">taco is easy to use</p>
-                <p class="mdl-typography--body-1 body-text">With taco, you can define even complex tensor algebra computations on dense and sparse tensors in just a couple of lines of C++ code using tensor index notation. The taco library takes care of generating the potentially very complicated kernels that are needed to perform your desired computations.</p>
+                <p class="mdl-typography--headline">TACO is easy to use</p>
+                <p class="mdl-typography--body-1 body-text">With TACO, you can define even complex tensor algebra computations on dense and sparse tensors in just a couple of lines of C++ or Python code using tensor index notation. The TACO library takes care of generating the potentially very complicated kernels that are needed to perform your desired computations.</p>
               </div>
             </div>
             <div class="mdl-cell mdl-cell--6-col parent-center">
@@ -182,29 +143,84 @@
             </div>
           </div>
 
-          <div class="mdl-grid normal-section-header">
+          <div class="mdl-grid">
             <div class="mdl-cell mdl-cell--12-col">
               <h1 class="mdl-typography--headline text-center titles-grey home-header">Media</h1>
             </div>
-          </div>
-
-          <div class="mdl-grid">
-            <div class="mdl-layout-spacer"></div>
-            <div class="mdl-cell mdl-cell--6-col demo-card-container">
-              <div class="demo-card-square mdl-card">
+            <div class="mdl-cell mdl-cell--4-col demo-card-container">
+              <div class="video-card-square mdl-card">
                 <div class="mdl-card__title mdl-card--expand">
-                  <iframe width="600" height="267" src="https://www.youtube.com/embed/eE38PC2ctFs" frameborder="0" allowfullscreen></iframe>
+                  <iframe style="width: 480px; height: 270px; margin-left:auto; margin-right:auto; display:block" src="https://www.youtube.com/embed/0wJsGWA5pTU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 </div>
                 <div class="mdl-card__actions mdl-card--border">
-                  <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" nofollow href="https://www.youtube.com/watch?v=eE38PC2ctFs">
-                    Watch the tools demo
+                  <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" nofollow href="https://www.youtube.com/watch?v=0wJsGWA5pTU">
+                    OOPSLA 2020 talk on the new scheduling language
                   </a>
                 </div>
               </div>
             </div>
-            <div class="mdl-layout-spacer"></div>
-            <div class="mdl-cell mdl-cell--6-col demo-card-container">
-              <div class="demo-card-square mdl-card">
+            <div class="mdl-cell mdl-cell--4-col demo-card-container">
+              <div class="video-card-square mdl-card">
+                <div class="mdl-card__title mdl-card--expand">
+                  <iframe style="width: 480px; height: 270px; margin-left:auto; margin-right:auto; display:block" src="https://www.youtube.com/embed/s6JRY8qcjvA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="mdl-card__actions mdl-card--border">
+                  <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" nofollow href="https://www.youtube.com/watch?v=s6JRY8qcjvA">
+                    PLDI 2020 talk on generating format conversion routines
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="mdl-cell mdl-cell--4-col demo-card-container">
+              <div class="video-card-square mdl-card">
+                <div class="mdl-card__title mdl-card--expand">
+                  <iframe style="width: 480px; height: 270px; margin-left:auto; margin-right:auto; display:block" src="https://www.youtube.com/embed/sQOq3Ci4tB0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="mdl-card__actions mdl-card--border">
+                  <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" nofollow href="https://www.youtube.com/watch?v=sQOq3Ci4tB0">
+                    OOPSLA 2018 talk on the forthcoming formats extension
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="mdl-cell mdl-cell--4-col demo-card-container">
+              <div class="video-card-square mdl-card">
+                <div class="mdl-card__title mdl-card--expand">
+                  <iframe style="width: 480px; height: 270px; margin-left:auto; margin-right:auto; display:block" src="https://www.youtube.com/embed/Kffbzf9etLE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="mdl-card__actions mdl-card--border">
+                  <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" nofollow href="https://www.youtube.com/watch?v=Kffbzf9etLE">
+                    OOPSLA 2017 talk on TACO
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="mdl-cell mdl-cell--4-col demo-card-container">
+              <div class="video-card-square mdl-card">
+                <div class="mdl-card__title mdl-card--expand">
+                  <iframe style="width: 480px; height: 270px; margin-left:auto; margin-right:auto; display:block" src="https://www.youtube.com/embed/eE38PC2ctFs" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="mdl-card__actions mdl-card--border">
+                  <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" nofollow href="https://www.youtube.com/watch?v=eE38PC2ctFs">
+                    Demo of the TACO command-line tool and web tool
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="mdl-cell mdl-cell--4-col demo-card-container">
+              <div class="video-card-square mdl-card">
+                <div class="mdl-card__title mdl-card--expand">
+                  <iframe style="width: 480px; height: 270px; margin-left:auto; margin-right:auto; display:block" src="https://www.youtube.com/embed/rUtw6vLZR-g" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="mdl-card__actions mdl-card--border">
+                  <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" nofollow href="https://www.youtube.com/watch?v=rUtw6vLZR-g">
+                    SPAA 2020 brief announcement on sparse tensor transposition
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="mdl-cell mdl-cell--4-col demo-card-container">
+              <div class="video-card-square mdl-card">
                 <div class="mdl-card__title mdl-card--expand mit-news">
                   <h2 class="mdl-card__title-text">We're in the news!</h2>
                 </div>
@@ -215,21 +231,12 @@
                 </div>
               </div>
             </div>
-            <div class="mdl-layout-spacer"></div>
-          </div>
-
-          <div class="mdl-grid normal-section-header">
             <div class="mdl-cell mdl-cell--12-col">
               <h1 class="mdl-typography--headline text-center titles-grey home-header">Acknowledgements</h1>
             </div>
-          </div>
-
-          <div class="mdl-grid">
-            <div class="mdl-layout-spacer"></div>
-            <div class="mdl-cell mdl-cell--11-col">
-                <p class="mdl-typography--body-1 body-text">taco is developed by members of the <a href="http://groups.csail.mit.edu/commit/">Commit</a> research group in MIT CSAIL and is built on work supported by the National Science Foundation under Grant No. CCF-1533753, by the U.S. Department of Energy, Office of Science, Office of Advanced Scientific Computing Research under Award Numbers DE-SC008923 and DE-SC014204, by the Direction Générale de l'Armement (Projet ERE 2016929), and by the Toyota Research Institute.</p>
+            <div class="mdl-cell mdl-cell--12-col">
+                <p class="mdl-typography--body-1 body-text full-text">TACO is developed by members of the <a href="http://groups.csail.mit.edu/commit/">Commit</a> research group in MIT CSAIL and is built on work supported by the National Science Foundation under Grant No. CCF-1533753, by the U.S. Department of Energy, Office of Science, Office of Advanced Scientific Computing Research under Award Numbers DE-SC008923 and DE-SC014204, by the Direction Générale de l'Armement (Projet ERE 2016929), and by the Toyota Research Institute.</p>
             </div>
-            <div class="mdl-layout-spacer"></div>
           </div>
 
           <footer class="mdl-mini-footer">

@@ -4,9 +4,11 @@ function demo() {
       expression: "",
       tensorOrders: {},
       error: "",
-      indices: []
+      indices: [],
+      prefix: ""
     },
     schedule: [],
+    exampleSchedule: "",
     output: {
       computeLoops: "",
       assemblyLoops: "",
@@ -17,6 +19,7 @@ function demo() {
 
     inputViews: [],
     scheduleView: null,
+    exampleScheduleViews: [],
     outputViews: [],
     reqViews: [],
 
@@ -30,10 +33,18 @@ function demo() {
       }
     },
     updateScheduleView: function() {
-      console.log(model.schedule);
       model.removeInvalidIndices();
       model.removeInvalidAccesses();
       model.scheduleView(0);
+    },
+    addExampleScheduleView: function(newView) {
+      model.exampleScheduleViews.push(newView);
+      newView(0);
+    },
+    updateExampleScheduleViews: function() {
+      for (v in model.exampleScheduleViews) {
+        model.exampleScheduleViews[v](0);
+      }
     },
     addOutputView: function(newView) {
       model.outputViews.push(newView);
@@ -81,6 +92,11 @@ function demo() {
       }
       model.updateInputViews();
     },
+    setPrefix: function(prefix) {
+      model.cancelReq();
+      model.setOutput("", "", "", "");
+      model.input.prefix = prefix;
+    },
     setOutput: function(computeLoops, assemblyLoops, fullCode, error) {
       model.output = { computeLoops: computeLoops,
                        assemblyLoops: assemblyLoops,
@@ -104,18 +120,9 @@ function demo() {
       return (model.output.error !== "") ? model.output.error : model.input.error;
     },
 
-    setExampleSchedule: function(e, schedule) {
-      if (schedule.length === 0) {
-        $("#btnDefaults").hide();
-      } else {
-        $("#btnDefaults").show();
-        $("#btnCPU").attr('data-val', e);
-        $("#btnCPU").text(e + " CPU");
-
-        $("#btnGPU").attr('data-val', e);
-        $("#btnGPU").text(e + " GPU");
-      }
-      model.setSchedule(schedule);
+    setExampleSchedule: function(e) {
+      model.exampleSchedule = e;
+      model.updateExampleScheduleViews();
     },
     setSchedule: function(schedule) {
       model.schedule = JSON.parse(JSON.stringify(schedule)); // deep
@@ -898,6 +905,23 @@ function demo() {
 
   model.scheduleView = tblScheduleView.updateView;
 
+  var btnExampleScheduleView = {
+    updateView: function(timeout) {
+      if (model.exampleSchedule.length === 0) {
+        $("#btnDefaults").hide();
+      } else {
+        $("#btnDefaults").show();
+        $("#btnCPU").attr('data-val', model.exampleSchedule);
+        $("#btnCPU").text(model.exampleSchedule + " CPU");
+
+        $("#btnGPU").attr('data-val', model.exampleSchedule);
+        $("#btnGPU").text(model.exampleSchedule + " GPU");
+      }
+    }
+  };
+
+  model.addExampleScheduleView(btnExampleScheduleView.updateView);
+
   var btnGetKernelView = {
     updateView: function(timeout) {
       $("#btnGetKernel").prop('disabled', model.input.error !== "" || model.req);
@@ -911,7 +935,8 @@ function demo() {
 
   $("#txtExpr").keyup(function() {
     model.setInput($("#txtExpr").val());
-    model.updateScheduleView();
+    model.resetSchedule();
+    model.setExampleSchedule("");
   });
 
   var panelKernelsView = {
@@ -961,10 +986,12 @@ function demo() {
 
   model.addReqView(btnGetKernelView.updateView);
 
-  $("#btnGetKernel").click(function() {
+  var getKernel = function() {
     model.setOutput("", "", "", "");
 
     var command = model.input.expression.replace(/ /g, "");
+
+    var formats = "";
     for (t in model.input.tensorOrders) {
       var order = model.input.tensorOrders[t];
       if (order === 0) {
@@ -972,41 +999,60 @@ function demo() {
       }
 
       command += (" -f=" + t + ":");
+      formats += ((formats === "") ? "" : ";") + t + ":";
       
       var dims = $("#dims" + t).sortable("toArray");
       for (var i = 1; i <= order; ++i) {
-        command += $("#" + dims[i] + "_select").attr("data-val");
+        var levelFormat = $("#" + dims[i] + "_select").attr("data-val");
+        command += levelFormat;
+        formats += levelFormat;
       }
       
       command += ":";
+      formats += ":";
       for (var i = 1; i <= order; ++i) {
-        command += dims[i].split("_")[1];
-        command += (i === order) ? "" : ",";
+        var position = dims[i].split("_")[1] + ((i === order) ? "" : ",");
+        command += position;
+        formats += position;
       }
     }
 
+    var schedule = "";
     for (var i = 0; i < model.schedule.length; ++i) {
-      command += " -s=";
-
       var scheduleCommand = model.schedule[i]["command"];
       if (!scheduleCommand) { continue; }
 
-      command += scheduleCommand + "(";
+      command += " -s=" + scheduleCommand + "(";
+      schedule += ((schedule === "") ? "" : ";") + scheduleCommand + ":";
 
       for (var param of model.schedule[i]["parameters"]) {
-        param = param.toString().replace(/ /g, "");
-        if (!param) {
+        var paramShortened = param.toString().replace(/ /g, "");
+        if (!paramShortened) {
           errorMsg = "Schedule is missing arguments";
           model.cancelReq();
           model.setOutput("", "", "", errorMsg); 
           return; 
         }
-        command += param + ",";
+        command += paramShortened + ",";
+        schedule += param + ":";
       }
 
       command = command.substring(0, command.length - 1);
       command += ")";
+      schedule = schedule.substring(0, schedule.length - 1);
     }
+
+    var prefix = model.input.prefix.replaceAll(" ", "");
+    if (prefix) {
+      command += " -prefix=" + prefix;
+    }
+
+    var url = window.location.pathname + "?expr=" 
+                  + model.input.expression + "&format=" + formats;
+    if (schedule !== "") {
+      url += "&sched=" + schedule;
+    }
+    history.replaceState(null, "", url);
 
     var req = $.ajax({
         type: "POST",
@@ -1028,7 +1074,8 @@ function demo() {
         }
     });
     model.setReq(req);
-  });
+  };
+  $("#btnGetKernel").click(getKernel);
 
   var examples = {
       spmv: { name: "SpMV", 
@@ -1078,17 +1125,51 @@ function demo() {
   }
   $("#listExamples").html(listExamplesBody);
 
-  var getURLParam = function(key) {
+  var getURLParam = function(k) {
     var url = window.location.search.substring(1);
     var params = url.split('&');
     for (var i = 0; i < params.length; ++i) {
       var param = params[i].split('=');
-      if (param[0] === key) {
-        return param[1];
+      var key = param[0];
+      var val = param.slice(1).join('=');
+      if (key === k) {
+        return val;
       }
     }
     return "";
   };
+
+  var inited = false;
+  var expr = getURLParam("expr");
+  if (expr !== "") {
+    var formats = getURLParam("format").split(";");
+    for (var f in formats) {
+      var [tensor, levelFormats, ordering] = formats[f].split(":");
+      levelFormats = levelFormats.split("");
+      ordering = ordering.split(",").map(Number);
+      format = { formats: levelFormats, ordering: ordering };
+      tblFormatsView.insertLevelsCacheEntry(tensor, format);
+      var name = tblFormatsView.getFormatName(format, levelFormats.length);
+      tblFormatsView.insertNamesCacheEntry(tensor, name);
+    }
+
+    expr = expr.replaceAll("%20", " ");
+    model.setInput(expr);
+    $("#txtExpr").val(expr);
+    inited = (model.error == null);
+
+    var schedule = [];
+    var scheduleString = getURLParam("sched");
+    if (scheduleString !== "") {
+      var commands = scheduleString.split(";");
+      for (var c in commands) {
+        var [transform, ...args] = commands[c].split(":").map(function(x) { return x.replaceAll("%20", " "); });
+        command = { command: transform, parameters: args };
+        schedule.push(command);
+      }
+    }
+    model.setSchedule(schedule);
+  }
 
   var demo = getURLParam("demo");
   if (!(demo in examples)) {
@@ -1106,26 +1187,31 @@ function demo() {
         model.setInput(code);
 
         var schedule = default_CPU_schedules[e];
-        model.setExampleSchedule(e, schedule);      
+        model.setExampleSchedule((schedule.length > 0) ? e : "");
+        model.setSchedule(schedule);      
       };
       $("#example_" + e).click(setExample);
 
       // Initialize demo
-      if (e === demo) {
+      if (!inited && e === demo) {
         setExample();
       }
     })(e, examples[e].code, examples[e].formats);
   }
 
-  var urlPrefix = "http://tensor-compiler.org/examples/" + demo;
-  var computeGet = $.get(urlPrefix + "_compute.c");
-  var assemblyGet = $.get(urlPrefix + "_assembly.c");
-  var fullGet = $.get(urlPrefix + "_full.c");
-  $.when(computeGet, assemblyGet, fullGet).done(function() {
-    model.setOutput(computeGet.responseText, 
-            assemblyGet.responseText, 
-            fullGet.responseText, "");
-  });
+  if (inited) {
+    getKernel();
+  } else {
+    var urlPrefix = "http://tensor-compiler.org/examples/" + demo;
+    var computeGet = $.get(urlPrefix + "_compute.c");
+    var assemblyGet = $.get(urlPrefix + "_assembly.c");
+    var fullGet = $.get(urlPrefix + "_full.c");
+    $.when(computeGet, assemblyGet, fullGet).done(function() {
+      model.setOutput(computeGet.responseText, 
+              assemblyGet.responseText, 
+              fullGet.responseText, "");
+    });
+  }
 
   $("#btnSchedule").click(function() {
     model.addScheduleRow();
@@ -1137,5 +1223,9 @@ function demo() {
 
   $("#btnGPU").click(function() {
     model.setSchedule(default_GPU_schedules[$(this).attr('data-val')]);
+  });
+
+  $("#prefix").keyup(function() {
+    model.setPrefix($("#prefix").val());
   });
 }
