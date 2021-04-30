@@ -14,7 +14,34 @@ var default_CPU_schedules = {
             parameters: ["i0", "CPU Thread", "No Races"]
           }
         ],
-  add: [],
+  spgemm: [
+            {
+              command: "reorder",
+              parameters: ["i", "k", "j"]
+            },
+            {
+              command: "precompute",
+              parameters: ["B(i,k) * C(k,j)", "j", "j"]
+            },
+            {
+              command: "assemble",
+              parameters: ["A", "Insert"]
+            },
+            {
+              command: "parallelize",
+              parameters: ["i", "CPU Thread", "No Races"]
+            }
+          ],
+  spadd: [
+           {
+             command: "assemble",
+             parameters: ["A", "Insert"]
+           },
+           {
+             command: "parallelize",
+             parameters: ["i", "CPU Thread", "No Races"]
+           }
+         ],
   ttv:  [
           { 
             command: "fuse",
@@ -35,8 +62,8 @@ var default_CPU_schedules = {
           {
             command: "parallelize", 
             parameters: ["chunk", "CPU Thread", "No Races"]
-        }
-       ],
+          }
+        ],
   mttkrp: [
             {
               command: "reorder",
@@ -105,7 +132,8 @@ var default_GPU_schedules = {
           parameters: ["thread", "GPU Thread", "Atomics"]
         }
       ],
-  add: [],
+  spgemm: [],
+  spadd: [],
   ttv:  [ 
         {
           command: "fuse",
