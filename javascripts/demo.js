@@ -634,13 +634,13 @@ function demo() {
       2: ["default", ""],
       3: ["text"]
     },
-    // divide: {
-    //   parameters: ["Divided IndexVar", "Outer IndexVar", "Inner IndexVar", "Divide Factor"],
-    //   0: ["index dropdown", [1, "0"], [2, "1"]],
-    //   1: ["default", ""],
-    //   2: ["default", ""],
-    //   3: ["text"]
-    // },
+    divide: {
+      parameters: ["Divided IndexVar", "Outer IndexVar", "Inner IndexVar", "Divide Factor"],
+      0: ["index dropdown", [1, "0"], [2, "1"]],
+      1: ["default", ""],
+      2: ["default", ""],
+      3: ["text"]
+    },
     precompute: {
       parameters: ["Precomputed Expr", "Original IndexVar", "Workspace IndexVar"],
       0: ["long text"],
