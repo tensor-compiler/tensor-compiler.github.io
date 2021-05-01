@@ -133,17 +133,24 @@ function demo() {
     },
     resetSchedule: function() {
       model.schedule = [];
+
+      model.cancelReq();
+      model.setOutput("", "", "", "");
       model.updateScheduleView();
     },
     addScheduleRow: function() {
       model.schedule.push({command: "", parameters: []});
+
       model.updateScheduleView();
     },
     deleteScheduleRow: function(row) {
+      var isNop = (model.schedule[row].command === "");
       model.schedule.splice(row, 1);
 
-      model.cancelReq();
-      model.setOutput("", "", "", "");
+      if (!isNop) {
+        model.cancelReq();
+        model.setOutput("", "", "", "");
+      }
       model.updateScheduleView();
     },
     swapScheduleRows: function(row1, row2) {
@@ -161,12 +168,23 @@ function demo() {
         var parameterInfo = scheduleCommands[command][i];
         var defaultValue = "";
 
-        if (parameterInfo[0] === "default" || parameterInfo[0] === "predefined dropdown") {
+        if (parameterInfo[0] === "default" || 
+            parameterInfo[0] === "predefined dropdown") {
           defaultValue = parameterInfo[1];
+        } else if (parameterInfo[0] === "result dropdown") {
+          for (var access in model.input.tensorOrders) {
+            if (model.input.tensorOrders[access] > 0
+                && model.input.expression.indexOf(access) <= model.input.expression.indexOf("=")) {
+              defaultValue += access;
+              break;
+            }
+          }
         }
         model.schedule[row].parameters.push(defaultValue);
       }
 
+      model.cancelReq();
+      model.setOutput("", "", "", "");
       model.updateScheduleView();
     },
     addScheduleParameter: function(row, index, value) {
@@ -616,13 +634,13 @@ function demo() {
       2: ["default", ""],
       3: ["text"]
     },
-    // divide: {
-    //   parameters: ["Divided IndexVar", "Outer IndexVar", "Inner IndexVar", "Divide Factor"],
-    //   0: ["index dropdown", [1, "0"], [2, "1"]],
-    //   1: ["default", ""],
-    //   2: ["default", ""],
-    //   3: ["text"]
-    // },
+    divide: {
+      parameters: ["Divided IndexVar", "Outer IndexVar", "Inner IndexVar", "Divide Factor"],
+      0: ["index dropdown", [1, "0"], [2, "1"]],
+      1: ["default", ""],
+      2: ["default", ""],
+      3: ["text"]
+    },
     precompute: {
       parameters: ["Precomputed Expr", "Original IndexVar", "Workspace IndexVar"],
       0: ["long text"],
@@ -653,6 +671,12 @@ function demo() {
           "GPU Thread", "GPU Block", "GPU Warp"],
       2: ["predefined dropdown", "No Races",
           "Ignore Races", "No Races", "Atomics", "Temporary", "Parallel Reduction"]
+    },
+    assemble: {
+      parameters: ["Result Tensor", "Assembly Strategy"],
+      0: ["result dropdown"],
+      1: ["predefined dropdown", "Insert",
+          "Insert", "Append"]
     }
   };
 
@@ -734,6 +758,26 @@ function demo() {
         return parameter;
       }
 
+      // a dropdown where user can choose from result tensors
+      function resultDropdown(parameterName, inputId, input) {
+        var parameter = ""; 
+        var defaultParam = "";
+        for (var access in model.input.tensorOrders) {
+          if (model.input.tensorOrders[access] > 0
+              && model.input.expression.indexOf(access) <= model.input.expression.indexOf("=")) {
+            parameter += "<li><a>";
+            parameter += access;
+            parameter += "</a></li>";
+            if (defaultParam === "") {
+              defaultParam += access;
+            }
+          }
+        }
+        parameter = dropdown(parameterName, inputId, input, defaultParam) 
+                  + parameter + "</ul></div></li>";
+        return parameter;
+      }
+
       // a dropdown where user can choose from a set of predefined options
       function predefinedDropdown(parameterName, inputId, input, options) {
         var parameter = dropdown(parameterName, inputId, input, options[0], false, "160px");
@@ -762,6 +806,9 @@ function demo() {
             break;
           case "access dropdown":
             parameters += accessDropdown(parameterName, inputId, input);
+            break;
+          case "result dropdown":
+            parameters += resultDropdown(parameterName, inputId, input);
             break;
           case "predefined dropdown":
             parameters += predefinedDropdown(parameterName, inputId, input, parameterInfo.slice(1));
@@ -858,7 +905,7 @@ function demo() {
         var row = rowId.substring(("schedule").length);
 
         $("#" + rowId).val(command);
-        model.addScheduleCommand(row, command, );
+        model.addScheduleCommand(row, command);
       });
 
       $(".schedule-input input").on("change", function(e) {
@@ -989,7 +1036,7 @@ function demo() {
   var getKernel = function() {
     model.setOutput("", "", "", "");
 
-    var command = model.input.expression.replace(/ /g, "");
+    var command = "\"" + model.input.expression.replace(/ /g, "") + "\"";
 
     var formats = "";
     for (t in model.input.tensorOrders) {
@@ -1022,7 +1069,7 @@ function demo() {
       var scheduleCommand = model.schedule[i]["command"];
       if (!scheduleCommand) { continue; }
 
-      command += " -s=" + scheduleCommand + "(";
+      command += " -s=\"" + scheduleCommand + "(";
       schedule += ((schedule === "") ? "" : ";") + scheduleCommand + ":";
 
       for (var param of model.schedule[i]["parameters"]) {
@@ -1038,7 +1085,7 @@ function demo() {
       }
 
       command = command.substring(0, command.length - 1);
-      command += ")";
+      command += ")\"";
       schedule = schedule.substring(0, schedule.length - 1);
     }
 
@@ -1086,7 +1133,15 @@ function demo() {
           x: { name: "Dense array", levels: { formats: ["d"], ordering: [0] } }
         }
       },
-      add: { name: "Sparse matrix addition", 
+      spgemm: { name: "SpGEMM", 
+        code: "A(i,j) = B(i,k) * C(k,j)",
+        formats: {
+          A: { name: "CSR", levels: { formats: ["d", "s"], ordering: [0, 1] } },
+          B: { name: "CSR", levels: { formats: ["d", "s"], ordering: [0, 1] } },
+          C: { name: "CSR", levels: { formats: ["d", "s"], ordering: [0, 1] } },
+        }
+      },
+      spadd: { name: "Sparse matrix addition", 
         code: "A(i,j) = B(i,j) + C(i,j)",
         formats: {
           A: { name: "CSR", levels: { formats: ["d", "s"], ordering: [0, 1] } },
@@ -1186,9 +1241,10 @@ function demo() {
         }
         model.setInput(code);
 
-        var schedule = default_CPU_schedules[e];
-        model.setExampleSchedule((schedule.length > 0) ? e : "");
-        model.setSchedule(schedule);      
+        var cpuSchedule = default_CPU_schedules[e];
+        var gpuSchedule = default_GPU_schedules[e];
+        model.setExampleSchedule((gpuSchedule.length > 0) ? e : "");
+        model.setSchedule(cpuSchedule);      
       };
       $("#example_" + e).click(setExample);
 
