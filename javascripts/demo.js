@@ -1152,7 +1152,7 @@ function demo() {
       ttv: { name: "Tensor-times-vector", 
         code: "A(i,j) = B(i,j,k) * c(k)",
         formats: {
-          A: { name: "DCSR", levels: { formats: ["s", "s"], ordering: [0, 1] } },
+          A: { name: "CSR", levels: { formats: ["d", "s"], ordering: [0, 1] } },
           B: { name: "CSF", levels: { formats: ["s", "s", "s"], ordering: [0, 1, 2] } },
           c: { name: "Dense array", levels: { formats: ["d"], ordering: [0] } },
         }

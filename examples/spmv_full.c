@@ -118,11 +118,6 @@ int compute(taco_tensor_t *y, taco_tensor_t *A, taco_tensor_t *x) {
   int x1_dimension = (int)(x->dimensions[0]);
   double* restrict x_vals = (double*)(x->vals);
 
-  #pragma omp parallel for schedule(static)
-  for (int32_t py = 0; py < y1_dimension; py++) {
-    y_vals[py] = 0.0;
-  }
-
   #pragma omp parallel for schedule(runtime)
   for (int32_t i0 = 0; i0 < ((A1_dimension + 31) / 32); i0++) {
     for (int32_t i1 = 0; i1 < 32; i1++) {
@@ -135,7 +130,7 @@ int compute(taco_tensor_t *y, taco_tensor_t *A, taco_tensor_t *x) {
         int32_t j = A2_crd[jA];
         tjy_val += A_vals[jA] * x_vals[j];
       }
-      y_vals[i] = y_vals[i] + tjy_val;
+      y_vals[i] = tjy_val;
     }
   }
   return 0;
@@ -164,11 +159,6 @@ int evaluate(taco_tensor_t *y, taco_tensor_t *A, taco_tensor_t *x) {
   int32_t y_capacity = y1_dimension;
   y_vals = (double*)malloc(sizeof(double) * y_capacity);
 
-  #pragma omp parallel for schedule(static)
-  for (int32_t py = 0; py < y_capacity; py++) {
-    y_vals[py] = 0.0;
-  }
-
   #pragma omp parallel for schedule(runtime)
   for (int32_t i0 = 0; i0 < ((A1_dimension + 31) / 32); i0++) {
     for (int32_t i1 = 0; i1 < 32; i1++) {
@@ -181,7 +171,7 @@ int evaluate(taco_tensor_t *y, taco_tensor_t *A, taco_tensor_t *x) {
         int32_t j = A2_crd[jA];
         tjy_val += A_vals[jA] * x_vals[j];
       }
-      y_vals[i] = y_vals[i] + tjy_val;
+      y_vals[i] = tjy_val;
     }
   }
 

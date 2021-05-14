@@ -43,25 +43,13 @@ var default_CPU_schedules = {
            }
          ],
   ttv:  [
-          { 
-            command: "fuse",
-            parameters: ["i", "j", "f"]
+          {
+            command: "assemble",
+            parameters: ["A", "Insert"]
           },
           {
-            command: "pos",
-            parameters: ["f", "fpos", "B"]
-          },
-          {
-            command: "split",
-            parameters: ["fpos", "chunk", "fpos2", 8]
-          },
-          {
-            command: "reorder", 
-            parameters: ["chunk", "fpos2", "k"]
-          },
-          {
-            command: "parallelize", 
-            parameters: ["chunk", "CPU Thread", "No Races"]
+            command: "parallelize",
+            parameters: ["i", "CPU Thread", "No Races"]
           }
         ],
   mttkrp: [
@@ -134,56 +122,7 @@ var default_GPU_schedules = {
       ],
   spgemm: [],
   spadd: [],
-  ttv:  [ 
-        {
-          command: "fuse",
-          parameters: ["j", "k", "jk"]
-        },
-        {
-          command: "fuse",
-          parameters: ["i", "jk", "f"]
-        },
-        {
-          command: "pos",
-          parameters: ["f", "fpos", "B"]
-        },
-        {
-          command: "split", 
-          parameters: ["fpos", "block", "fpos1", 256]
-        },
-        {
-          command: "split", 
-          parameters: ["fpos1", "warp", "fpos2", 16]
-        },
-        {
-          command: "split", 
-          parameters: ["fpos2", "thread", "thr_nz", 1] 
-        },
-        {
-          command: "reorder",
-          parameters: ["block", "warp", "thread", "thr_nz"]
-        },
-        {
-          command: "precompute",
-          parameters: ["B(i, j, k) * c(k)", "thr_nz", "thr_nz_pre"]
-        },
-        {
-          command: "unroll",
-          parameters: ["thr_nz_pre", 1]
-        },
-        {
-          command: "parallelize",
-          parameters: ["block", "GPU Block", "Ignore Races"]
-        },
-        {
-          command: "parallelize",
-          parameters: ["warp", "GPU Warp", "Ignore Races"]
-        },
-        {
-          command: "parallelize",
-          parameters: ["thread", "GPU Thread", "Atomics"]
-        }
-        ],
+  ttv: [], 
   mttkrp: [
           {
             command: "reorder",
