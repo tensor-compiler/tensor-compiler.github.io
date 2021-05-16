@@ -9,6 +9,9 @@
 #include <math.h>
 #include <complex.h>
 #include <string.h>
+#if _OPENMP
+#include <omp.h>
+#endif
 #define TACO_MIN(_a,_b) ((_a) < (_b) ? (_a) : (_b))
 #define TACO_MAX(_a,_b) ((_a) > (_b) ? (_a) : (_b))
 #define TACO_DEREF(_a) (((___context___*)(*__ctx__))->_a)
@@ -25,6 +28,10 @@ typedef struct {
   uint8_t*     vals;          // tensor values
   int32_t      vals_size;     // values array size
 } taco_tensor_t;
+#endif
+#if !_OPENMP
+int omp_get_thread_num() { return 0; }
+int omp_get_max_threads() { return 1; }
 #endif
 int cmp(const void *a, const void *b) {
   return *((const int*)a) - *((const int*)b);
@@ -175,8 +182,7 @@ int assemble(taco_tensor_t *A, taco_tensor_t *B, taco_tensor_t *c) {
     int32_t tjA2_nnz_val = 0;
     for (int32_t jB = B2_pos[iB]; jB < B2_pos[(iB + 1)]; jB++) {
       bool qtkA_val = 0;
-      for (int32_t kB = B3_pos[jB]; kB < B3_pos[(jB + 1)]; kB++) {
-        int32_t k = B3_crd[kB];
+      if (B3_pos[jB] < B3_pos[(jB + 1)]) {
         qtkA_val = 1;
       }
       tjA2_nnz_val += (int32_t)qtkA_val;
@@ -199,8 +205,7 @@ int assemble(taco_tensor_t *A, taco_tensor_t *B, taco_tensor_t *c) {
     for (int32_t jB0 = B2_pos[iB0]; jB0 < B2_pos[(iB0 + 1)]; jB0++) {
       int32_t j = B2_crd[jB0];
       bool tkA_set = 0;
-      for (int32_t kB0 = B3_pos[jB0]; kB0 < B3_pos[(jB0 + 1)]; kB0++) {
-        int32_t k = B3_crd[kB0];
+      if (B3_pos[jB0] < B3_pos[(jB0 + 1)]) {
         tkA_set = 1;
       }
       if (tkA_set) {
@@ -248,8 +253,7 @@ int evaluate(taco_tensor_t *A, taco_tensor_t *B, taco_tensor_t *c) {
     int32_t tjA2_nnz_val = 0;
     for (int32_t jB = B2_pos[iB]; jB < B2_pos[(iB + 1)]; jB++) {
       bool qtkA_val = 0;
-      for (int32_t kB = B3_pos[jB]; kB < B3_pos[(jB + 1)]; kB++) {
-        int32_t k = B3_crd[kB];
+      if (B3_pos[jB] < B3_pos[(jB + 1)]) {
         qtkA_val = 1;
       }
       tjA2_nnz_val += (int32_t)qtkA_val;

@@ -17,12 +17,15 @@ int assemble(taco_tensor_t *A, taco_tensor_t *B, taco_tensor_t *C) {
   int32_t* restrict A2_nnz = 0;
   A2_nnz = (int32_t*)malloc(sizeof(int32_t) * B1_dimension);
 
+  int32_t* restrict qworkspace_index_list_all = 0;
+  qworkspace_index_list_all = (int32_t*)malloc(sizeof(int32_t) * (C2_dimension * omp_get_max_threads()));
+  bool* restrict qworkspace_already_set_all = calloc((C2_dimension * omp_get_max_threads()), sizeof(bool));
+
   #pragma omp parallel for schedule(runtime)
   for (int32_t i = 0; i < B1_dimension; i++) {
     int32_t qworkspace_index_list_size = 0;
-    int32_t* restrict qworkspace_index_list = 0;
-    qworkspace_index_list = (int32_t*)malloc(sizeof(int32_t) * C2_dimension);
-    bool* restrict qworkspace_already_set = calloc(C2_dimension, sizeof(bool));
+    int32_t* restrict qworkspace_index_list = qworkspace_index_list_all + C2_dimension * omp_get_thread_num();
+    bool* restrict qworkspace_already_set = qworkspace_already_set_all + C2_dimension * omp_get_thread_num();
     for (int32_t kB = B2_pos[i]; kB < B2_pos[(i + 1)]; kB++) {
       int32_t k = B2_crd[kB];
       for (int32_t jC = C2_pos[k]; jC < C2_pos[(k + 1)]; jC++) {
@@ -41,9 +44,10 @@ int assemble(taco_tensor_t *A, taco_tensor_t *B, taco_tensor_t *C) {
       qworkspace_already_set[j] = 0;
     }
     A2_nnz[i] = tjA2_nnz_val;
-    free(qworkspace_index_list);
-    free(qworkspace_already_set);
   }
+
+  free(qworkspace_index_list_all);
+  free(qworkspace_already_set_all);
 
   A2_pos = (int32_t*)malloc(sizeof(int32_t) * (A1_dimension + 1));
   A2_pos[0] = 0;
@@ -53,12 +57,15 @@ int assemble(taco_tensor_t *A, taco_tensor_t *B, taco_tensor_t *C) {
   A2_crd = (int32_t*)malloc(sizeof(int32_t) * A2_pos[A1_dimension]);
   A_vals = (double*)malloc(sizeof(double) * A2_pos[A1_dimension]);
 
+  int32_t* restrict workspace_index_list_all = 0;
+  workspace_index_list_all = (int32_t*)malloc(sizeof(int32_t) * (C2_dimension * omp_get_max_threads()));
+  bool* restrict workspace_already_set_all = calloc((C2_dimension * omp_get_max_threads()), sizeof(bool));
+
   #pragma omp parallel for schedule(runtime)
   for (int32_t i = 0; i < B1_dimension; i++) {
     int32_t workspace_index_list_size = 0;
-    int32_t* restrict workspace_index_list = 0;
-    workspace_index_list = (int32_t*)malloc(sizeof(int32_t) * C2_dimension);
-    bool* restrict workspace_already_set = calloc(C2_dimension, sizeof(bool));
+    int32_t* restrict workspace_index_list = workspace_index_list_all + C2_dimension * omp_get_thread_num();
+    bool* restrict workspace_already_set = workspace_already_set_all + C2_dimension * omp_get_thread_num();
     for (int32_t kB0 = B2_pos[i]; kB0 < B2_pos[(i + 1)]; kB0++) {
       int32_t k = B2_crd[kB0];
       for (int32_t jC0 = C2_pos[k]; jC0 < C2_pos[(k + 1)]; jC0++) {
@@ -79,9 +86,10 @@ int assemble(taco_tensor_t *A, taco_tensor_t *B, taco_tensor_t *C) {
       A2_crd[pA2] = j;
       workspace_already_set[j] = 0;
     }
-    free(workspace_index_list);
-    free(workspace_already_set);
   }
+
+  free(workspace_index_list_all);
+  free(workspace_already_set_all);
 
   for (int32_t p = 0; p < A1_dimension; p++) {
     A2_pos[A1_dimension - p] = A2_pos[((A1_dimension - p) - 1)];

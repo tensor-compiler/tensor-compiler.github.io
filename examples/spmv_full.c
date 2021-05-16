@@ -9,6 +9,9 @@
 #include <math.h>
 #include <complex.h>
 #include <string.h>
+#if _OPENMP
+#include <omp.h>
+#endif
 #define TACO_MIN(_a,_b) ((_a) < (_b) ? (_a) : (_b))
 #define TACO_MAX(_a,_b) ((_a) > (_b) ? (_a) : (_b))
 #define TACO_DEREF(_a) (((___context___*)(*__ctx__))->_a)
@@ -25,6 +28,10 @@ typedef struct {
   uint8_t*     vals;          // tensor values
   int32_t      vals_size;     // values array size
 } taco_tensor_t;
+#endif
+#if !_OPENMP
+int omp_get_thread_num() { return 0; }
+int omp_get_max_threads() { return 1; }
 #endif
 int cmp(const void *a, const void *b) {
   return *((const int*)a) - *((const int*)b);
