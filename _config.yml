@@ -1,4 +1,4 @@
 remote_theme: chrisrhymes/bulma-clean-theme
-title: TACO: The Tensor Algebra Compiler
-tagline: TACO: The Tensor Algebra Compiler
+title: The Tensor Algebra Compiler
+tagline: The Tensor Algebra Compiler
 description:  A fast and versatile library for linear and tensor algebra
