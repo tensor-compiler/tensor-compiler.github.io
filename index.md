@@ -1,3 +1,9 @@
+---
+title: The Tensor Algebra Compiler
+subtitle: A fast and versatile library for linear and tensor algebra
+layout: page
+---
+
 ## Welcome to GitHub Pages!
 
 You can use the [editor on GitHub](https://github.com/tensor-compiler/new-website/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
