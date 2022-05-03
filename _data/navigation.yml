@@ -1,10 +1,10 @@
 - name: Docs 
-  link: /docs/
+  link: /docs
 - name: Publications
-  link: /publications/
+  link: /publications
 - name: Related Projects
-  link: /related/
+  link: /related
 - name: Web Tool 
-  link: /codegen/
+  link: /codegen
 - name: GitHub
   link: https://github.com/tensor-compiler/taco
