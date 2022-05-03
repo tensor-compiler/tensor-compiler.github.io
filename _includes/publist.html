@@ -1,6 +1,9 @@
 {% assign sections=site.data.[include.pubs] %}
 {% for section in sections %}
-  <p class="title is-3 my-5">{{ section.heading }}</p>
+  <p class="title is-3 my-5">{% if section.link %}<a href="{{ section.link }}">{% endif %}{{ section.heading }}{% if section.link %}</a>{% endif %}</p>
+  {% if section.desc %}
+  <p>{{ section.desc }}</p>
+  {% endif %}
   {% for pub in section.pubs %}
   <details>
     <summary>

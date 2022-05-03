@@ -1,0 +1,26 @@
+- heading: MLIR 
+  link: https://mlir.llvm.org/
+  desc: >
+    MLIR is an open-source project that provides an extensible infrastructure for building compilers for domain-specific programming languages.
+    MLIR provides first-class support for sparse tensor operations through the <code>SparseTensor</code> dialect, which the MLIR compiler can compile to LLVM IR using an implementation of TACO's sparse tensor algebra compiler theory.
+  pubs:
+  - title: Compiler Support for Sparse Tensor Computations in MLIR
+    authors: Aart J.C. Bik, Penporn Koanantakool, Tatiana Shpeisman, Nicolas Vasilache, Bixia Zheng, and Fredrik Kjolstad 
+    is_thesis: false
+    paper_link: https://arxiv.org/abs/2202.04305
+    slide_link: https://llvm.org/devmtg/2021-11/slides/2021-CompilerSupportforSparseTensorComputationsinMLIR.pdf
+    youtube: x-nHc3hBxHM
+    abstract: >
+      Sparse tensors arise in problems in science, engineering, machine learning, and data analytics. Programs that operate on such tensors can exploit sparsity to reduce storage requirements and computational time. Developing and maintaining sparse software by hand, however, is a complex and error-prone task. Therefore, we propose treating sparsity as a property of tensors, not a tedious implementation task, and letting a sparse compiler generate sparse code automatically from a sparsity-agnostic definition of the computation. This paper discusses integrating this idea into MLIR. 
+    bibtex: >
+      @article{https://doi.org/10.48550/arxiv.2202.04305,
+        doi = {10.48550/ARXIV.2202.04305},
+        url = {https://arxiv.org/abs/2202.04305},
+        author = {Bik, Aart J. C. and Koanantakool, Penporn and Shpeisman, Tatiana and Vasilache, Nicolas and Zheng, Bixia and Kjolstad, Fredrik},
+        keywords = {Programming Languages (cs.PL), FOS: Computer and information sciences, FOS: Computer and information sciences},
+        title = {Compiler Support for Sparse Tensor Computations in MLIR},
+        publisher = {arXiv},
+        year = {2022},
+        copyright = {Creative Commons Attribution 4.0 International}
+      }
+
