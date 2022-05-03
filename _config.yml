@@ -1,4 +1,4 @@
-theme: bulma-clean-theme
+#theme: bulma-clean-theme
 remote_theme: chrisrhymes/bulma-clean-theme
 title: "TACO: The Tensor Algebra Compiler"
 #tagline:  A fast and versatile library for linear and tensor algebra
