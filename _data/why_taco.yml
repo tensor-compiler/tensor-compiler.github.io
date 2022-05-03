@@ -1,0 +1,22 @@
+style: is-light pb-5
+height: is-small
+items:
+  - title: TACO is versatile!
+    icon: fa-wrench
+    description: >
+
+      TACO enables it to support a wide variety of linear and tensor algebra operations, ranging from simpler ones like sparse matrix-vector multiplication to more complex ones like MTTKRP on tensors of any order. Tensors can be stored in a wide range of storage formats, including many commonly used sparse matrix and tensor formats such as CSR and COO. 
+  - title: TACO is fast!
+    icon: fa-rocket
+    subtitle: 
+    description: >
+
+      Under the hood, the TACO library employs a novel compiler-based technique to generate kernels that are optimized for the computations you want to perform. This enables TACO to achieve performance that exceeds the MATLAB Tensor Toolbox by up to several orders of magnitude and that is competitive with other high-performance sparse linear and tensor algebra libraries like Eigen, Intel MKL, and SPLATT.
+  - title: TACO is easy to use!
+    icon: fa-coffee
+    description: >
+
+      The example description text goes here and can be multiple lines.
+      For example, such as this.
+    call_to_action_name: Call to action 3
+    call_to_action_link: https://www.csrhymes.com/bulma-clean-theme/page-3/

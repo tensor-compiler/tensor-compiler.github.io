@@ -1,0 +1,10 @@
+- name: Docs 
+  link: /docs/
+- name: Publications
+  link: /publications/
+- name: Related Projects
+  link: /related/
+- name: Web Tool 
+  link: /codegen/
+- name: GitHub
+  link: https://github.com/tensor-compiler/taco

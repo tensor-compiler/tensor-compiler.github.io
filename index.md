@@ -1,43 +1,17 @@
 ---
-title: The Tensor Algebra Compiler
-subtitle: A fast and versatile library for linear and tensor algebra
+title: "TACO: The Tensor Algebra Compiler"
+subtitle: A fast and versatile compiler-based library for sparse linear and tensor algebra
+hero_link: /page-1/
+hero_link_text: Example Call To Action
+hero_height: is-medium
+callouts: why_taco
 layout: page
 ---
 
-## Welcome to GitHub Pages!
+# How can I use TACO?
 
-You can use the [editor on GitHub](https://github.com/tensor-compiler/new-website/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+# How can I contribute to TACO?
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+# Acknowledgements 
 
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/tensor-compiler/new-website/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+TACO is developed by members of the COMMIT research group in MIT CSAIL and is built on work supported by the National Science Foundation under Grant No. CCF-1533753, by the U.S. Department of Energy, Office of Science, Office of Advanced Scientific Computing Research under Award Numbers DE-SC008923 and DE-SC014204, by the Direction Générale de l'Armement (Projet ERE 2016929), and by the Toyota Research Institute.
