@@ -15,7 +15,7 @@
       &nbsp;
       <b>{{ pub.title }}</b>
       &nbsp;
-      <small>{{ pub.authors }}</small>
+      <small>{{ pub.authors }} {% if pub.venue %}({{ pub.venue }}){% endif %}</small>
     </summary>
     <blockquote>
       {% if pub.paper_link %}

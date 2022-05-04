@@ -6,6 +6,7 @@
   pubs:
   - title: Compiler Support for Sparse Tensor Computations in MLIR
     authors: Aart J.C. Bik, Penporn Koanantakool, Tatiana Shpeisman, Nicolas Vasilache, Bixia Zheng, and Fredrik Kjolstad 
+    venue: arXiv Preprint
     is_thesis: false
     paper_link: https://arxiv.org/abs/2202.04305
     slide_link: https://llvm.org/devmtg/2021-11/slides/2021-CompilerSupportforSparseTensorComputationsinMLIR.pdf

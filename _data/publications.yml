@@ -2,6 +2,7 @@
   pubs:
   - title: Autoscheduling for Sparse Tensor Algebra with an Asymptotic Cost Model
     authors: Peter Ahrens, Fredrik Kjolstad, and Saman Amarasinghe
+    venue: PLDI 2022
     is_thesis: false
     paper_link: https://arxiv.org/pdf/2111.14947.pdf
     abstract: >
@@ -18,6 +19,7 @@
       }
   - title: "DISTAL: The Distributed Tensor Algebra Compiler"
     authors: Rohan Yadav, Alex Aiken, and Fredrik Kjolstad
+    venue: PLDI 2022
     is_thesis: false
     paper_link: https://arxiv.org/pdf/2203.08069.pdf
     abstract: >
@@ -32,6 +34,7 @@
       }
   - title: Unified Compilation for Lossless Compression and Sparse Computing
     authors: Daniel Donenfeld, Stephen Chou, and Saman Amarasinghe
+    venue: CGO 2022
     is_thesis: false
     paper_link: /files/donenfeld-cgo22-taco-compression.pdf
     youtube: uU3brPcwUos
@@ -52,6 +55,7 @@
   pubs:
   - title: Dynamic Sparse Tensor Algebra Compilation
     authors: Stephen Chou and Saman Amarasinghe
+    venue: arXiv Preprint
     is_thesis: false
     paper_link: /files/chou-arxiv-taco-dynamic.pdf
     abstract: >
@@ -71,6 +75,7 @@
       }
   - title: Compilation of Sparse Array Programming Models 
     authors: Rawn Henry*, Olivia Hsu*, Rohan Yadav, Stephen Chou, Kunle Olukotun, Saman Amarasinghe, and Fredrik Kjolstad 
+    venue: OOPSLA 2021
     is_thesis: false 
     paper_link: /files/henry_hsu-oopsla21-taco-array.pdf
     youtube: sY_jEfaP8f4 
@@ -102,6 +107,7 @@
   pubs:
   - title: A Sparse Iteration Space Transformation Framework for Sparse Tensor Algebra
     authors: Ryan Senanayake, Changwan Hong, Ziheng Wang, Amalee Wilson, Stephen Chou, Shoaib Kamil, Saman Amarasinghe, and Fredrik Kjolstad
+    venue: OOPSLA 2020
     is_thesis: false 
     paper_link: /files/senanayake-oopsla20-taco-scheduling.pdf
     youtube: 0wJsGWA5pTU
@@ -127,8 +133,34 @@
         numpages = {30},
         keywords = {Sparse Tensor Algebra, Sparse Iteration Spaces, Optimizing Transformations}
       }
+  - title: Sparse Tensor Transpositions
+    authors: Suzanne Mueller, Peter Ahrens, Stephen Chou, Fredrik Kjolstad, and Saman Amarasinghe
+    venue: SPAA 2020
+    is_thesis: false
+    paper_link: /files/mueller-spaa20-taco-transpositions.pdf
+    youtube: rUtw6vLZR-g
+    abstract: >
+      We present a new algorithm for transposing sparse tensors called Quesadilla. The algorithm converts the sparse tensor data structure to a list of coordinates and sorts it with a fast multi-pass radix algorithm that exploits knowledge of the requested transposition and the tensors input partial coordinate ordering to provably minimize the number of parallel partial sorting passes. We evaluate both a serial and a parallel implementation of Quesadilla on a set of 19 tensors from the FROSTT collection, a set of tensors taken from scientific and data analytic applications. We compare Quesadilla and a generalization, Top-2-sadilla to several state of the art approaches, including the tensor transposition routine used in the SPLATT tensor factorization library. In serial tests, Quesadilla was the best strategy for 60% of all tensor and transposition combinations and improved over SPLATT by at least 19% in half of the combinations. In parallel tests, at least one of Quesadilla or Top-2-sadilla was the best strategy for 52% of all tensor and transposition combinations. 
+    bibtex: >
+      @inproceedings{mueller:2020:transposition,
+        author = {Mueller, Suzanne and Ahrens, Peter and Chou, Stephen and Kjolstad, Fredrik and Amarasinghe, Saman},
+        title = {Sparse Tensor Transpositions},
+        year = {2020},
+        isbn = {9781450369350},
+        publisher = {Association for Computing Machinery},
+        address = {New York, NY, USA},
+        url = {https://doi.org/10.1145/3350755.3400245},
+        doi = {10.1145/3350755.3400245},
+        booktitle = {Proceedings of the 32nd ACM Symposium on Parallelism in Algorithms and Architectures},
+        pages = {559–561},
+        numpages = {3},
+        keywords = {COO, sorting, radix sort, transposition, sparse tensors},
+        location = {Virtual Event, USA},
+        series = {SPAA '20}
+      }
   - title: Automatic Generation of Efficient Sparse Tensor Format Conversion Routines
     authors: Stephen Chou, Fredrik Kjolstad, and Saman Amarasinghe
+    venue: PLDI 2020
     is_thesis: false
     paper_link: /files/chou-pldi20-taco-conversion.pdf
     slide_link: /files/chou-pldi20-slides.pdf
@@ -154,32 +186,9 @@
         location = {London, UK},
         series = {PLDI 2020}
       }
-  - title: Sparse Tensor Transpositions
-    authors: Suzanne Mueller, Peter Ahrens, Stephen Chou, Fredrik Kjolstad, and Saman Amarasinghe
-    is_thesis: false
-    paper_link: /files/mueller-spaa20-taco-transpositions.pdf
-    youtube: rUtw6vLZR-g
-    abstract: >
-      We present a new algorithm for transposing sparse tensors called Quesadilla. The algorithm converts the sparse tensor data structure to a list of coordinates and sorts it with a fast multi-pass radix algorithm that exploits knowledge of the requested transposition and the tensors input partial coordinate ordering to provably minimize the number of parallel partial sorting passes. We evaluate both a serial and a parallel implementation of Quesadilla on a set of 19 tensors from the FROSTT collection, a set of tensors taken from scientific and data analytic applications. We compare Quesadilla and a generalization, Top-2-sadilla to several state of the art approaches, including the tensor transposition routine used in the SPLATT tensor factorization library. In serial tests, Quesadilla was the best strategy for 60% of all tensor and transposition combinations and improved over SPLATT by at least 19% in half of the combinations. In parallel tests, at least one of Quesadilla or Top-2-sadilla was the best strategy for 52% of all tensor and transposition combinations. 
-    bibtex: >
-      @inproceedings{mueller:2020:transposition,
-        author = {Mueller, Suzanne and Ahrens, Peter and Chou, Stephen and Kjolstad, Fredrik and Amarasinghe, Saman},
-        title = {Sparse Tensor Transpositions},
-        year = {2020},
-        isbn = {9781450369350},
-        publisher = {Association for Computing Machinery},
-        address = {New York, NY, USA},
-        url = {https://doi.org/10.1145/3350755.3400245},
-        doi = {10.1145/3350755.3400245},
-        booktitle = {Proceedings of the 32nd ACM Symposium on Parallelism in Algorithms and Architectures},
-        pages = {559–561},
-        numpages = {3},
-        keywords = {COO, sorting, radix sort, transposition, sparse tensors},
-        location = {Virtual Event, USA},
-        series = {SPAA '20}
-      }
   - title: A Framework for Computing on Sparse Tensors based on Operator Properties
     authors: Rawn Henry
+    venue: MEng Thesis
     is_thesis: true 
     paper_link: /files/henry-meng-thesis-taco-array.pdf
     abstract: >
@@ -201,6 +210,7 @@
       }
   - title: Automatic Optimization of Sparse Tensor Algebra Programs
     authors: Ziheng Wang
+    venue: MEng Thesis
     is_thesis: true 
     paper_link: /files/wang-meng-thesis-taco-autoscheduling.pdf
     abstract: >
@@ -220,6 +230,7 @@
       }
   - title: A Unified Iteration Space Transformation Framework for Sparse and Dense Tensor Algebra
     authors: Ryan Senanayake
+    venue: MEng Thesis
     is_thesis: true 
     paper_link: /files/senanayake-meng-thesis-taco-scheduling.pdf
     abstract: >
@@ -239,6 +250,7 @@
       }
   - title: Sparse Tensor Transpositions in the Tensor Algebra Compiler
     authors: Suzanne Mueller
+    venue: MEng Thesis
     is_thesis: true 
     paper_link: /files/mueller-meng-thesis-taco-transposition.pdf
     abstract: >
@@ -256,6 +268,7 @@
       }
   - title: Sparse Tensor Algebra Compilation
     authors: Fredrik Kjolstad
+    venue: PhD Thesis
     is_thesis: true 
     paper_link: /files/kjolstad-phd-thesis-taco-compiler.pdf
     abstract: >
@@ -277,6 +290,7 @@
   pubs:
   - title: A Tensor Algebra Compiler Library Interface and Runtime
     authors: Patricio Noyola
+    venue: MEng Thesis
     is_thesis: true 
     paper_link: /files/noyola-meng-thesis-taco-interface.pdf
     abstract: >
@@ -298,6 +312,7 @@
       }
   - title: "SuperTaco: Taco Tensor Algebra Kernels on Distributed Systems Using Legion"
     authors: Sachin Dilip Shinde
+    venue: MEng Thesis
     is_thesis: true 
     paper_link: /files/shinde-meng-thesis-taco-distributed.pdf
     abstract: >
@@ -317,6 +332,7 @@
       }
   - title: Tensor Algebra Compilation with Workspaces
     authors: Fredrik Kjolstad, Peter Ahrens, Shoaib Kamil, and Saman Amarasinghe
+    venue: CGO 2019
     is_thesis: false
     paper_link: /files/kjolstad-cgo19-taco-workspaces.pdf
     abstract: >
@@ -344,6 +360,7 @@
   pubs:
   - title: Format Abstraction for Sparse Tensor Algebra Compilers
     authors: Stephen Chou, Fredrik Kjolstad, and Saman Amarasinghe
+    venue: OOPSLA 2018
     is_thesis: false
     paper_link: /files/chou-oopsla18-taco-formats.pdf
     slide_link: /files/chou-oopsla18-slides.pdf
@@ -375,6 +392,7 @@
       }
   - title: Unified Sparse Formats for Tensor Algebra Compilers
     authors: Stephen Chou
+    venue: SM Thesis
     is_thesis: true 
     paper_link: /files/chou-sm-thesis-taco-formats.pdf
     abstract: >
@@ -398,6 +416,7 @@
   pubs:
   - title: The Tensor Algebra Compiler
     authors: Fredrik Kjolstad, Shoaib Kamil, Stephen Chou, David Lugato, and Saman Amarasinghe
+    venue: OOPSLA 2017
     is_thesis: false
     paper_link: /files/kjolstad-oopsla17-tensor-compiler.pdf
     slide_link: /files/kjolstad-oopsla17-slides.pdf
@@ -427,6 +446,7 @@
       }
   - title: "taco: A Tool to Generate Tensor Algebra Kernels"
     authors: Fredrik Kjolstad, Stephen Chou, David Lugato, Shoaib Kamil, and Saman Amarasinghe
+    venue: ASE 2017
     is_thesis: false
     paper_link: /files/kjolstad-ase17-taco-tools.pdf
     youtube: eE38PC2ctFs
@@ -447,6 +467,7 @@
   pubs:
   - title: An Investigation of Sparse Tensor Formats for Tensor Libraries
     authors: Parker Allen Tew
+    venue: MEng Thesis
     is_thesis: true 
     paper_link: /files/tew-meng-thesis-sparse.pdf
     abstract: >
