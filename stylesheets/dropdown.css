@@ -1,0 +1,46 @@
+.dropdown-menu {
+  cursor: pointer;
+  top: initial;
+  min-width: 10px;
+  margin: 0;
+}
+
+.formats li {
+  width: 160px;
+}
+
+.level-formats {
+  padding-top: 0px;
+}
+
+.level-formats li {
+  width: 160px; 
+}
+
+.dropdown li {
+  float: left;
+  padding: 0; 
+  font-size: 16px;
+}
+
+.dropdown li a {
+  padding: 8px 16px;
+}
+
+.dropdown-submenu {
+  position: relative;
+}
+
+.dropdown-submenu .dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -1px;
+}
+
+.commands li {
+  width: 120px;
+}
+
+.schedule-input li {
+  width: 120px;
+}
