@@ -1149,7 +1149,7 @@ function demo() {
           C: { name: "CSR", levels: { formats: ["d", "s"], ordering: [0, 1] } },
         }
       },
-      ttv: { name: "Tensor-times-vector", 
+      ttv: { name: "Sparse tensor-times-vector", 
         code: "A(i,j) = B(i,j,k) * c(k)",
         formats: {
           A: { name: "CSR", levels: { formats: ["d", "s"], ordering: [0, 1] } },
