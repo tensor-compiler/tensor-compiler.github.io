@@ -36,7 +36,7 @@
     authors: Daniel Donenfeld, Stephen Chou, and Saman Amarasinghe
     venue: CGO 2022
     is_thesis: false
-    paper_link: /files/donenfeld-cgo22-taco-compression.pdf
+    paper_link: files/donenfeld-cgo22-taco-compression.pdf
     youtube: uU3brPcwUos
     abstract: >
       This paper shows how to extend sparse tensor algebra compilers to support lossless compression techniques, including variants of run-length encoding and Lempel-Ziv compression. We develop new abstractions to represent losslessly compressed data as a generalized form of sparse tensors, with repetitions of values (which are compressed out in storage) represented by non-scalar, dynamic fill values. We then show how a compiler can use these abstractions to emit efficient code that computes on losslessly compressed data. By unifying lossless compression with sparse tensor algebra, our technique is able to generate code that computes with both losslessly compressed data and sparse data, as well as generate code that computes directly on compressed data without needing to first decompress it.
@@ -57,7 +57,7 @@
     authors: Stephen Chou and Saman Amarasinghe
     venue: arXiv Preprint
     is_thesis: false
-    paper_link: /files/chou-arxiv-taco-dynamic.pdf
+    paper_link: files/chou-arxiv-taco-dynamic.pdf
     abstract: >
       This paper shows how to generate efficient tensor algebra code that compute on dynamic sparse tensors, which have sparsity structures that evolve over time. We propose a language for precisely specifying recursive, pointer-based data structures, and we show how this language can express a wide range of dynamic data structures that support efficient modification, such as linked lists, binary search trees, and B-trees. We then describe how, given high-level specifications of such data structures, a compiler can generate code to efficiently iterate over and compute with dynamic sparse tensors that are stored in the aforementioned data structures. Furthermore, we define an abstract interface that captures how nonzeros can be inserted into dynamic data structures, and we show how this abstraction guides a compiler to emit efficient code that store the results of sparse tensor algebra computations in dynamic data structures.
       <br><br>
@@ -77,7 +77,7 @@
     authors: Rawn Henry*, Olivia Hsu*, Rohan Yadav, Stephen Chou, Kunle Olukotun, Saman Amarasinghe, and Fredrik Kjolstad 
     venue: OOPSLA 2021
     is_thesis: false 
-    paper_link: /files/henry_hsu-oopsla21-taco-array.pdf
+    paper_link: files/henry_hsu-oopsla21-taco-array.pdf
     youtube: sY_jEfaP8f4 
     abstract: >
       This paper shows how to compile sparse array programming languages. A sparse array programming language is an array programming language that supports element-wise application, reduction, and broadcasting of arbitrary functions over dense and sparse arrays with any fill value. Such a language has great expressive power and can express sparse and dense linear and tensor algebra, functions over images, exclusion and inclusion filters, and even graph algorithms.
@@ -109,7 +109,7 @@
     authors: Ryan Senanayake, Changwan Hong, Ziheng Wang, Amalee Wilson, Stephen Chou, Shoaib Kamil, Saman Amarasinghe, and Fredrik Kjolstad
     venue: OOPSLA 2020
     is_thesis: false 
-    paper_link: /files/senanayake-oopsla20-taco-scheduling.pdf
+    paper_link: files/senanayake-oopsla20-taco-scheduling.pdf
     youtube: 0wJsGWA5pTU
     abstract: >
       We address the problem of optimizing sparse tensor algebra in a compiler and show how to define standard loop transformations---split, collapse, and reorder---on sparse iteration spaces. The key idea is to track the transformation functions that map the original iteration space to derived iteration spaces. These functions are needed by the code generator to emit code that maps coordinates between iteration spaces at runtime, since the coordinates in the sparse data structures remain in the original iteration space. We further demonstrate that derived iteration spaces can tile both the universe of coordinates and the subset of nonzero coordinates: the former is analogous to tiling dense iteration spaces, while the latter tiles sparse iteration spaces into statically load-balanced blocks of nonzeros. Tiling the space of nonzeros lets the generated code efficiently exploit heterogeneous compute resources such as threads, vector units, and GPUs.
@@ -137,7 +137,7 @@
     authors: Suzanne Mueller, Peter Ahrens, Stephen Chou, Fredrik Kjolstad, and Saman Amarasinghe
     venue: SPAA 2020
     is_thesis: false
-    paper_link: /files/mueller-spaa20-taco-transpositions.pdf
+    paper_link: files/mueller-spaa20-taco-transpositions.pdf
     youtube: rUtw6vLZR-g
     abstract: >
       We present a new algorithm for transposing sparse tensors called Quesadilla. The algorithm converts the sparse tensor data structure to a list of coordinates and sorts it with a fast multi-pass radix algorithm that exploits knowledge of the requested transposition and the tensors input partial coordinate ordering to provably minimize the number of parallel partial sorting passes. We evaluate both a serial and a parallel implementation of Quesadilla on a set of 19 tensors from the FROSTT collection, a set of tensors taken from scientific and data analytic applications. We compare Quesadilla and a generalization, Top-2-sadilla to several state of the art approaches, including the tensor transposition routine used in the SPLATT tensor factorization library. In serial tests, Quesadilla was the best strategy for 60% of all tensor and transposition combinations and improved over SPLATT by at least 19% in half of the combinations. In parallel tests, at least one of Quesadilla or Top-2-sadilla was the best strategy for 52% of all tensor and transposition combinations. 
@@ -162,8 +162,8 @@
     authors: Stephen Chou, Fredrik Kjolstad, and Saman Amarasinghe
     venue: PLDI 2020
     is_thesis: false
-    paper_link: /files/chou-pldi20-taco-conversion.pdf
-    slide_link: /files/chou-pldi20-slides.pdf
+    paper_link: files/chou-pldi20-taco-conversion.pdf
+    slide_link: files/chou-pldi20-slides.pdf
     youtube: s6JRY8qcjvA
     abstract: >
       This paper shows how to generate code that efficiently converts sparse tensors between disparate storage formats (data layouts) such as CSR, DIA, ELL, and many others. We decompose sparse tensor conversion into three logical phases: coordinate remapping, analysis, and assembly. We then develop a language that precisely describes how different formats group together and order a tensor’s nonzeros in memory. This lets a compiler emit code that performs complex remappings of nonzeros when converting between formats. We also develop a query language that can extract statistics about sparse tensors, and we show how to emit efficient analysis code that computes such queries. Finally, we define an abstract interface that captures how data structures for storing a tensor can be efficiently assembled given specific statistics about the tensor. Disparate formats can implement this common interface, thus letting a compiler emit optimized sparse tensor conversion code for arbitrary combinations of many formats without hard-coding for any specific combination.
@@ -190,7 +190,7 @@
     authors: Rawn Henry
     venue: MEng Thesis
     is_thesis: true 
-    paper_link: /files/henry-meng-thesis-taco-array.pdf
+    paper_link: files/henry-meng-thesis-taco-array.pdf
     abstract: >
       Tensor operations have been traditionally limited to addition and multiplication operations. For operations of sparse tensors, these semantics were extended to account for the fact that tensors usually omit zero values. However, there are many operators with a rich semantics of operator properties that can be used in dense and sparse tensor computations.
       <br><br>
@@ -212,7 +212,7 @@
     authors: Ziheng Wang
     venue: MEng Thesis
     is_thesis: true 
-    paper_link: /files/wang-meng-thesis-taco-autoscheduling.pdf
+    paper_link: files/wang-meng-thesis-taco-autoscheduling.pdf
     abstract: >
       In this thesis, I attempt to give some guidance on how to automatically optimize programs using a domain-specific-language (DSLs) compiler that exposes a set of scheduling commands. These DSLs have proliferated as of late, including Halide, TACO, Tiramisu and TVM, to name a few. The scheduling commands allow succinct expression of the programmer’s desire to perform certain loop transformations,such as strip-mining, tiling, collapsing and parallelization, which the compiler proceeds to carry out. I explore if we can automatically generate schedules with good performance.
       <br><br>
@@ -232,7 +232,7 @@
     authors: Ryan Senanayake
     venue: MEng Thesis
     is_thesis: true 
-    paper_link: /files/senanayake-meng-thesis-taco-scheduling.pdf
+    paper_link: files/senanayake-meng-thesis-taco-scheduling.pdf
     abstract: >
       This work addresses the problem of optimizing mixed sparse and dense tensor algebra in a compiler. I show that standard loop transformations, such as strip-mining, tiling, collapsing, parallelization and vectorization, can be applied to irregular loops over sparse iteration spaces. I also show how these transformations can be applied to the contiguous value arrays of sparse tensor data structures, which I call their position spaces, to unlock load-balanced tiling and parallelism.
       <br><br>
@@ -252,7 +252,7 @@
     authors: Suzanne Mueller
     venue: MEng Thesis
     is_thesis: true 
-    paper_link: /files/mueller-meng-thesis-taco-transposition.pdf
+    paper_link: files/mueller-meng-thesis-taco-transposition.pdf
     abstract: >
        The current state of the art for transposing sparse tensors involves converting the sparse tensor into a list of coordinates, sorting the list of coordinates and finally packing the list of coordinates into the desired sparse tensor format. This thesis explores the potential for faster methodologies. Its main contributions are an algorithm that exploits partial sortedness to minimize sorting passes and an implementation that demonstrates that this transposition algorithm is competitive with state of the art. In particular the algorithm takes advantage of the ordering that already exists to apply selective sorting passes and thereby reduce the amount of work that needsto be done to reorder the tensor.
     bibtex: >
@@ -270,7 +270,7 @@
     authors: Fredrik Kjolstad
     venue: PhD Thesis
     is_thesis: true 
-    paper_link: /files/kjolstad-phd-thesis-taco-compiler.pdf
+    paper_link: files/kjolstad-phd-thesis-taco-compiler.pdf
     abstract: >
       This dissertation shows how to compile any sparse tensor algebra expression to CPU and GPU code that matches the performance of hand-optimized implementations. A tensor algebra expression is sparse if at least one of its tensor operands is sparse, and a tensor is sparse if most of its values are zero. If a tensor is sparse, then we can store its nonzero values in a compressed data structure, and omit the zeros. Indeed, as the matrices and tensors in many important applications are extremely sparse, compressed data structures provide the only practical means to store them. A sparse tensor algebra expression may contain any number of operations, which must be compiled to fused sparse loops that compute the entire expression simultaneously. It is not viable to support only binary expressions, because their composition may result in worse asymptotic complexity than the fused implementation. I present compiler techniques to generate fused loops that coiterate over any number of tensors stored in different types of data structures. By design, these loops avoid computing values known to be zero due to the algebraic properties of their operators.
       <br><br>
@@ -292,7 +292,7 @@
     authors: Patricio Noyola
     venue: MEng Thesis
     is_thesis: true 
-    paper_link: /files/noyola-meng-thesis-taco-interface.pdf
+    paper_link: files/noyola-meng-thesis-taco-interface.pdf
     abstract: >
       Tensor algebra is a powerful tool for computing on multidimensional data and has applications in many fields. The number of possible tensor operations is infinite, so it is impossible to manually implement all of them to operate on different tensor dimensions. The Tensor Algebra Compiler (taco) introduced a compiler approach to automatically generate kernels for any compound tensor algebra operation on any input tensor formats.
       <br><br>
@@ -314,7 +314,7 @@
     authors: Sachin Dilip Shinde
     venue: MEng Thesis
     is_thesis: true 
-    paper_link: /files/shinde-meng-thesis-taco-distributed.pdf
+    paper_link: files/shinde-meng-thesis-taco-distributed.pdf
     abstract: >
       Tensor algebra is a powerful language for expressing computation on multidimensional data. While many tensor datasets are sparse, most tensor algebra libraries have limited support for handling sparsity. The Tensor Algebra Compiler (Taco) has introduced a taxonomy for sparse tensor formats that has allowed them to compile sparse tensor algebra expressions to performant C code, but they have not taken advantage of distributed systems.
       <br><br>
@@ -334,7 +334,7 @@
     authors: Fredrik Kjolstad, Peter Ahrens, Shoaib Kamil, and Saman Amarasinghe
     venue: CGO 2019
     is_thesis: false
-    paper_link: /files/kjolstad-cgo19-taco-workspaces.pdf
+    paper_link: files/kjolstad-cgo19-taco-workspaces.pdf
     abstract: >
       This paper shows how to extend sparse tensor algebra compilers to introduce temporary tensors called workspaces to avoid inefficient sparse data structures accesses. We develop an intermediate representation (IR) for tensor operations called concrete index notation that specifies when sub-computations occur and where they are stored. We then describe the workspace transformation in this IR, how to programmatically invoke it, and how the IR is compiled to sparse code. Finally, we show how the transformation can be used to optimize sparse tensor kernels, including sparse matrix multiplication, sparse tensor addition, and the matricized tensor times Khatri-Rao product (MTTKRP).
       <br><br>
@@ -362,8 +362,8 @@
     authors: Stephen Chou, Fredrik Kjolstad, and Saman Amarasinghe
     venue: OOPSLA 2018
     is_thesis: false
-    paper_link: /files/chou-oopsla18-taco-formats.pdf
-    slide_link: /files/chou-oopsla18-slides.pdf
+    paper_link: files/chou-oopsla18-taco-formats.pdf
+    slide_link: files/chou-oopsla18-slides.pdf
     youtube: sQOq3Ci4tB0
     abstract: >
       This paper shows how to build a sparse tensor algebra compiler that is agnostic to tensor formats (data layouts). We develop an interface that describes formats in terms of their capabilities and properties, and show how to build a modular code generator where new formats can be added as plugins. We then describe six implementations of the interface that compose to form the dense, CSR/CSF, COO, DIA, ELL, and HASH tensor formats and countless variants thereof. With these implementations at hand, our code generator can generate code to compute any tensor algebra expression on any combination of the aforementioned formats.
@@ -394,7 +394,7 @@
     authors: Stephen Chou
     venue: SM Thesis
     is_thesis: true 
-    paper_link: /files/chou-sm-thesis-taco-formats.pdf
+    paper_link: files/chou-sm-thesis-taco-formats.pdf
     abstract: >
       Tensor algebra is a powerful tool for computing on multidimensional data and has appli-cations in many fields. Practical applications often deal with tensors that are sparse, and there exists a wide variety of formats for storing such tensors, each suited to specific typesof applications and data. Examples of sparse tensor storage formats include COO, CSR, CSC, DCSR, BCSR, CSF, CSB, ELL, DIA, and hash maps.
       <br><br>
@@ -418,8 +418,8 @@
     authors: Fredrik Kjolstad, Shoaib Kamil, Stephen Chou, David Lugato, and Saman Amarasinghe
     venue: OOPSLA 2017
     is_thesis: false
-    paper_link: /files/kjolstad-oopsla17-tensor-compiler.pdf
-    slide_link: /files/kjolstad-oopsla17-slides.pdf
+    paper_link: files/kjolstad-oopsla17-tensor-compiler.pdf
+    slide_link: files/kjolstad-oopsla17-slides.pdf
     youtube: Kffbzf9etLE
     abstract: >
        Tensor algebra is a powerful tool with applications in machine learning, data analytics, engineering and the physical sciences. Tensors are often sparse and compound operations must frequently be computed in a single kernel for performance and to save memory. Programmers are left to write kernels for every operation of interest, with different mixes of dense and sparse tensors in different formats. The combinations are infinite, which makes it impossible to manually implement and optimize them all. This paper introduces the first compiler technique to automatically generate kernels for any compound tensor algebra operation on dense and sparse tensors. The technique is implemented in a C++ library called taco. Its performance is competitive with best-in-class hand-optimized kernels in popular libraries, while supporting far more tensor operations.
@@ -448,7 +448,7 @@
     authors: Fredrik Kjolstad, Stephen Chou, David Lugato, Shoaib Kamil, and Saman Amarasinghe
     venue: ASE 2017
     is_thesis: false
-    paper_link: /files/kjolstad-ase17-taco-tools.pdf
+    paper_link: files/kjolstad-ase17-taco-tools.pdf
     youtube: eE38PC2ctFs
     abstract: >
        Tensor algebra is an important computational abstraction that is increasingly used in data analytics, machine learning, engineering, and the physical sciences. However, the number of tensor expressions is unbounded, which makes it hard to develop and optimize libraries. Furthermore, the tensors are often sparse (most components are zero), which means the code has to traverse compressed formats. To support programmers we have developed taco, a code generation tool that generates dense, sparse, and mixed kernels from tensor algebra expressions. This paper describes the taco web and command-line tools and discusses the benefits of a code generator over a traditional library. See also the demo video at tensor-compiler.org/ase2017.
@@ -469,7 +469,7 @@
     authors: Parker Allen Tew
     venue: MEng Thesis
     is_thesis: true 
-    paper_link: /files/tew-meng-thesis-sparse.pdf
+    paper_link: files/tew-meng-thesis-sparse.pdf
     abstract: >
       Tensors provide a generalized structure to store arbitrary indexable data, which is applicable in fields such as chemometrics, physics simulations, signal processing and lies at the heart of machine learning. Many naturally occurring tensors are considered sparse as they contain mostly zero values. As with sparse matrices, various techniques can be employed to more efficiently store and compute on these sparse tensors.
       <br><br>
