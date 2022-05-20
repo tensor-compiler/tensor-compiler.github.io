@@ -1,0 +1,13 @@
+items:
+  - title: Data Analytics
+    img: data-analytics.png
+    call_to_action_name: See an example
+    call_to_action_link: docs/data_analytics/index.html 
+  - title: Scientific Computing
+    img: scientific-computing.png
+    call_to_action_name: See an example
+    call_to_action_link: docs/scientific_computing/index.html 
+  - title: Machine Learning 
+    img: machine-learning.png
+    call_to_action_name: See an example
+    call_to_action_link: docs/machine_learning/index.html 
