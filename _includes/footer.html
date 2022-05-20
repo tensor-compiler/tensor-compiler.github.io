@@ -1,0 +1,21 @@
+<footer class="footer">
+    <div class="container">
+        
+        {% if site.footer_menu %}
+        <div class="columns is-multiline">
+            {% for item in site.data[site.footer_menu] %}
+            <div class="column has-text-centered">
+                <div>
+                    <a href="{{ item.link | relative_url }}" class="link">{{ item.name }}</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="content is-small has-text-centered">
+            <p class="">Theme built by <a href="https://www.csrhymes.com">C.S. Rhymes</a>. <a href="https://www.flaticon.com/free-icons/statistics" title="statistics icons">Statistics</a> and <a href="https://www.flaticon.com/free-icons/lab" title="lab icons">lab icons</a> created by <a href="https://www.flaticon.com"/>Freepik - Flaticon</a>. <a href="https://www.flaticon.com/free-icons/machine-learning" title="machine learning icons">Machine learning icons</a> created by <a href="https://www.flaticon.com">Smashicons - Flaticon</a>.</p>
+            <p>{{ page.date | date: "%-d %B %Y" }}</p>
+        </div>
+    </div>
+</footer>
