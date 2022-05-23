@@ -449,7 +449,7 @@ function demo() {
             listTensorsBody += "</ul></div></td>";
 
             listTensorsBody += "<td class=\"mdl-data-table__cell--non-numeric\" ";
-            listTensorsBody += "style=\"padding: 0px; overflow: auto; vertical-align: middle\">";
+            listTensorsBody += "style=\"padding: 0px; vertical-align: middle\">";
             listTensorsBody += "<ul id=\"";
             listTensorsBody += listId;
             listTensorsBody += "\" class=\"ui-state-default sortable\" style=\"margin-top: 0px; margin-left: 0px\">";

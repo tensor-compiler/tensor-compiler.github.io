@@ -73,7 +73,7 @@
             style="padding-left: 0px; vertical-align: middle">
             <div style="display:inline"><big>Format&nbsp;</big></div>
           </th>
-          <th class="mdl-data-table__cell--non-numeric" style="padding-left: 7px; vertical-align: middle">
+          <th class="mdl-data-table__cell--non-numeric" style="padding-left: 7px; vertical-align: middle; text-align: left">
             <div style="display:inline"><big>Level Formats&nbsp;</big></div>
             <div style="display:inline; margin-right:10px">(reorder dimensions by dragging the drop-down menus)</div>
             <div style="display:inline; vertical-align: middle">
@@ -83,7 +83,7 @@
               <div id="helpMenu" class="help-menu mdl-menu mdl-js-menu mdl-js-ripple-effect" for="btnHelp">
                 <p>
                   <strong>Dense</strong> levels store the size of the dimension $(N)$ and encode the coordinates in the interval $[0, N)$.
-                  <img src="images/dense-arrays.jpg" class="centered-img" style="height: 25px; padding-top:10px">
+                  <img src="images/dense-arrays.jpg" class="centered-img" style="height: 29px; padding-top:10px">
                 </p>
                 <p>
                   <strong>Sparse</strong> levels store coordinates in a segment of the $\texttt{crd}$ array, with segment bounds stored in the $\texttt{pos}$ array.
@@ -91,7 +91,7 @@
                 </p> 
                 <p>
                   <strong>Singleton</strong> levels store individual coordinates (with no siblings) in the $\texttt{crd}$ array.
-                  <img src="images/singleton-arrays.jpg" class="centered-img" style="height: 25px; padding-top:10px">
+                  <img src="images/singleton-arrays.jpg" class="centered-img" style="height: 30px; padding-top:10px">
                 </p>
                 <p> 
                   A level is <strong>unique (U)</strong> if no collection of coordinates that share the same ancestors contains duplicates, and it is <strong>not unique (&not;U)</strong> otherwise.

@@ -19,10 +19,10 @@
     </summary>
     <blockquote>
       {% if pub.paper_link %}
-      <a href="{{ pub.paper_link }}" class="button is-primary">Download {% if pub.is_thesis == true %}Thesis{% else %}Paper{% endif %}</a>
+      <a href="{{ pub.paper_link }}" class="button is-primary" style="height: 24px">Download {% if pub.is_thesis == true %}Thesis{% else %}Paper{% endif %}</a>
       {% endif %}
       {% if pub.slide_link %}
-      <a href="{{ pub.slide_link }}" class="button is-primary">Download Slides</a>
+      <a href="{{ pub.slide_link }}" class="button is-primary" style="height: 24px">Download Slides</a>
       {% endif %}
       {% if pub.abstract %}
       <p class="title is-5 pt-5">Abstract</p>
