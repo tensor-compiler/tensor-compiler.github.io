@@ -439,7 +439,7 @@ function demo() {
             listTensorsBody += "<label class=\"mdl-textfield__label\"></label>";
             listTensorsBody += "<ul class=\"formats dropdown-menu\" for=\"";
             listTensorsBody += formatNameId;
-            listTensorsBody += "\" style=\"margin-left: 0px; top: 37px\">";
+            listTensorsBody += "\" style=\"margin-left: 0px; top: 37px; min-width: 0px\">";
 
             for (var name of namesList) {
               listTensorsBody += "<li><a id=\"";
@@ -586,6 +586,12 @@ function demo() {
             updateCache(selectParent, val);
           });
 
+          $('.dropdown-submenu > a').on("click", function(e){
+            $(this).next('ul').toggle();
+            e.stopPropagation();
+            e.preventDefault();
+          });
+
           $(".formats a").each(function() {
             $(this).click(function() {
               var formatParent = $(this).parent().parent();
@@ -726,7 +732,7 @@ function demo() {
         }
         parameter += "\" for=\"";
         parameter += inputId;
-        parameter += "\" style=\"margin-left: 0px; top: 44px\">";
+        parameter += "\" style=\"margin-left: 0px; top: 44px; min-width: 0px\">";
         return parameter;
       }
 
@@ -863,7 +869,7 @@ function demo() {
         row += "style=\"padding: 0px 20px; vertical-align: middle\">";
         row += "<div class=\"dropdown mdl-textfield mdl-js-textfield ";
         row += "mdl-textfield--floating-label getmdl-select\" ";
-        row += "style=\"width: 160px\">";
+        row += "style=\"width: 160px; min-width: 0px\">";
         row += "<input class=\"mdl-textfield__input\" ";
         row += "data-toggle=\"dropdown\" id=\"";
         row += rowId;
@@ -876,9 +882,9 @@ function demo() {
         row += "<label class=\"mdl-textfield__label\"></label>";
         row += "<ul class=\"commands dropdown-menu\" for=\"";
         row += rowId;
-        row += "\" style=\"margin-left: 0px; top: 37px\">";
+        row += "\" style=\"margin-left: 0px; top: 37px; min-width: 0px\">";
         for (var c in scheduleCommands) {
-          row += "<li style=\"width: 100%\"><a>" + c + "</a></li>";
+          row += "<li><a>" + c + "</a></li>";
         }
         row += "</ul></div></td>";
         row += "<td class=\"mdl-data-table__cell--non-numeric\"";
