@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
 <link rel="stylesheet" href="stylesheets/getmdl-select.min.css">
-<link rel="stylesheet" href="stylesheets/bootstrap-dropdown.css">
+<!--<link rel="stylesheet" href="stylesheets/bootstrap-dropdown.css">-->
 <link rel="stylesheet" href="stylesheets/style.css">
 <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -28,7 +28,7 @@
 <div class="mdl-grid" style="padding-top: 0px">
   <!--<div class="mdl-layout-spacer"></div>-->
   <div class="mdl-cell mdl-cell--12-col">
-    <p style="line-height: 100%" align="justify">This is an prototype implementation of the sparse tensor algebra compiler theory and contains known bugs, which are documented <a href="https://github.com/tensor-compiler/taco/issues">here</a>. If you find additional issues, please consider submitting a bug report.</p>
+    <p style="line-height: 100%">This is an prototype implementation of the sparse tensor algebra compiler theory and contains known bugs, which are documented <a href="https://github.com/tensor-compiler/taco/issues">here</a>. If you find additional issues, please consider submitting a bug report.</p>
     <h6 style="margin-bottom: 0px; margin-top: 18px">Input a tensor algebra expression in index notation to generate code that computes it:</h6>
     <table style="width: 100%">
       <tr>
@@ -140,6 +140,144 @@
   <!--<div class="mdl-layout-spacer"></div>-->
 </div>
 
+
+
+<div class="select is-normal">
+  <select>
+    <option>Dense</option>
+    <option label="Test">Compressed (w/ Unique Elements)</option>
+    <option>Compressed (w/ Duplicate Elements)</option>
+    <option>Singleton (w/ Unique Elements)</option>
+    <option>Singleton (w/ Duplicate Elements)</option>
+    <optgroup label="Compressed">
+        <option>w/ Unique</option>
+        <option>Velociraptor</option>
+        <option>Deinonychus</option>
+    </optgroup>
+  </select>
+</div>
+
+<div class="dropdown">
+  <div class="dropdown-trigger">
+    <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+      <span>Dropdown button</span>
+      <span class="icon is-small">
+        <i class="fas fa-angle-down" aria-hidden="true"></i>
+      </span>
+    </button>
+  </div>
+  <div class="dropdown-menu" id="dropdown-menu" role="menu">
+    <div class="dropdown-content">
+      <a href="#" class="dropdown-item">
+        Dropdown item
+      </a>
+      <a class="dropdown-item">
+        Other dropdown item
+      </a>
+      <a href="#" class="dropdown-item">
+        Active dropdown item
+      </a>
+      <a href="#" class="dropdown-item">
+        Other dropdown item
+      </a>
+      <hr class="dropdown-divider">
+      <a href="#" class="dropdown-item">
+        With a divider
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="field is-horizontal">
+  <div class="field-label is-normal">
+    <label class="label">Department</label>
+  </div>
+  <div class="field-body">
+    <div class="field is-narrow">
+      <div class="control">
+        <div class="select is-fullwidth">
+          <select>
+            <option>Business development</option>
+            <option>Marketing</option>
+            <option>Sales</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="sortable"> 
+<div class="field">
+  <label class="label">Dimension 1</label>
+  <div class="dropdown">
+    <div class="dropdown-trigger">
+      <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+        <span>Compressed (U)</span>
+        <span class="icon is-small">
+          <i class="fas fa-angle-down" aria-hidden="true"></i>
+        </span>
+      </button>
+    </div>
+    <div class="dropdown-menu" id="dropdown-menu" role="menu">
+      <div class="dropdown-content">
+        <a class="dropdown-item">
+          Dense 
+        </a>
+        <hr class="dropdown-divider">
+        <a class="dropdown-item">
+          Compressed (w/ Unique Elements) 
+        </a>
+        <a class="dropdown-item">
+          Compressed (w/ Duplicate Elements) 
+        </a>
+        <hr class="dropdown-divider">
+        <a class="dropdown-item">
+          Singleton (w/ Unique Elements) 
+        </a>
+        <a class="dropdown-item">
+          Singleton (w/ Duplicate Elements) 
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="field" style="float: left">
+  <label class="label">Dimension 1</label>
+  <div class="dropdown">
+    <div class="dropdown-trigger">
+      <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+        <span>Compressed (U)</span>
+        <span class="icon is-small">
+          <i class="fas fa-angle-down" aria-hidden="true"></i>
+        </span>
+      </button>
+    </div>
+    <div class="dropdown-menu" id="dropdown-menu" role="menu">
+      <div class="dropdown-content">
+        <a class="dropdown-item">
+          Dense 
+        </a>
+        <hr class="dropdown-divider">
+        <a class="dropdown-item">
+          Compressed (w/ Unique Elements) 
+        </a>
+        <a class="dropdown-item">
+          Compressed (w/ Duplicate Elements) 
+        </a>
+        <hr class="dropdown-divider">
+        <a class="dropdown-item">
+          Singleton (w/ Unique Elements) 
+        </a>
+        <a class="dropdown-item">
+          Singleton (w/ Duplicate Elements) 
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
 <div class="mdl-grid" style="padding-top: 6px">
   <!--<div class="mdl-layout-spacer"></div>-->
   <div class="mdl-cell mdl-cell--12-col">
@@ -178,4 +316,5 @@
 </div>
 
 <script>demo()</script>
+
 <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/app.css">

@@ -294,6 +294,7 @@ function demo() {
     },
     createEntryFromId: function(listId) {
       var dims = $("#" + listId).sortable("toArray");
+      console.log(dims);
       var formats = [];
       var ordering = [];
 
@@ -422,89 +423,155 @@ function demo() {
 
             listTensorsBody += "<td class=\"mdl-data-table__cell--non-numeric\" ";
             listTensorsBody += "style=\"padding: 0px; vertical-align: middle\">";
-            listTensorsBody += "<div class=\"dropdown mdl-textfield mdl-js-textfield ";
-            listTensorsBody += "mdl-textfield--floating-label getmdl-select\" ";
-            listTensorsBody += "style=\"width: 155px\">";
-            listTensorsBody += "<input class=\"mdl-textfield__input\" ";
-            listTensorsBody += "data-toggle=\"dropdown\" id=\"";
-            listTensorsBody += formatNameId;
-            listTensorsBody += "\" type=\"text\" readonly ";
-            listTensorsBody += "value=\"";
-            listTensorsBody += formatName;
-            listTensorsBody += "\"/>";
-            listTensorsBody += "<label data-toggle=\"dropdown\">";
-            listTensorsBody += "<i class=\"mdl-icon-toggle__label ";
-            listTensorsBody += "material-icons\">keyboard_arrow_down</i>";
-            listTensorsBody += "</label>";
-            listTensorsBody += "<label class=\"mdl-textfield__label\"></label>";
-            listTensorsBody += "<ul class=\"formats dropdown-menu\" for=\"";
-            listTensorsBody += formatNameId;
-            listTensorsBody += "\" style=\"margin-left: 0px; top: 37px; min-width: 0px\">";
 
+            listTensorsBody += "  <div class=\"dropdown\">";
+            listTensorsBody += "    <div class=\"dropdown-trigger\">";
+            listTensorsBody += "      <button class=\"button\" aria-haspopup=\"true\" aria-controls=\"dropdown-menu\">";
+            listTensorsBody += "        <span id=\"";
+            listTensorsBody += formatNameId;
+            listTensorsBody += "\">";
+            listTensorsBody += formatName;
+            listTensorsBody += "</span>";
+            listTensorsBody += "        <span class=\"icon is-small\">";
+            listTensorsBody += "          <i class=\"fas fa-angle-down\" aria-hidden=\"true\"></i>";
+            listTensorsBody += "        </span>";
+            listTensorsBody += "      </button>";
+            listTensorsBody += "    </div>";
+            listTensorsBody += "    <div class=\"dropdown-menu\" id=\"dropdown-menu\" role=\"menu\">";
+            listTensorsBody += "      <div class=\"dropdown-content formats\">";
+            //listTensorsBody += "      <div class=\"dropdown-content formats\" for=\"";
+            //listTensorsBody += formatNameId;
+            //listTensorsBody += "\"/>";
             for (var name of namesList) {
-              listTensorsBody += "<li><a id=\"";
+              listTensorsBody += "<a class=\"dropdown-item\" id=\"";
               listTensorsBody += formatNameId + "_" + name + "\" >";
-              listTensorsBody += name + "</a></li>";
+              listTensorsBody += name + "</a>";
             }
-            listTensorsBody += "</ul></div></td>";
+            listTensorsBody += "      </div>";
+            listTensorsBody += "    </div>";
+            listTensorsBody += "  </div></td>";
+
+            //listTensorsBody += "<div class=\"dropdown mdl-textfield mdl-js-textfield ";
+            //listTensorsBody += "mdl-textfield--floating-label getmdl-select\" ";
+            //listTensorsBody += "style=\"width: 125px\">";
+            //listTensorsBody += "<input class=\"mdl-textfield__input\" ";
+            //listTensorsBody += "data-toggle=\"dropdown\" id=\"";
+            //listTensorsBody += formatNameId;
+            //listTensorsBody += "\" type=\"text\" readonly ";
+            //listTensorsBody += "value=\"";
+            //listTensorsBody += formatName;
+            //listTensorsBody += "\"/>";
+            //listTensorsBody += "<label data-toggle=\"dropdown\">";
+            //listTensorsBody += "<i class=\"mdl-icon-toggle__label ";
+            //listTensorsBody += "material-icons\">keyboard_arrow_down</i>";
+            //listTensorsBody += "</label>";
+            //listTensorsBody += "<label class=\"mdl-textfield__label\"></label>";
+            //listTensorsBody += "<ul class=\"formats dropdown-menu\" for=\"";
+            //listTensorsBody += formatNameId;
+            //listTensorsBody += "\" style=\"margin-left: 0px; top: 37px; min-width: 0px\">";
+
+            //for (var name of namesList) {
+            //  listTensorsBody += "<li><a id=\"";
+            //  listTensorsBody += formatNameId + "_" + name + "\" >";
+            //  listTensorsBody += name + "</a></li>";
+            //}
+            //listTensorsBody += "</ul></div></td>";
 
             listTensorsBody += "<td class=\"mdl-data-table__cell--non-numeric\" ";
-            listTensorsBody += "style=\"padding: 0px; vertical-align: middle\">";
+            listTensorsBody += "style=\"vertical-align: middle; padding-bottom: 16.5px\">";
             listTensorsBody += "<ul id=\"";
             listTensorsBody += listId;
             listTensorsBody += "\" class=\"ui-state-default sortable\" style=\"margin-top: 0px; margin-left: 0px\">";
             listTensorsBody += "<li class=\"ui-state-default\" ";
-            listTensorsBody += "style=\"width: 0px; padding: 0px; position: relative\"></li>";
+            listTensorsBody += "style=\"width: 0px; padding: 0px\"></li>";
 
             for (var i = 0; i < order; ++i) {
               var dim = cached ? tblFormatsView.levelsCache[t].ordering[i] : i;
               var level = cached ? tblFormatsView.levelsCache[t].formats[i] : "d";
+              console.log(cached);
+              console.log(level);
               var id = "dim" + t + "_" + dim;
               var selectId = id + "_select";
 
               listTensorsBody += "<li id=\"";
               listTensorsBody += id;
-              listTensorsBody += "\" class=\"ui-state-default\" style=\"margin-top: 0px\">";
-              listTensorsBody += "<div class=\"dropdown mdl-textfield mdl-js-textfield ";
-              listTensorsBody += "mdl-textfield--floating-label getmdl-select\" ";
-              listTensorsBody += "style=\"cursor: move; max-width: 160px\">";
-              listTensorsBody += "<input class=\"mdl-textfield__input\" ";
-              listTensorsBody += "data-toggle=\"dropdown\" id=\"";
-              listTensorsBody += selectId;
-              listTensorsBody += "\" type=\"text\" readonly ";
-              listTensorsBody += "value=\"";
-              listTensorsBody += tblFormatsView.getLevelFormatString(level);
-              listTensorsBody += "\" data-val=\"";
+              listTensorsBody += "\" class=\"ui-state-default\" style=\"cursor: move\">";
+              listTensorsBody += "<div class=\"field\" style=\"cursor: move;\">";
+              listTensorsBody += "  <label class=\"label\" style=\"cursor: move; margin-bottom: 0px\"><small>Dimension ";
+              listTensorsBody += (dim + 1)
+              listTensorsBody += "</small></label>";
+              listTensorsBody += "  <div class=\"dropdown\" data-val=\"";
               listTensorsBody += level;
-              listTensorsBody += "\"/>";
-              listTensorsBody += "<label data-toggle=\"dropdown\">";
-              listTensorsBody += "<i class=\"mdl-icon-toggle__label ";
-              listTensorsBody += "material-icons\">keyboard_arrow_down</i>";
-              listTensorsBody += "</label>";
-              listTensorsBody += "<label class=\"mdl-textfield__label\">Dimension ";
-              listTensorsBody += (dim + 1);
-              listTensorsBody += "</label>";
-              listTensorsBody += "<ul class=\"level-formats dropdown-menu\" style=\"min-width: 0px; margin-left: 0px; top: 44px\" for=\""
+              listTensorsBody += "\" id=\"";
               listTensorsBody += selectId;
-              listTensorsBody += "\"><li class =\"dense\"><a data-val=\""
-              listTensorsBody += "d\">Dense</a></li>";
-              listTensorsBody += "<li class=\"sparse dropdown-submenu\">";
-              listTensorsBody += "<a>Compressed";
-              listTensorsBody += "<i class=\"material-icons\" style=\"float:right\">";
-              listTensorsBody += "keyboard_arrow_right</i></a>";
-              listTensorsBody += "<ul class=\"level-formats dropdown-menu\" style=\"min-width: 0px; margin-left: 0px\">";
-              listTensorsBody += "<li><a data-val=\"s\">Unique</a></li>";
-              listTensorsBody += "<li><a data-val=\"u\">Not Unique</a></li>";
-              listTensorsBody += "</ul></li>";
-              listTensorsBody += "<li class=\"singleton dropdown-submenu\">";
-              listTensorsBody += "<a>Singleton";
-              listTensorsBody += "<i class=\"material-icons\" style=\"float:right\">";
-              listTensorsBody += "keyboard_arrow_right</i></a>";
-              listTensorsBody += "<ul class=\"level-formats dropdown-menu\" style=\"min-width: 0px; margin-left: 0px\">";
-              listTensorsBody += "<li><a data-val=\"q\">Unique</a></li>";
-              listTensorsBody += "<li><a data-val=\"c\">Not Unique</a></li>";
-              listTensorsBody += "</ul></li>";
-              listTensorsBody += "</ul></div></li>";
+              listTensorsBody += "\">";
+              listTensorsBody += "    <div class=\"dropdown-trigger\">";
+              listTensorsBody += "      <button class=\"button\" aria-haspopup=\"true\" aria-controls=\"dropdown-menu\">";
+              listTensorsBody += "        <span class=\"level-format-label\">";
+              listTensorsBody += tblFormatsView.getLevelFormatString(level);
+              listTensorsBody += "</span>";
+              listTensorsBody += "        <span class=\"icon is-small\">";
+              listTensorsBody += "          <i class=\"fas fa-angle-down\" aria-hidden=\"true\"></i>";
+              listTensorsBody += "        </span>";
+              listTensorsBody += "      </button>";
+              listTensorsBody += "    </div>";
+              listTensorsBody += "    <div class=\"dropdown-menu\" role=\"menu\" for=\""
+              listTensorsBody += selectId;
+              listTensorsBody += "\">";
+              listTensorsBody += "      <div class=\"dropdown-content level-formats\">";
+              listTensorsBody += "        <a data-val=\"d\" class=\"dropdown-item\">Dense</a>";
+              listTensorsBody += "        <hr class=\"dropdown-divider\">";
+              listTensorsBody += "        <a data-val=\"s\" class=\"dropdown-item\">Compressed (w/ Unique Elements)</a>";
+              listTensorsBody += "        <a data-val=\"u\" class=\"dropdown-item\">Compressed (w/ Duplicate Elements)</a>";
+              listTensorsBody += "        <hr class=\"dropdown-divider\">";
+              listTensorsBody += "        <a data-val=\"q\" class=\"dropdown-item\">Singleton (w/ Unique Elements)</a>";
+              listTensorsBody += "        <a data-val=\"c\" class=\"dropdown-item\">Singleton (w/ Duplicate Elements)</a>";
+              listTensorsBody += "      </div>";
+              listTensorsBody += "    </div>";
+              listTensorsBody += "  </div>";
+              listTensorsBody += "</div>";
+              listTensorsBody += "</li>";
+
+              //listTensorsBody += "<div class=\"dropdown mdl-textfield mdl-js-textfield ";
+              //listTensorsBody += "mdl-textfield--floating-label getmdl-select\" ";
+              //listTensorsBody += "style=\"cursor: move; max-width: 160px\">";
+              //listTensorsBody += "<input class=\"mdl-textfield__input\" ";
+              //listTensorsBody += "data-toggle=\"dropdown\" id=\"";
+              //listTensorsBody += selectId;
+              //listTensorsBody += "\" type=\"text\" readonly ";
+              //listTensorsBody += "value=\"";
+              //listTensorsBody += tblFormatsView.getLevelFormatString(level);
+              //listTensorsBody += "\" data-val=\"";
+              //listTensorsBody += level;
+              //listTensorsBody += "\"/>";
+              //listTensorsBody += "<label data-toggle=\"dropdown\">";
+              //listTensorsBody += "<i class=\"mdl-icon-toggle__label ";
+              //listTensorsBody += "material-icons\">keyboard_arrow_down</i>";
+              //listTensorsBody += "</label>";
+              //listTensorsBody += "<label class=\"mdl-textfield__label\">Dimension ";
+              //listTensorsBody += (dim + 1);
+              //listTensorsBody += "</label>";
+              //listTensorsBody += "<ul class=\"level-formats dropdown-menu\" style=\"min-width: 0px; margin-left: 0px; top: 44px\" for=\""
+              //listTensorsBody += selectId;
+              //listTensorsBody += "\"><li class =\"dense\"><a data-val=\""
+              //listTensorsBody += "d\">Dense</a></li>";
+              //listTensorsBody += "<li class=\"sparse dropdown-submenu\">";
+              //listTensorsBody += "<a>Compressed";
+              //listTensorsBody += "<i class=\"material-icons\" style=\"float:right\">";
+              //listTensorsBody += "keyboard_arrow_right</i></a>";
+              //listTensorsBody += "<ul class=\"level-formats dropdown-menu\" style=\"min-width: 0px; margin-left: 0px\">";
+              //listTensorsBody += "<li><a data-val=\"s\">Unique</a></li>";
+              //listTensorsBody += "<li><a data-val=\"u\">Not Unique</a></li>";
+              //listTensorsBody += "</ul></li>";
+              //listTensorsBody += "<li class=\"singleton dropdown-submenu\">";
+              //listTensorsBody += "<a>Singleton";
+              //listTensorsBody += "<i class=\"material-icons\" style=\"float:right\">";
+              //listTensorsBody += "keyboard_arrow_right</i></a>";
+              //listTensorsBody += "<ul class=\"level-formats dropdown-menu\" style=\"min-width: 0px; margin-left: 0px\">";
+              //listTensorsBody += "<li><a data-val=\"q\">Unique</a></li>";
+              //listTensorsBody += "<li><a data-val=\"c\">Not Unique</a></li>";
+              //listTensorsBody += "</ul></li>";
+              //listTensorsBody += "</ul></div></li>";
             }
 
             listTensorsBody += "</ul></td></tr>";
@@ -513,9 +580,17 @@ function demo() {
 
         if (listTensorsBody !== "") {
           $("#listTensors").html(listTensorsBody);
-          getmdlSelect.init(".getmdl-select");
+          //getmdlSelect.init(".getmdl-select");
 
           $(".sortable").sortable({
+            // From https://stackoverflow.com/questions/2451528/jquery-ui-sortable-scroll-helper-element-offset-firefox-issue
+            sort: function(ev, ui) {
+              var $target = $(ev.target);
+              if (!/html|body/i.test($target.offsetParent()[0].tagName)) {
+                var top = ev.pageY - $target.offsetParent().offset().top - (ui.helper.outerHeight(true) / 2);
+                ui.helper.css({'top' : top + 'px'});
+              }
+            },
             update: function(ev, ui) {
               var listId = ui.item.parent().attr('id');
               var id = ui.item.context.id;
@@ -533,20 +608,27 @@ function demo() {
 
           function updateCache(selectParent, val) {
             var selectId = selectParent.attr('for');
-            var listId = selectParent.parent().parent().parent().attr('id');
+            var listId = selectParent.parent().parent().parent().parent().attr('id');
             var tensor = listId.replace("dims", "");
 
             var level = tblFormatsView.getLevelFormatString(val);
             level = level.replace("&not;", $("<div>").html("&not;").text());
+            console.log("listId: " + listId);
+            console.log(level);
+            console.log(selectId);
+            console.log(tensor);
 
-            $("#" + selectId).val(level);
+            $("#" + selectId + " > .dropdown-trigger > .button > .level-format-label").html(level);
             $("#" + selectId).attr('data-val', val);
 
             var tensor = listId.substring(4);
+            console.log(tensor);
             var entry = tblFormatsView.createEntryFromId(listId);
             var name = tblFormatsView.getFormatName(entry, model.input.tensorOrders[tensor]);
+            console.log(entry);
+            console.log(name);
 
-            $("#format" + tensor).val(name);
+            $("#format" + tensor).html(name);
             tblFormatsView.insertNamesCacheEntry(tensor, name);
             tblFormatsView.insertLevelsCacheEntry(tensor, entry);
             
@@ -592,11 +674,13 @@ function demo() {
             e.preventDefault();
           });
 
-          $(".formats a").each(function() {
-            $(this).click(function() {
-              var formatParent = $(this).parent().parent();
-              var formatId = formatParent.attr('for');
-              $("#" + formatId).val($(this).text());
+          $(".formats > a").each(function() {
+            $(this).mousedown(function() {
+              //var formatParent = $(this).parent().parent();
+              //var formatId = formatParent.attr('for');
+              //console.log(formatId);
+              //console.log($(this).text());
+              //$("#" + formatId).val($(this).text());
 
               var id = $(this).attr('id');
               var tensor = id.substring(6, id.indexOf("_"));
@@ -609,6 +693,36 @@ function demo() {
               model.updateInputViews();
               model.cancelReq();
               model.setOutput("", "", "", "");
+            });
+          });
+
+          $(".level-formats > a").each(function() {
+            $(this).mousedown(function() {
+              console.log("test10");
+              var selectParent = $(this).parent().parent();
+              var val = $(this).attr("data-val");
+              updateCache(selectParent, val);
+            });
+          });
+
+          $(".dropdown-item").mousedown(function() {
+            console.log("test");
+            var dropdown = $(this).parents('.dropdown');
+            //dropdown.parent().parent().parent().css({overflow: 'visible'});
+            dropdown.toggleClass('is-active');
+            dropdown.focusout(function() {
+              $(this).removeClass('is-active');
+              //$(this).parent().parent().parent().css({overflow: 'hidden'});
+            });
+          });
+          $(".dropdown .button").click(function() {
+            var dropdown = $(this).parents('.dropdown');
+            //dropdown.parent().parent().parent().css({overflow: 'visible'});
+            dropdown.toggleClass('is-active');
+            dropdown.focusout(function() {
+              $(this).removeClass('is-active');
+              //dropdown.parent().parent().parent().css({overflow: 'auto'});
+              //console.log("here");
             });
           });
 
@@ -732,7 +846,7 @@ function demo() {
         }
         parameter += "\" for=\"";
         parameter += inputId;
-        parameter += "\" style=\"margin-left: 0px; top: 44px; min-width: 0px\">";
+        parameter += "\" style=\"margin-left: 0px; top: 44px; min-width: 100%\">";
         return parameter;
       }
 
@@ -860,16 +974,16 @@ function demo() {
 
         var row = "<tr style=\"cursor: auto\">";
         row += "<td class=\"removable-row mdl-data-table__cell--non-numeric\" id=\"";
-        row += rowId + "-button\"; style=\"vertical-align: middle\">";
+        row += rowId + "-button\"; style=\"vertical-align: middle; padding-left: 0.75em\">";
         row += "<button class=\"mdl-button mdl-js-button mdl-button--icon\">";
         row += "<i class=\"material-icons\" style=\"font-size:16px\">clear</i>";
         row += "</button></td>";
 
         row += "<td class=\"mdl-data-table__cell--non-numeric\" ";
-        row += "style=\"padding: 0px 20px; vertical-align: middle\">";
+        row += "style=\"padding: 0px 0.75em; vertical-align: middle\">";
         row += "<div class=\"dropdown mdl-textfield mdl-js-textfield ";
         row += "mdl-textfield--floating-label getmdl-select\" ";
-        row += "style=\"width: 160px; min-width: 0px\">";
+        row += "style=\"width: 120px; min-width: 0px\">";
         row += "<input class=\"mdl-textfield__input\" ";
         row += "data-toggle=\"dropdown\" id=\"";
         row += rowId;
@@ -882,7 +996,7 @@ function demo() {
         row += "<label class=\"mdl-textfield__label\"></label>";
         row += "<ul class=\"commands dropdown-menu\" for=\"";
         row += rowId;
-        row += "\" style=\"margin-left: 0px; top: 37px; min-width: 0px\">";
+        row += "\" style=\"margin-left: 0px; top: 37px; min-width: 100%\">";
         for (var c in scheduleCommands) {
           row += "<li><a>" + c + "</a></li>";
         }
