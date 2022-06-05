@@ -67,41 +67,57 @@
     <table class="mdl-data-table mdl-js-data-table" style="width: 100%; margin-bottom: 8px">
       <thead>
         <tr>
-          <th class="mdl-data-table__cell--non-numeric" width="100" style="vertical-align: middle; padding-left: 9px">
+          <th class="mdl-data-table__cell--non-numeric" style="min-width: 100px; vertical-align: middle; padding-left: 9px">
             <div align="center" style="position:relative"><big>Tensor</big></div></th>
-          <th class="mdl-data-table__cell--non-numeric" width="175px" 
-            style="padding-left: 0px; vertical-align: middle">
-            <div style="display:inline"><big>Format&nbsp;</big></div>
+          <!--<th class="mdl-data-table__cell--non-numeric" width="175px" -->
+          <th class="mdl-data-table__cell--non-numeric" style="padding-left: 0px; vertical-align: middle; text-align: left">
+            <big>
+              Format
+            </big>
+            <big id="levelHeading" style="padding-left: 143px">
+              (Level Formats)
+            </big>
+            <big>
+              <!--
+              <div style="display:inline; vertical-align: middle">
+              </div>
+              -->
+              <button class="help-btn js-modal-trigger mdl-button mdl-js-button mdl-button--icon" data-target="modal-js-example"><i class="material-icons" style="font-size:20px">help_outline</i>
+              </button>
+              <div id="modal-js-example" class="modal">
+                <div class="modal-background"></div>
+              
+                <div class="modal-content">
+                  <div class="box">
+                    <p>
+                      <strong>Dense</strong> levels store the size of the dimension $(N)$ and encode the coordinates in the interval $[0, N)$.
+                      <img src="images/dense-arrays.jpg" class="centered-img" style="height: 29px; padding-top:10px">
+                    </p>
+                    <p>
+                      <strong>Sparse</strong> levels store coordinates in a segment of the $\texttt{crd}$ array, with segment bounds stored in the $\texttt{pos}$ array.
+                      <img src="images/compressed-arrays.jpg" class="centered-img" style="height: 50px; padding-top:10px">
+                    </p> 
+                    <p>
+                      <strong>Singleton</strong> levels store individual coordinates (with no siblings) in the $\texttt{crd}$ array.
+                      <img src="images/singleton-arrays.jpg" class="centered-img" style="height: 30px; padding-top:10px">
+                    </p>
+                    <p>
+                      A level is <strong>unique (U)</strong> if no collection of coordinates that share the same ancestors contains duplicates, and it is <strong>not unique (&not;U)</strong> otherwise.
+                    </p>
+                    <p style="margin-bottom: 0"> More info on formats that are supported by TACO can be found <a href="files/chou-oopsla18-taco-formats.pdf">here</a>.</p>
+                  </div>
+                </div>
+              
+                <button class="modal-close is-large" aria-label="close"></button>
+              </div>
+            </big>
           </th>
+          <!--
           <th class="mdl-data-table__cell--non-numeric" style="padding-left: 7px; vertical-align: middle; text-align: left">
-            <!--
             <div style="display:inline"><big>Level Formats&nbsp;</big></div>
             <div style="display:inline; margin-right:10px">(reorder dimensions by dragging the drop-down menus)</div>
-            -->
-            <div style="display:inline; vertical-align: middle">
-              <button id="btnHelp" class="help-btn mdl-button mdl-js-button mdl-button--icon">
-                <i class="material-icons" style="font-size:20px">help_outline</i>
-              </button>
-              <div id="helpMenu" class="help-menu mdl-menu mdl-js-menu mdl-js-ripple-effect" for="btnHelp">
-                <p>
-                  <strong>Dense</strong> levels store the size of the dimension $(N)$ and encode the coordinates in the interval $[0, N)$.
-                  <img src="images/dense-arrays.jpg" class="centered-img" style="height: 29px; padding-top:10px">
-                </p>
-                <p>
-                  <strong>Sparse</strong> levels store coordinates in a segment of the $\texttt{crd}$ array, with segment bounds stored in the $\texttt{pos}$ array.
-                  <img src="images/compressed-arrays.jpg" class="centered-img" style="height: 50px; padding-top:10px">
-                </p> 
-                <p>
-                  <strong>Singleton</strong> levels store individual coordinates (with no siblings) in the $\texttt{crd}$ array.
-                  <img src="images/singleton-arrays.jpg" class="centered-img" style="height: 30px; padding-top:10px">
-                </p>
-                <p> 
-                  A level is <strong>unique (U)</strong> if no collection of coordinates that share the same ancestors contains duplicates, and it is <strong>not unique (&not;U)</strong> otherwise.
-                </p>
-                <p style="margin-bottom: 0"> More info on formats that are supported by TACO can be found <a href="files/chou-oopsla18-taco-formats.pdf">here</a>.</p>
-              </div>
-            </div>
           </th>
+          -->
         </tr>
       </thead>
       <tbody id="listTensors">

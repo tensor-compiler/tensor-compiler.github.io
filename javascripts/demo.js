@@ -424,15 +424,17 @@ function demo() {
             listTensorsBody += "<td class=\"mdl-data-table__cell--non-numeric\" ";
             listTensorsBody += "style=\"padding: 0px; vertical-align: middle\">";
 
-            listTensorsBody += "  <div class=\"dropdown\">";
+            listTensorsBody += "<div class=\"format-selector\">";
+            listTensorsBody += "  <div class=\"dropdown\" style=\"margin-top: 6px; margin-bottom: 6px\">";
+            //listTensorsBody += "  <div class=\"dropdown\" style=\"float: left\">";
             listTensorsBody += "    <div class=\"dropdown-trigger\">";
-            listTensorsBody += "      <button class=\"button\" aria-haspopup=\"true\" aria-controls=\"dropdown-menu\">";
-            listTensorsBody += "        <span id=\"";
+            listTensorsBody += "      <button class=\"button\" style=\"width: 175px\" aria-haspopup=\"true\" aria-controls=\"dropdown-menu\">";
+            listTensorsBody += "        <span style=\"font-weight: normal\" id=\"";
             listTensorsBody += formatNameId;
             listTensorsBody += "\">";
             listTensorsBody += formatName;
             listTensorsBody += "</span>";
-            listTensorsBody += "        <span class=\"icon is-small\">";
+            listTensorsBody += "        <span class=\"icon is-small\" style=\"\">";
             listTensorsBody += "          <i class=\"fas fa-angle-down\" aria-hidden=\"true\"></i>";
             listTensorsBody += "        </span>";
             listTensorsBody += "      </button>";
@@ -449,7 +451,8 @@ function demo() {
             }
             listTensorsBody += "      </div>";
             listTensorsBody += "    </div>";
-            listTensorsBody += "  </div></td>";
+            //listTensorsBody += "  </div></td>";
+            listTensorsBody += "  </div>";
 
             //listTensorsBody += "<div class=\"dropdown mdl-textfield mdl-js-textfield ";
             //listTensorsBody += "mdl-textfield--floating-label getmdl-select\" ";
@@ -477,11 +480,12 @@ function demo() {
             //}
             //listTensorsBody += "</ul></div></td>";
 
-            listTensorsBody += "<td class=\"mdl-data-table__cell--non-numeric\" ";
-            listTensorsBody += "style=\"vertical-align: middle; padding-bottom: 16.5px\">";
+            //listTensorsBody += "<td class=\"mdl-data-table__cell--non-numeric\" ";
+            //listTensorsBody += "style=\"vertical-align: middle; padding-bottom: 16.5px\">";
             listTensorsBody += "<ul id=\"";
             listTensorsBody += listId;
             listTensorsBody += "\" class=\"ui-state-default sortable\" style=\"margin-top: 0px; margin-left: 0px\">";
+            //listTensorsBody += "\" class=\"ui-state-default sortable\" style=\"float: left; margin-top: 0px; margin-left: 0px\">";
             listTensorsBody += "<li class=\"ui-state-default\" ";
             listTensorsBody += "style=\"width: 0px; padding: 0px\"></li>";
 
@@ -497,7 +501,7 @@ function demo() {
               listTensorsBody += id;
               listTensorsBody += "\" class=\"ui-state-default\" style=\"cursor: move\">";
               listTensorsBody += "<div class=\"field\" style=\"cursor: move;\">";
-              listTensorsBody += "  <label class=\"label\" style=\"cursor: move; margin-bottom: 0px\"><small>Dimension ";
+              listTensorsBody += "  <label class=\"label\" style=\"cursor: move; margin-bottom: 0px; font-weight: 400\"><small>Dimension ";
               listTensorsBody += (dim + 1)
               listTensorsBody += "</small></label>";
               listTensorsBody += "  <div class=\"dropdown\" data-val=\"";
@@ -506,7 +510,7 @@ function demo() {
               listTensorsBody += selectId;
               listTensorsBody += "\">";
               listTensorsBody += "    <div class=\"dropdown-trigger\">";
-              listTensorsBody += "      <button class=\"button\" aria-haspopup=\"true\" aria-controls=\"dropdown-menu\">";
+              listTensorsBody += "      <button class=\"button\" style=\"width: 175px\" aria-haspopup=\"true\" aria-controls=\"dropdown-menu\">";
               listTensorsBody += "        <span class=\"level-format-label\">";
               listTensorsBody += tblFormatsView.getLevelFormatString(level);
               listTensorsBody += "</span>";
@@ -574,7 +578,7 @@ function demo() {
               //listTensorsBody += "</ul></div></li>";
             }
 
-            listTensorsBody += "</ul></td></tr>";
+            listTensorsBody += "</ul></div></td></tr>";
           }
         }
 
@@ -598,7 +602,8 @@ function demo() {
 
               var entry = tblFormatsView.createEntryFromId(listId);
               var name = tblFormatsView.getFormatName(entry, model.input.tensorOrders[tensor]);
-              $("#format" + tensor).val(name);
+
+              $("#format" + tensor).html(name);
               tblFormatsView.insertNamesCacheEntry(tensor, name);
 
               model.cancelReq();
@@ -613,20 +618,13 @@ function demo() {
 
             var level = tblFormatsView.getLevelFormatString(val);
             level = level.replace("&not;", $("<div>").html("&not;").text());
-            console.log("listId: " + listId);
-            console.log(level);
-            console.log(selectId);
-            console.log(tensor);
 
             $("#" + selectId + " > .dropdown-trigger > .button > .level-format-label").html(level);
             $("#" + selectId).attr('data-val', val);
 
             var tensor = listId.substring(4);
-            console.log(tensor);
             var entry = tblFormatsView.createEntryFromId(listId);
             var name = tblFormatsView.getFormatName(entry, model.input.tensorOrders[tensor]);
-            console.log(entry);
-            console.log(name);
 
             $("#format" + tensor).html(name);
             tblFormatsView.insertNamesCacheEntry(tensor, name);
@@ -1422,4 +1420,50 @@ function demo() {
   $("#prefix").keyup(function() {
     model.setPrefix($("#prefix").val());
   });
+
+  document.addEventListener('DOMContentLoaded', () => {
+  // Functions to open and close a modal
+  function openModal($el) {
+    $el.classList.add('is-active');
+  }
+
+  function closeModal($el) {
+    $el.classList.remove('is-active');
+  }
+
+  function closeAllModals() {
+    (document.querySelectorAll('.modal') || []).forEach(($modal) => {
+      closeModal($modal);
+    });
+  }
+
+  // Add a click event on buttons to open a specific modal
+  (document.querySelectorAll('.js-modal-trigger') || []).forEach(($trigger) => {
+    const modal = $trigger.dataset.target;
+    const $target = document.getElementById(modal);
+    console.log(modal);
+
+    $trigger.addEventListener('click', () => {
+      openModal($target);
+    });
+  });
+
+  // Add a click event on various child elements to close the parent modal
+  (document.querySelectorAll('.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button') || []).forEach(($close) => {
+    const $target = $close.closest('.modal');
+
+    $close.addEventListener('click', () => {
+      closeModal($target);
+    });
+  });
+
+  // Add a keyboard event to close all modals
+  document.addEventListener('keydown', (event) => {
+    const e = event || window.event;
+
+    if (e.keyCode === 27) { // Escape key
+      closeAllModals();
+    }
+  });
+});
 }

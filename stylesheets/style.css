@@ -152,10 +152,12 @@ ul {
 
 .sortable li {
   float: left;
-  padding: 0.5em;
+  padding-left: 0px;
+  padding-right: 14px;
   padding-top: 0px;
   padding-bottom: 0px;
-  margin-top: 5px;
+  margin-top: 0px;
+  margin-bottom: 6px;
 }
 
 /*Publications: */
@@ -275,4 +277,40 @@ h1, h2, h3, h4, h5, h6 {
 .mdl-grid {
   padding-left: 0px;
   padding-right: 0px;
+}
+
+@media (max-width: 545px) {
+  .format-selector {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .format-selector > div {
+    padding-right: 0px;
+  }
+
+  #levelHeading {
+    display: none;
+  }
+}
+@media (min-width: 545px) {
+  .format-selector {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+  }
+
+  .format-selector > div {
+    padding-right: 28px;
+  }
+
+  #levelHeading {
+    display: inline;
+  }
+}
+
+.box > p {
+  word-break: word-wrap;
+  white-space: normal;
 }
