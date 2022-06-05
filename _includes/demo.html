@@ -30,34 +30,28 @@
   <div class="mdl-cell mdl-cell--12-col">
     <p style="line-height: 100%">This is an prototype implementation of the sparse tensor algebra compiler theory and contains known bugs, which are documented <a href="https://github.com/tensor-compiler/taco/issues">here</a>. If you find additional issues, please consider submitting a bug report.</p>
     <h6 style="margin-bottom: 0px; margin-top: 18px">Input a tensor algebra expression in index notation to generate code that computes it:</h6>
-    <table style="width: 100%">
-      <tr>
-        <td>
-          <div class="mdl-textfield mdl-js-textfield" style="width: 100%">
-            <input id="txtExpr" class="mdl-textfield__input" value="y(i) = A(i,j) * x(j)" style="font-family: monospace" spellcheck="false" autocomplete="false" autocorrect="false" autocapitalize="false">
-            <span id="lblError" class="mdl-textfield__error" style="font-size: 14px"></span>
-          </div>
-        </td>
-        <td style="width: 32px; vertical-align: middle; padding-left: 0px; padding-right: 0px">
-          <div style="position: relative">
-            <button id="btnExamples" class="mdl-button mdl-js-button mdl-button--icon" style="width: 100%">
-              <i class="material-icons">more_vert</i>
-            </button>
-            <ul id="listExamples" class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" style="margin-top: 0em; margin-left: 0em" for="btnExamples"></ul>
-          </div>
-        </td>
-        <td style="width: 200px; padding-right: 15px">
-          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" 
-          style="width: 100%">
-            <input id="prefix" class="mdl-textfield__input" style="font-family: monospace" spellcheck="false" autocomplete="off" autocorrect="false" autocapitalize="false">
-            <label class="mdl-textfield__label">(Optional) Prefix</label>
-          </div>
-        </td>
-        <td style="width: 200px; vertical-align: middle">
-          <button id="btnGetKernel" class="button demo-btn">Generate Kernel</button>
-        </td>
-      </tr>
-    </table>
+    <div class="input-bar">
+      <div class="mdl-textfield mdl-js-textfield expr-input">
+        <input id="txtExpr" class="mdl-textfield__input" value="y(i) = A(i,j) * x(j)" style="font-family: monospace" spellcheck="false" autocomplete="false" autocorrect="false" autocapitalize="false">
+        <span id="lblError" class="mdl-textfield__error" style="font-size: 14px"></span>
+      </div>
+      <div class="input-bar-misc">
+        <div style="float: left; margin-top: 16px">
+          <button id="btnExamples" class="mdl-button mdl-js-button mdl-button--icon">
+            <i class="material-icons">more_vert</i>
+          </button>
+          <ul id="listExamples" class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" style="margin-top: 0em; margin-left: 0em" for="btnExamples"></ul>
+        </div>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label prefix-input">
+          <input id="prefix" class="mdl-textfield__input" style="font-family: monospace" spellcheck="false" autocomplete="off" autocorrect="false" autocapitalize="false">
+          <label class="mdl-textfield__label">Prefix (Optional)</label>
+        </div>
+        <button id="btnGetKernel" class="button demo-btn">Generate Kernel</button>
+      </div>
+    </div>
+  <!--<td style="width: 32px; vertical-align: middle; padding-left: 0px; padding-right: 0px">-->
+  <!--<td style="width: 200px; padding-right: 15px">-->
+  <!--<td style="width: 200px; vertical-align: middle">-->
   </div>
   <!--<div class="mdl-layout-spacer"></div>-->
 </div>
@@ -133,7 +127,7 @@
     <table style="width: 100%; margin-bottom: 0px">
       <tr>
         <td style="width: 250px; vertical-align: middle">
-          <button id="btnSchedule" class="button demo-btn" style="margin-bottom: 8px; margin-top: 8px">
+          <button id="btnSchedule" class="button" style="margin-bottom: 8px; margin-top: 8px">
             Add Scheduling Command
           </button>
         </td>
@@ -141,10 +135,10 @@
           <p style="font-size: 12px; line-height: 100%">Documentation for the scheduling language can be found <a href="http://tensor-compiler.org/docs/scheduling/index.html">here</a>.</p>
         </td>
         <td align="right" style="padding-right: 0px">
-          <button id="btnCPU" class="button demo-btn" style="margin-top: 8px; margin-right: 12px; width: inherit">
+          <button id="btnCPU" class="button" style="margin-top: 8px; margin-right: 12px; width: inherit">
             Sample CPU Schedule
           </button>
-          <button id="btnGPU" class="button demo-btn" style="margin-top: 8px; margin-right: 12px; width: inherit">
+          <button id="btnGPU" class="button" style="margin-top: 8px; margin-right: 12px; width: inherit">
             Sample GPU Schedule
           </button>
         </td>
@@ -175,7 +169,7 @@
             <!--<div class="mdl-tabs__tab-bar" style="justify-content: flex-end">
                 <a href="" class="mdl-tabs__tab">Download</a>
             </div>-->
-            <button id="btnDownload" class="button demo-btn">Download</button>
+            <button id="btnDownload" class="button">Download</button>
           </td>
         </tr>
       </table>

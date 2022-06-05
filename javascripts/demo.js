@@ -1041,7 +1041,7 @@ function demo() {
 
         var row = "<tr style=\"cursor: auto\">";
         row += "<td class=\"removable-row mdl-data-table__cell--non-numeric\" id=\"";
-        row += rowId + "-button\"; style=\"vertical-align: middle; padding-left: 14px; padding-right: 14px\">";
+        row += rowId + "-button\"; style=\"vertical-align: middle; padding-left: 14px; padding-right: 14px; width: 60px\">";
         row += "<button class=\"mdl-button mdl-js-button mdl-button--icon\">";
         row += "<i class=\"material-icons\" style=\"font-size:16px\">clear</i>";
         row += "</button></td>";
@@ -1210,7 +1210,11 @@ function demo() {
   var btnGetKernelView = {
     updateView: function(timeout) {
       $("#btnGetKernel").prop('disabled', model.input.error !== "" || model.req);
-      $("#btnGetKernel").html(model.req ? "Processing..." : "Generate Kernel");
+      if (model.req) {
+        $("#btnGetKernel").addClass("is-loading");
+      } else {
+        $("#btnGetKernel").removeClass("is-loading");
+      }
     }
   };
 

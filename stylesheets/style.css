@@ -202,11 +202,6 @@ ul {
   margin-bottom: 0px;
 }
 
-.demo-btn {
-  width: 100%;
-  font-weight: 400;
-}
-
 .help-btn {
   width: 22px;
   height: 22px;
@@ -299,6 +294,7 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
+    min-height: 75px;
   }
 
   .format-selector > div {
@@ -321,4 +317,51 @@ h1, h2, h3, h4, h5, h6 {
 
 .label > small {
   font-weight: 400;
+}
+
+.input-bar {
+  display: flex;
+}
+
+.input-bar-misc {
+  display: flex;
+  justify-content: space-between;
+}
+
+@media (max-width: 800px) {
+  .input-bar {
+    flex-wrap: wrap;
+  }
+
+  .input-bar-misc {
+    width: 100%;
+    min-width: 0px;
+  }
+
+  .expr-input {
+    padding-bottom: 0px;
+  }
+}
+
+@media (min-width: 800px) {
+  .input-bar {
+    flex-wrap: nowrap;
+  }
+
+  .input-bar-misc {
+    min-width: 375px;
+  }
+}
+
+.demo-btn {
+  margin-top: 16px;
+}
+
+.prefix-input {
+  flex-grow: 1;
+  margin-right: 15px;
+}
+
+.expr-input {
+  width: 100%;
 }
