@@ -820,12 +820,12 @@ function demo() {
     makeParameters: function(row, command) {
       // a normal textfield
       function empty(parameterName, inputId, input, long = false) {
-        var parameter = "<li style=\"margin-top: 0px\">";
+        var parameter = "<li style=\"margin-top: 3.5px; margin-bottom: 6px\">";
         parameter += "<label class=\"label\" style=\"margin-bottom: 0px\"><small>";
         parameter += parameterName;
         parameter += "</small></label>";
         parameter += "<div class=\"schedule-input has-placeholder\" ";
-        parameter += long ? "style=\"width: 200px\"" : "";
+        //parameter += long ? "style=\"width: 200px\"" : "";
         parameter += "><input class=\"input space-font\"";
         parameter += "type=\"text\" autocomplete=\"off\" placeholder=\"\" value = \"";
         parameter += input;
@@ -837,7 +837,7 @@ function demo() {
       }
 
       function dropdown(paramterName, inputId, input, defaultValue = "", useMonospace = true, length = "120px") {
-        var parameter = "<li style=\"margin-top: 0px\">";
+        var parameter = "<li style=\"margin-top: 3.5px; margin-bottom: 6px\">";
         //parameter += "<div class=\"schedule-input dropdown mdl-textfield mdl-js-textfield ";
         //parameter += "mdl-textfield--floating-label getmdl-select has-placeholder\" ";
         //parameter += "style=\"width:" + length + "\"";
@@ -869,7 +869,7 @@ function demo() {
         parameter += "</small></label>";
         parameter += "  <div class=\"dropdown schedule-param-select schedule-dropdown\">";
         parameter += "    <div class=\"dropdown-trigger\">";
-        parameter += "      <button class=\"button has-text-spaced\" style=\"width: 190px\" aria-haspopup=\"true\" aria-controls=\"dropdown-menu\">";
+        parameter += "      <button class=\"button has-text-spaced\" style=\"width: 200px\" aria-haspopup=\"true\" aria-controls=\"dropdown-menu\">";
         parameter += "        <span ";
         if (useMonospace) {
           parameter += "class=\"space-font\" ";
@@ -1012,6 +1012,7 @@ function demo() {
       }
 
       if (command === "reorder") {
+        console.log("reorder: " + model.schedule[row].parameters.length);
         for (var p = 1; p < model.schedule[row].parameters.length; ++p) {
           var parameterName = parametersList[0];
           var inputId = "param" + row + "-" + p;
@@ -1023,8 +1024,8 @@ function demo() {
         var reorderId = "reorder" + row;
         parameters += "<li class=\"add-reorder\" id=\"";
         parameters += reorderId;
-        parameters += "\"><button class=\"button\">";
-        parameters += "Add";
+        parameters += "\"><button class=\"button\" style=\"width: 200px; margin-top: 13.5px\">";
+        parameters += "Add IndexVar";
         parameters += "</button></li>";
       }
 
@@ -1040,16 +1041,17 @@ function demo() {
 
         var row = "<tr style=\"cursor: auto\">";
         row += "<td class=\"removable-row mdl-data-table__cell--non-numeric\" id=\"";
-        row += rowId + "-button\"; style=\"vertical-align: middle; padding-left: 0.75em\">";
+        row += rowId + "-button\"; style=\"vertical-align: middle; padding-left: 14px; padding-right: 14px\">";
         row += "<button class=\"mdl-button mdl-js-button mdl-button--icon\">";
         row += "<i class=\"material-icons\" style=\"font-size:16px\">clear</i>";
         row += "</button></td>";
 
         row += "<td class=\"mdl-data-table__cell--non-numeric\" ";
-        row += "style=\"padding: 0px 0.75em; vertical-align: middle\">";
+        row += "style=\"padding: 0px; vertical-align: middle\">";
+        row += "<div class=\"format-selector\">";
         row += "  <div class=\"dropdown schedule-dropdown schedule-command-select\" style=\"margin-top: 6px; margin-bottom: 6px\">";
         row += "    <div class=\"dropdown-trigger\">";
-        row += "      <button class=\"button has-text-spaced\" style=\"width: 190px\" aria-haspopup=\"true\" aria-controls=\"dropdown-menu\">";
+        row += "      <button class=\"button has-text-spaced\" style=\"width: 200px\" aria-haspopup=\"true\" aria-controls=\"dropdown-menu\">";
         row += "        <span style=\"font-weight: normal\" id=\"";
         row += rowId;
         row += "\">";
@@ -1076,9 +1078,11 @@ function demo() {
         //row += "<td class=\"mdl-data-table__cell--non-numeric\"";
         //row += "style=\"width: 100%; padding: 0px 0px; vertical-align: middle\">";
         if (command) {
+          row += "<div>";
           row += tblScheduleView.makeParameters(r, command);
+          row += "</div>";
         }
-        row += "</td></tr>";
+        row += "</div></td></tr>";
 
         scheduleBody += row;
       }
