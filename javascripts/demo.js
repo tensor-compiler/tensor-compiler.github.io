@@ -428,7 +428,7 @@ function demo() {
             listTensorsBody += "  <div class=\"dropdown\" style=\"margin-top: 6px; margin-bottom: 6px\">";
             //listTensorsBody += "  <div class=\"dropdown\" style=\"float: left\">";
             listTensorsBody += "    <div class=\"dropdown-trigger\">";
-            listTensorsBody += "      <button class=\"button\" style=\"width: 175px\" aria-haspopup=\"true\" aria-controls=\"dropdown-menu\">";
+            listTensorsBody += "      <button class=\"button has-text-spaced\" style=\"width: 190px\" aria-haspopup=\"true\" aria-controls=\"dropdown-menu\">";
             listTensorsBody += "        <span style=\"font-weight: normal\" id=\"";
             listTensorsBody += formatNameId;
             listTensorsBody += "\">";
@@ -501,7 +501,7 @@ function demo() {
               listTensorsBody += id;
               listTensorsBody += "\" class=\"ui-state-default\" style=\"cursor: move\">";
               listTensorsBody += "<div class=\"field\" style=\"cursor: move;\">";
-              listTensorsBody += "  <label class=\"label\" style=\"cursor: move; margin-bottom: 0px; font-weight: 400\"><small>Dimension ";
+              listTensorsBody += "  <label class=\"label\" style=\"cursor: move; margin-bottom: 0px\"><small>Dimension ";
               listTensorsBody += (dim + 1)
               listTensorsBody += "</small></label>";
               listTensorsBody += "  <div class=\"dropdown\" data-val=\"";
@@ -510,7 +510,7 @@ function demo() {
               listTensorsBody += selectId;
               listTensorsBody += "\">";
               listTensorsBody += "    <div class=\"dropdown-trigger\">";
-              listTensorsBody += "      <button class=\"button\" style=\"width: 175px\" aria-haspopup=\"true\" aria-controls=\"dropdown-menu\">";
+              listTensorsBody += "      <button class=\"button has-text-spaced\" style=\"width: 190px\" aria-haspopup=\"true\" aria-controls=\"dropdown-menu\">";
               listTensorsBody += "        <span class=\"level-format-label\">";
               listTensorsBody += tblFormatsView.getLevelFormatString(level);
               listTensorsBody += "</span>";
@@ -821,48 +821,82 @@ function demo() {
       // a normal textfield
       function empty(parameterName, inputId, input, long = false) {
         var parameter = "<li style=\"margin-top: 0px\">";
-        parameter += "<div class=\"schedule-input mdl-textfield mdl-js-textfield ";
-        parameter += "mdl-textfield--floating-label has-placeholder\" ";
-        parameter += long ? "style=\"width:200px\"" : "";
-        parameter += "><input class=\"space-font mdl-textfield__input\" style=\"height: 32px\"";
+        parameter += "<label class=\"label\" style=\"margin-bottom: 0px\"><small>";
+        parameter += parameterName;
+        parameter += "</small></label>";
+        parameter += "<div class=\"schedule-input has-placeholder\" ";
+        parameter += long ? "style=\"width: 200px\"" : "";
+        parameter += "><input class=\"input space-font\"";
         parameter += "type=\"text\" autocomplete=\"off\" placeholder=\"\" value = \"";
         parameter += input;
         parameter += "\" id=\"";
         parameter += inputId;
-        parameter += "\"><label class=\"mdl-textfield__label\">";
-        parameter += parameterName;
-        parameter += "</label>";
+        parameter += "\">";
         parameter += "</div></li>";
         return parameter;
       }
 
       function dropdown(paramterName, inputId, input, defaultValue = "", useMonospace = true, length = "120px") {
         var parameter = "<li style=\"margin-top: 0px\">";
-        parameter += "<div class=\"schedule-input dropdown mdl-textfield mdl-js-textfield ";
-        parameter += "mdl-textfield--floating-label getmdl-select has-placeholder\" ";
-        parameter += "style=\"width:" + length + "\"";
-        parameter += "><input class=\"mdl-textfield__input ";
-        if (useMonospace) {
-          parameter += "space-font";
-        }
-        parameter += "\" data-toggle=\"dropdown\" id=\"";
-        parameter += inputId;
-        parameter += "\" type=\"text\" readonly placeholder=\"\" value=\"";
-        parameter += input ? input : defaultValue;
-        parameter += "\"><label data-toggle=\"dropdown\">";
-        parameter += "<i class=\"mdl-icon-toggle__label ";
-        parameter += "material-icons\">keyboard_arrow_down</i>";
-        parameter += "</label><label class=\"mdl-textfield__label\">";
+        //parameter += "<div class=\"schedule-input dropdown mdl-textfield mdl-js-textfield ";
+        //parameter += "mdl-textfield--floating-label getmdl-select has-placeholder\" ";
+        //parameter += "style=\"width:" + length + "\"";
+        //parameter += "><input class=\"mdl-textfield__input ";
+        //if (useMonospace) {
+        //  parameter += "space-font";
+        //}
+        //parameter += "\" data-toggle=\"dropdown\" id=\"";
+        //parameter += inputId;
+        //parameter += "\" type=\"text\" readonly placeholder=\"\" value=\"";
+        //parameter += input ? input : defaultValue;
+        //parameter += "\"><label data-toggle=\"dropdown\">";
+        //parameter += "<i class=\"mdl-icon-toggle__label ";
+        //parameter += "material-icons\">keyboard_arrow_down</i>";
+        //parameter += "</label><label class=\"mdl-textfield__label\">";
+        //parameter += parameterName;
+        //parameter += "</label>";
+        //parameter += "<label class=\"mdl-textfield__label\"></label>";
+        //parameter += "<ul class=\"options dropdown-menu ";
+        //if (useMonospace) {
+        //  parameter += "space-font";
+        //}
+        //parameter += "\" for=\"";
+        //parameter += inputId;
+        //parameter += "\" style=\"margin-left: 0px; top: 44px; min-width: 100%\">";
+
+        parameter += "<label class=\"label\" style=\"margin-bottom: 0px\"><small>";
         parameter += parameterName;
-        parameter += "</label>";
-        parameter += "<label class=\"mdl-textfield__label\"></label>";
-        parameter += "<ul class=\"options dropdown-menu ";
+        parameter += "</small></label>";
+        parameter += "  <div class=\"dropdown schedule-param-select schedule-dropdown\">";
+        parameter += "    <div class=\"dropdown-trigger\">";
+        parameter += "      <button class=\"button has-text-spaced\" style=\"width: 190px\" aria-haspopup=\"true\" aria-controls=\"dropdown-menu\">";
+        parameter += "        <span ";
         if (useMonospace) {
-          parameter += "space-font";
+          parameter += "class=\"space-font\" ";
         }
-        parameter += "\" for=\"";
+        parameter += "style=\"font-weight: normal\" id=\"";
         parameter += inputId;
-        parameter += "\" style=\"margin-left: 0px; top: 44px; min-width: 100%\">";
+        parameter += "\">";
+        parameter += input ? input : defaultValue;
+        parameter += "</span>";
+        parameter += "        <span class=\"icon is-small\" style=\"\">";
+        parameter += "          <i class=\"fas fa-angle-down\" aria-hidden=\"true\"></i>";
+        parameter += "        </span>";
+        parameter += "      </button>";
+        parameter += "    </div>";
+        parameter += "    <div class=\"dropdown-menu\" id=\"dropdown-menu\" role=\"menu\" for =\"";
+        parameter += inputId;
+        parameter += "\">";
+        parameter += "      <div class=\"dropdown-content\">";
+        //for (var c in scheduleCommands) {
+        //  row += "<a class=\"dropdown-item\" id=\"";
+        //  //row += formatNameId + "_" + name + "\" >";
+        //  row += "\">";
+        //  row += c + "</a>";
+        //}
+        //row += "      </div>";
+        //row += "    </div>";
+        //row += "  </div>";
         return parameter;
       }
 
@@ -870,12 +904,16 @@ function demo() {
       function indexDropdown(parameterName, inputId, input) {
         var parameter = dropdown(parameterName, inputId, input);
         for (var index of model.getIndices(row)) {
-          parameter += "<li style=\"margin-top: 0px\"><a>";
+          //parameter += "<li style=\"margin-top: 0px\"><a>";
+          //parameter += index;
+          //parameter += "</a></li>";
+          parameter += "<a class=\"dropdown-item space-font\">";
           parameter += index;
-          parameter += "</a></li>";
+          parameter += "</a>";
         }
-
-        parameter += "</ul></div></li>";
+        parameter += "      </div>";
+        parameter += "    </div>";
+        parameter += "  </div>";
         return parameter;
       }
 
@@ -885,12 +923,17 @@ function demo() {
         for (var access in model.input.tensorOrders) {
           if (model.input.tensorOrders[access] > 0
               && model.input.expression.indexOf(access) > model.input.expression.indexOf("=")) {
-            parameter += "<li><a>";
+            //parameter += "<li><a>";
+            //parameter += access;
+            //parameter += "</a></li>";
+            parameter += "<a class=\"dropdown-item\">";
             parameter += access;
-            parameter += "</a></li>";
+            parameter += "</a>";
           }
         }
-        parameter += "</ul></div></li>";
+        parameter += "      </div>";
+        parameter += "    </div>";
+        parameter += "  </div>";
         return parameter;
       }
 
@@ -901,16 +944,18 @@ function demo() {
         for (var access in model.input.tensorOrders) {
           if (model.input.tensorOrders[access] > 0
               && model.input.expression.indexOf(access) <= model.input.expression.indexOf("=")) {
-            parameter += "<li><a>";
+            parameter += "<a class=\"dropdown-item\">";
             parameter += access;
-            parameter += "</a></li>";
+            parameter += "</a>";
             if (defaultParam === "") {
               defaultParam += access;
             }
           }
         }
-        parameter = dropdown(parameterName, inputId, input, defaultParam) 
-                  + parameter + "</ul></div></li>";
+        parameter = dropdown(parameterName, inputId, input, defaultParam) + parameter;
+        parameter += "      </div>";
+        parameter += "    </div>";
+        parameter += "  </div>";
         return parameter;
       }
 
@@ -918,11 +963,16 @@ function demo() {
       function predefinedDropdown(parameterName, inputId, input, options) {
         var parameter = dropdown(parameterName, inputId, input, options[0], false, "160px");
         for (var option of options.slice(1)) {
-          parameter += "<li style=\"width:200px\"><a>";
+          //parameter += "<li style=\"width:200px\"><a>";
+          //parameter += option;
+          //parameter += "</a></li>";
+          parameter += "<a class=\"dropdown-item\">";
           parameter += option;
-          parameter += "</a></li>";
+          parameter += "</a>";
         }
-        parameter += "</ul></div></li>";
+        parameter += "      </div>";
+        parameter += "    </div>";
+        parameter += "  </div>";
         return parameter;
       }
 
@@ -936,7 +986,7 @@ function demo() {
         var input = model.getScheduleParameter(row, p);
 
         var parameterInfo = commandInfo[p];
-        switch(parameterInfo[0]) {
+        switch (parameterInfo[0]) {
           case "index dropdown":
             parameters += indexDropdown(parameterName, inputId, input);
             break;
@@ -973,7 +1023,7 @@ function demo() {
         var reorderId = "reorder" + row;
         parameters += "<li class=\"add-reorder\" id=\"";
         parameters += reorderId;
-        parameters += "\"><button class=\"mdl-button mdl-js-button mdl-button--raised demo-btn\">";
+        parameters += "\"><button class=\"button\">";
         parameters += "Add";
         parameters += "</button></li>";
       }
@@ -997,28 +1047,34 @@ function demo() {
 
         row += "<td class=\"mdl-data-table__cell--non-numeric\" ";
         row += "style=\"padding: 0px 0.75em; vertical-align: middle\">";
-        row += "<div class=\"dropdown mdl-textfield mdl-js-textfield ";
-        row += "mdl-textfield--floating-label getmdl-select\" ";
-        row += "style=\"width: 120px; min-width: 0px\">";
-        row += "<input class=\"mdl-textfield__input\" ";
-        row += "data-toggle=\"dropdown\" id=\"";
+        row += "  <div class=\"dropdown schedule-dropdown schedule-command-select\" style=\"margin-top: 6px; margin-bottom: 6px\">";
+        row += "    <div class=\"dropdown-trigger\">";
+        row += "      <button class=\"button has-text-spaced\" style=\"width: 190px\" aria-haspopup=\"true\" aria-controls=\"dropdown-menu\">";
+        row += "        <span style=\"font-weight: normal\" id=\"";
         row += rowId;
-        row += "\" type=\"text\" readonly value=\"";
+        row += "\">";
         row += command;
-        row += "\"><label data-toggle=\"dropdown\">";
-        row += "<i class=\"mdl-icon-toggle__label ";
-        row += "material-icons\">keyboard_arrow_down</i>";
-        row += "</label>";
-        row += "<label class=\"mdl-textfield__label\"></label>";
-        row += "<ul class=\"commands dropdown-menu\" for=\"";
+        row += "</span>";
+        row += "        <span class=\"icon is-small\" style=\"\">";
+        row += "          <i class=\"fas fa-angle-down\" aria-hidden=\"true\"></i>";
+        row += "        </span>";
+        row += "      </button>";
+        row += "    </div>";
+        row += "    <div class=\"dropdown-menu\" id=\"dropdown-menu\" role=\"menu\" for =\"";
         row += rowId;
-        row += "\" style=\"margin-left: 0px; top: 37px; min-width: 100%\">";
+        row += "\">";
+        row += "      <div class=\"dropdown-content\">";
         for (var c in scheduleCommands) {
-          row += "<li><a>" + c + "</a></li>";
+          row += "<a class=\"dropdown-item\" id=\"";
+          //row += formatNameId + "_" + name + "\" >";
+          row += "\">";
+          row += c + "</a>";
         }
-        row += "</ul></div></td>";
-        row += "<td class=\"mdl-data-table__cell--non-numeric\"";
-        row += "style=\"width: 100%; padding: 0px 0px; vertical-align: middle\">";
+        row += "      </div>";
+        row += "    </div>";
+        row += "  </div>";
+        //row += "<td class=\"mdl-data-table__cell--non-numeric\"";
+        //row += "style=\"width: 100%; padding: 0px 0px; vertical-align: middle\">";
         if (command) {
           row += tblScheduleView.makeParameters(r, command);
         }
@@ -1035,13 +1091,54 @@ function demo() {
         $("#tblSchedule").hide();
       }
 
-      $(".commands a").on("click", function(e) {
-        var command = $(this).text();
-        var rowId = $(this).parent().parent().attr("for");
-        var row = rowId.substring(("schedule").length);
+      $(".schedule-command-select a").each(function() {
+        $(this).mousedown(function() {
+          var command = $(this).text();
+          var rowId = $(this).parent().parent().attr("for");
+          var row = rowId.substring(("schedule").length);
 
-        $("#" + rowId).val(command);
-        model.addScheduleCommand(row, command);
+          $("#" + rowId).val(command);
+          model.addScheduleCommand(row, command);
+        });
+      });
+
+      $(".dropdown-item").mousedown(function() {
+        console.log("test");
+        var dropdown = $(this).parents('.dropdown');
+        //dropdown.parent().parent().parent().css({overflow: 'visible'});
+        dropdown.removeClass('is-active');
+        //dropdown.focusout(function() {
+        //  $(this).removeClass('is-active');
+        //  //$(this).parent().parent().parent().css({overflow: 'hidden'});
+        //});
+      });
+
+      $(".schedule-dropdown .button").click(function() {
+        var dropdown = $(this).parents('.schedule-dropdown');
+        //dropdown.parent().parent().parent().css({overflow: 'visible'});
+        dropdown.toggleClass('is-active');
+        //dropdown.focusout(function() {
+        //  $(this).removeClass('is-active');
+        //  //dropdown.parent().parent().parent().css({overflow: 'auto'});
+        //  console.log("here2");
+        //});
+        //dropdown.blur(function() {
+        //  $(this).removeClass('is-active');
+        //  //dropdown.parent().parent().parent().css({overflow: 'auto'});
+        //  console.log("here");
+        //});
+        //console.log("focus");
+        //dropdown.focus();
+        //dropdown.blur();
+      });
+
+      $(".schedule-dropdown .button").each(function() {
+        var dropdown = $(this).parents('.schedule-dropdown');
+        document.addEventListener("click", function(ev) {
+          if (!dropdown[0].contains(ev.target)) {
+            dropdown.removeClass('is-active');
+          }
+        });
       });
 
       $(".schedule-input input").on("change", function(e) {
@@ -1052,11 +1149,12 @@ function demo() {
         model.addScheduleParameter(row, index, $(this).val());
       });
 
-      $(".options a").on("click", function(e) {
+      $(".schedule-param-select a").on("mousedown", function(e) {
         var option = $(this).text();
         var inputId = $(this).parent().parent().attr("for");
         var row = inputId[inputId.indexOf("-") - 1];
         var index = inputId.slice(-1);
+        console.log("test2");
 
         model.addScheduleParameter(row, index, option);
       });

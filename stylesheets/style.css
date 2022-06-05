@@ -279,7 +279,7 @@ h1, h2, h3, h4, h5, h6 {
   padding-right: 0px;
 }
 
-@media (max-width: 545px) {
+@media (max-width: 575px) {
   .format-selector {
     display: flex;
     flex-wrap: wrap;
@@ -294,7 +294,7 @@ h1, h2, h3, h4, h5, h6 {
     display: none;
   }
 }
-@media (min-width: 545px) {
+@media (min-width: 575px) {
   .format-selector {
     display: flex;
     flex-wrap: nowrap;
@@ -313,4 +313,12 @@ h1, h2, h3, h4, h5, h6 {
 .box > p {
   word-break: word-wrap;
   white-space: normal;
+}
+
+.button.has-text-spaced {
+  justify-content: space-between;
+}
+
+.label > small {
+  font-weight: 400;
 }
