@@ -415,8 +415,9 @@ function demo() {
 
             listTensorsBody += "<tr>";
             listTensorsBody += "<td class=\"mdl-data-table__cell--non-numeric\" ";
-            listTensorsBody += "width=\"100\" style=\"vertical-align: middle; padding-left: 9px\"><div align=\"center\" ";
-            listTensorsBody += "style=\"font-size: 16px\">";
+            listTensorsBody += "width=\"100\" style=\"vertical-align: middle; ";
+            listTensorsBody += "padding-left: 9px\"><div align=\"center\" ";
+            listTensorsBody += "style=\"font-size: 16px\" class=\"space-font\">";
             listTensorsBody += t;
             listTensorsBody += "</div></td>";
 
@@ -739,7 +740,7 @@ function demo() {
         for (var access in model.input.tensorOrders) {
           if (model.input.tensorOrders[access] > 0
               && model.input.expression.indexOf(access) > model.input.expression.indexOf("=")) {
-            parameter += "<a class=\"dropdown-item\">";
+            parameter += "<a class=\"dropdown-item space-font\">";
             parameter += access;
             parameter += "</a>";
           }
@@ -755,7 +756,7 @@ function demo() {
         for (var access in model.input.tensorOrders) {
           if (model.input.tensorOrders[access] > 0
               && model.input.expression.indexOf(access) <= model.input.expression.indexOf("=")) {
-            parameter += "<a class=\"dropdown-item\">";
+            parameter += "<a class=\"dropdown-item space-font\">";
             parameter += access;
             parameter += "</a>";
             if (defaultParam === "") {
