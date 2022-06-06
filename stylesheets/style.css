@@ -96,21 +96,31 @@ h1, h2, h3, h4, h5, h6 {
   display: inline;
 }
 
-@media (max-width: 540px) {
+@media (max-width: 580px) {
   .format-selector {
     flex-wrap: wrap;
   }
 
-  .format-selector > div {
+  .format-selector li {
+    padding-right: 50px;
+  }
+  
+  .schedule-list li {
+    padding-right: 50px;
+  }
+  
+  #levelHeading {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .format-selector li {
     padding-right: 0px;
   }
 
   .schedule-list li {
     padding-right: 0px;
-  }
-
-  #levelHeading {
-    display: none;
   }
 }
 
