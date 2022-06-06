@@ -135,7 +135,7 @@ h1, h2, h3, h4, h5, h6 {
 .input-bar-misc {
   display: flex;
   justify-content: space-between;
-  min-width: 450px;
+  min-width: 400px;
 }
 
 #btnExamples {
@@ -144,7 +144,7 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: 20px;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 825px) {
   .input-bar {
     flex-wrap: wrap;
   }
@@ -164,14 +164,6 @@ h1, h2, h3, h4, h5, h6 {
 
   #btnExamples {
     margin-left: 0px;
-  }
-}
-
-@media (min-width: 900px) {
-  .input-bar {
-  }
-
-  .input-bar-misc {
   }
 }
 
