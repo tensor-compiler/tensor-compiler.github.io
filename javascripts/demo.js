@@ -425,7 +425,7 @@ function demo() {
             listTensorsBody += "style=\"padding: 0px; vertical-align: middle\">";
 
             listTensorsBody += "<div class=\"format-selector\">";
-            listTensorsBody += "<div class=\"dropdown\" style=\"margin-top: 6px; margin-bottom: 6px\">";
+            listTensorsBody += "<div class=\"dropdown format-dropdown\" style=\"margin-top: 6px; margin-bottom: 6px\">";
             listTensorsBody += "<div class=\"dropdown-trigger\">";
             listTensorsBody += "<button class=\"button has-text-spaced\" style=\"width: 190px\" ";
             listTensorsBody += "aria-haspopup=\"true\" aria-controls=\"dropdown-menu\">";
@@ -465,7 +465,7 @@ function demo() {
               listTensorsBody += "<label class=\"label\" style=\"cursor: move; margin-bottom: 0px\">";
               listTensorsBody += "<small>Dimension ";
               listTensorsBody += (dim + 1)
-              listTensorsBody += "</small></label><div class=\"dropdown\" data-val=\"";
+              listTensorsBody += "</small></label><div class=\"dropdown format-dropdown\" data-val=\"";
               listTensorsBody += level;
               listTensorsBody += "\" id=\"";
               listTensorsBody += selectId;
@@ -485,14 +485,14 @@ function demo() {
               listTensorsBody += "<a data-val=\"d\" class=\"dropdown-item\">Dense</a>";
               listTensorsBody += "<hr class=\"dropdown-divider\">";
               listTensorsBody += "<a data-val=\"s\" class=\"dropdown-item\">";
-              listTensorsBody += "Compressed (w/ Unique Elements)</a>";
+              listTensorsBody += "<div>Compressed</div><div>(w/ Unique Elements)</div></a>";
               listTensorsBody += "<a data-val=\"u\" class=\"dropdown-item\">";
-              listTensorsBody += "Compressed (w/ Duplicate Elements)</a>";
+              listTensorsBody += "<div>Compressed</div><div>(w/ Duplicate Elements)</div></a>";
               listTensorsBody += "<hr class=\"dropdown-divider\">";
               listTensorsBody += "<a data-val=\"q\" class=\"dropdown-item\">";
-              listTensorsBody += "Singleton (w/ Unique Elements)</a>";
+              listTensorsBody += "<div>Singleton</div><div>(w/ Unique Elements)</div></a>";
               listTensorsBody += "<a data-val=\"c\" class=\"dropdown-item\">";
-              listTensorsBody += "Singleton (w/ Duplicate Elements)</a>";
+              listTensorsBody += "<div>Singleton</div><div>(w/ Duplicate Elements)</div></a>";
               listTensorsBody += "</div></div></div></div></li>";
             }
 
@@ -588,12 +588,12 @@ function demo() {
             dropdown.removeClass('is-active');
           });
 
-          $(".dropdown .button").click(function() {
+          $(".format-dropdown .button").click(function() {
             var dropdown = $(this).parents('.dropdown');
             dropdown.toggleClass('is-active');
           });
 
-          $(".dropdown .button").each(function() {
+          $(".format-dropdown .button").each(function() {
             var dropdown = $(this).parents('.dropdown');
             document.addEventListener("click", function(ev) {
               if (!dropdown[0].contains(ev.target)) {
@@ -1202,13 +1202,25 @@ function demo() {
   for (var e in examples) {
     listExamplesBody += "<li id=\"example_";
     listExamplesBody += e;
-    listExamplesBody += "\" class=\"mdl-menu__item\">";
+    listExamplesBody += "\" class=\"mdl-menu__item\"><div class=\"short-name\">";
+    listExamplesBody += examples[e].name;
+    listExamplesBody += "</div><div class=\"long-name\">";
     listExamplesBody += examples[e].name;
     listExamplesBody += ":&nbsp; <code style=\"background-color: transparent\">";
     listExamplesBody += examples[e].code;
-    listExamplesBody += "</code></li>";
+    listExamplesBody += "</code></div></li>";
   }
   $("#listExamples").html(listExamplesBody);
+
+  $("#btnExamples").click(function() {
+    if ($(window).width() > 480) {
+      $("#listExamples .long-name").css("display", "block");
+      $("#listExamples .short-name").css("display", "none");
+    } else {
+      $("#listExamples .long-name").css("display", "none");
+      $("#listExamples .short-name").css("display", "block");
+    }
+  });
 
   var getURLParam = function(k) {
     var url = window.location.search.substring(1);

@@ -92,8 +92,20 @@ h1, h2, h3, h4, h5, h6 {
   padding-right: 28px;
 }
 
-#levelHeading {
+.format-selector .dropdown-menu {
+  min-width: 190px;
+}
+
+.schedule-dropdown .dropdown-menu {
+  min-width: 200px;
+}
+
+.optional-header {
   display: inline;
+}
+
+#formatHeading {
+  padding-left: 65px;
 }
 
 @media (max-width: 580px) {
@@ -109,8 +121,12 @@ h1, h2, h3, h4, h5, h6 {
     padding-right: 50px;
   }
   
-  #levelHeading {
+  .optional-header {
     display: none;
+  }
+
+  #formatHeading {
+    padding-left: 55px; 
   }
 }
 
@@ -214,4 +230,12 @@ h1, h2, h3, h4, h5, h6 {
   .demo-btn {
     width: 100%;
   }
+}
+
+.level-formats .dropdown-item {
+  padding-right: 16px;
+}
+
+#listExamples .long-name {
+  display: none;
 }
