@@ -1,8 +1,6 @@
 <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-red.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
-<link rel="stylesheet" href="stylesheets/getmdl-select.min.css">
-<!--<link rel="stylesheet" href="stylesheets/bootstrap-dropdown.css">-->
 <link rel="stylesheet" href="stylesheets/style.css">
 <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -10,7 +8,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/styles/default.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/highlight.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-<script src="javascripts/getmdl-select.min.js"></script>
 <script src="javascripts/jquery.ui.touch-punch.min.js"></script>
 <script src="javascripts/FileSaver.min.js"></script>
 <script src="javascripts/parser.js"></script>
@@ -26,7 +23,6 @@
 <link rel="stylesheet" href="stylesheets/dropdown.css">
 
 <div class="mdl-grid" style="padding-top: 0px">
-  <!--<div class="mdl-layout-spacer"></div>-->
   <div class="mdl-cell mdl-cell--12-col">
     <p style="line-height: 100%">This is an prototype implementation of the sparse tensor algebra compiler theory and contains known bugs, which are documented <a href="https://github.com/tensor-compiler/taco/issues">here</a>. If you find additional issues, please consider submitting a bug report.</p>
     <h6 style="margin-bottom: 0px; margin-top: 18px">Input a tensor algebra expression in index notation to generate code that computes it:</h6>
@@ -49,22 +45,17 @@
         <button id="btnGetKernel" class="button demo-btn">Generate Kernel</button>
       </div>
     </div>
-  <!--<td style="width: 32px; vertical-align: middle; padding-left: 0px; padding-right: 0px">-->
-  <!--<td style="width: 200px; padding-right: 15px">-->
-  <!--<td style="width: 200px; vertical-align: middle">-->
   </div>
-  <!--<div class="mdl-layout-spacer"></div>-->
 </div>
+
 <div id="tblFormats" class="mdl-grid" style="padding-top: 0px; padding-bottom: 0px">
-  <!--<div class="mdl-layout-spacer"></div>-->
   <div class="mdl-cell mdl-cell--12-col">
     <table class="mdl-data-table mdl-js-data-table" style="width: 100%; margin-bottom: 8px">
       <thead>
         <tr>
-          <th class="mdl-data-table__cell--non-numeric" style="min-width: 100px; vertical-align: middle; padding-left: 9px">
+          <th class="mdl-data-table__cell--non-numeric" style="min-width: 70px; vertical-align: middle; padding-left: 9px">
             <div align="center" style="position:relative"><big>Tensor</big></div></th>
-          <!--<th class="mdl-data-table__cell--non-numeric" width="175px" -->
-          <th class="mdl-data-table__cell--non-numeric" style="padding-left: 0px; vertical-align: middle; text-align: left">
+          <th class="mdl-data-table__cell--non-numeric" style="width: 100%; padding-left: 0px; vertical-align: middle; text-align: left">
             <big>
               Format
             </big>
@@ -72,33 +63,44 @@
               (Level Formats)
             </big>
             <big>
-              <!--
-              <div style="display:inline; vertical-align: middle">
-              </div>
-              -->
-              <button class="help-btn js-modal-trigger mdl-button mdl-js-button mdl-button--icon" data-target="modal-js-example"><i class="material-icons" style="font-size:20px">help_outline</i>
+              <button class="help-btn js-modal-trigger mdl-button mdl-js-button mdl-button--icon" data-target="modal-level-formats"><i class="material-icons" style="font-size:20px">help_outline</i>
               </button>
-              <div id="modal-js-example" class="modal">
+              <div id="modal-level-formats" class="modal">
                 <div class="modal-background"></div>
               
                 <div class="modal-content">
                   <div class="box">
                     <p>
-                      <strong>Dense</strong> levels store the size of the dimension $(N)$ and encode the coordinates in the interval $[0, N)$.
+                      TACO represents tensor formats as compositions of the 
+                      following per-dimension level formats:
+                    </p>
+                    <p>
+                      <strong>Dense</strong> levels store the size of the dimension 
+                      $(N)$ and encode the coordinates in the interval $[0, N)$.
                       <img src="images/dense-arrays.jpg" class="centered-img" style="height: 29px; padding-top:10px">
                     </p>
                     <p>
-                      <strong>Sparse</strong> levels store coordinates in a segment of the $\texttt{crd}$ array, with segment bounds stored in the $\texttt{pos}$ array.
+                      <strong>Compressed</strong> levels store coordinates in a 
+                      segment of the $\texttt{crd}$ array, with segment bounds 
+                      stored in the $\texttt{pos}$ array.
                       <img src="images/compressed-arrays.jpg" class="centered-img" style="height: 50px; padding-top:10px">
                     </p> 
                     <p>
-                      <strong>Singleton</strong> levels store individual coordinates (with no siblings) in the $\texttt{crd}$ array.
+                      <strong>Singleton</strong> levels store individual 
+                      coordinates in the $\texttt{crd}$ array.
                       <img src="images/singleton-arrays.jpg" class="centered-img" style="height: 30px; padding-top:10px">
                     </p>
                     <p>
-                      A level is <strong>unique (U)</strong> if no collection of coordinates that share the same ancestors contains duplicates, and it is <strong>not unique (&not;U)</strong> otherwise.
+                      Some level formats also come in different variants that 
+                      either can only store unique elements (U) or may store 
+                      duplicate elements (&not;U). More details can be found 
+                      <a href="files/chou-oopsla18-taco-formats.pdf">here</a>.
                     </p>
-                    <p style="margin-bottom: 0"> More info on formats that are supported by TACO can be found <a href="files/chou-oopsla18-taco-formats.pdf">here</a>.</p>
+                    <p>
+                      TACO also supports non-row major tensor formats such as CSC.
+                      You can define non-row major tensor formats in the web tool by  
+                      <strong>dragging the drop-down menus to reorder dimensions</strong>.
+                    </p>
                   </div>
                 </div>
               
@@ -106,70 +108,62 @@
               </div>
             </big>
           </th>
-          <!--
-          <th class="mdl-data-table__cell--non-numeric" style="padding-left: 7px; vertical-align: middle; text-align: left">
-            <div style="display:inline"><big>Level Formats&nbsp;</big></div>
-            <div style="display:inline; margin-right:10px">(reorder dimensions by dragging the drop-down menus)</div>
-          </th>
-          -->
         </tr>
       </thead>
       <tbody id="listTensors">
       </tbody>
     </table>
   </div>
-  <!--<div class="mdl-layout-spacer"></div>-->
 </div>
 
-<div class="mdl-grid" style="padding-top: 6px">
-  <!--<div class="mdl-layout-spacer"></div>-->
+<div class="mdl-grid" style="padding-top: 8px; padding-bottom: 0px">
   <div class="mdl-cell mdl-cell--12-col">
-    <table style="width: 100%; margin-bottom: 0px">
-      <tr>
-        <td style="width: 250px; vertical-align: middle">
-          <button id="btnSchedule" class="button" style="margin-bottom: 8px; margin-top: 8px">
-            Add Scheduling Command
-          </button>
-        </td>
-        <td style="vertical-align: middle; padding-left: 30px">
-          <p style="font-size: 12px; line-height: 100%">Documentation for the scheduling language can be found <a href="http://tensor-compiler.org/docs/scheduling/index.html">here</a>.</p>
-        </td>
-        <td align="right" style="padding-right: 0px">
-          <button id="btnCPU" class="button" style="margin-top: 8px; margin-right: 12px; width: inherit">
-            Sample CPU Schedule
-          </button>
-          <button id="btnGPU" class="button" style="margin-top: 8px; margin-right: 12px; width: inherit">
-            Sample GPU Schedule
-          </button>
-        </td>
-      </tr>
-    </table>
+    <div align="right" style="padding-right: 0px">
+      <button id="btnCPU" class="button sample-button">
+        Sample CPU Schedule
+      </button>
+      <button id="btnGPU" class="button sample-button">
+        Sample GPU Schedule
+      </button>
+    </div>
     <table class="mdl-data-table mdl-js-data-table" style="width: 100%; margin-bottom: 8px">
+      <thead>
+        <tr>
+          <th class="mdl-data-table__cell--non-numeric"></th>
+          <th class="mdl-data-table__cell--non-numeric" style="padding-left: 0px; padding-right: 8px; vertical-align: middle; text-align: left">
+            <big>
+              Scheduling Commands
+            </big>
+            <big>
+              <button class="help-btn mdl-button mdl-js-button mdl-button--icon">
+                <a target="_blank" rel="noopener noreferrer" href="http://tensor-compiler.org/docs/scheduling/index.html">
+                  <i class="material-icons" style="font-size: 20px; color: black">help_outline</i>
+                </a>
+              </button>
+            </big>
+          </th>
+        </tr>
+      </thead>
       <tbody id="tblSchedule">
       </tbody>
     </table>
   </div>
-  <!--<div class="mdl-layout-spacer"></div>-->
 </div>
 
 <div class="mdl-grid" style="padding-top: 6px">
-  <!--<div class="mdl-layout-spacer"></div>-->
   <div class="mdl-cell mdl-cell--12-col">
     <div id="panelKernels" class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
-      <table style="width: 100%">
+      <table style="width: 100%; margin-bottom: 0px">
         <tr>
-          <td>
+          <td style="padding: 0px; padding-bottom: 8px">
             <div class="mdl-tabs__tab-bar" style="justify-content: flex-start">
-                <a href="#compute-panel" class="mdl-tabs__tab is-active">Compute Loops</a>
-                <a href="#assembly-panel" class="mdl-tabs__tab">Assembly Loops</a>
-                <a href="#full-panel" class="mdl-tabs__tab">Complete Code</a>
+                <a style="padding-left: 12px; padding-right: 12px" href="#compute-panel" class="mdl-tabs__tab is-active">Compute Loops</a>
+                <a style="padding-left: 12px; padding-right: 12px" href="#assembly-panel" class="mdl-tabs__tab">Assemble Loops</a>
+                <a style="padding-left: 12px; padding-right: 12px" href="#full-panel" class="mdl-tabs__tab">Full Code</a>
             </div>
           </td>
-          <td style="width: 200px" align="right">
-            <!--<div class="mdl-tabs__tab-bar" style="justify-content: flex-end">
-                <a href="" class="mdl-tabs__tab">Download</a>
-            </div>-->
-            <button id="btnDownload" class="button">Download</button>
+          <td id="cellBtnDownload" align="right">
+            <button id="btnDownload" class="button" style="width: 100%">Download</button>
           </td>
         </tr>
       </table>
@@ -177,7 +171,7 @@
         <pre style="margin: 0px 0px; padding: 0px 0px"><code id="txtComputeLoops" class="lang-cpp">/* The generated compute loops will appear here */</code></pre>
       </div>
       <div class="mdl-tabs__panel" id="assembly-panel">
-        <pre style="margin: 0px 0px; padding: 0px 0px"><code id="txtAssemblyLoops" class="lang-cpp">/* The generated assembly loops will appear here */</code></pre>
+        <pre style="margin: 0px 0px; padding: 0px 0px"><code id="txtAssemblyLoops" class="lang-cpp">/* The generated assemble loops will appear here */</code></pre>
       </div>
       <div class="mdl-tabs__panel" id="full-panel">
         <pre style="margin: 0px 0px; padding: 0px 0px"><code id="txtFullCode" class="lang-cpp">/* The complete generated code will appear here */</code></pre>
@@ -186,7 +180,6 @@
     <br>
     <p style="line-height: 100%">The generated code is provided "as is" without warranty of any kind. To help us improve TACO, we keep an anonymized record of all requests submitted to the TACO online server.</p>
   </div>
-  <!--<div class="mdl-layout-spacer"></div>-->
 </div>
 
 <script>demo()</script>

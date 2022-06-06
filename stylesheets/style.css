@@ -1,149 +1,6 @@
-body{
-  color:black;
-}
-/*
-footer{
-  position: relative;
-  bottom: 0;
-}*/
-
-.light-bg{
-  background:#fff;
-}
-
-/*.light-bg{
-  position: relative;
-}
-
-.light-bg:after {
-    content : "";
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-image: url('./images/space.png'); 
-    background-size: 160%;
-    background-position: 30% 20%;
-    width: 100%;
-    height: 100%;
-    opacity : 0.8;
-    z-index: -1;
-}*/
-
-body {
-    -webkit-text-size-adjust: 100%;
-}
-
-.menu-title{
-  color:white;
-/*  font-size: 20px;
-*/}
-
-.color-grey{
-  color: #9e9e9e;
-}
-
-.titles-grey{
-  color:#323232;
-}
-
-.dark-bg{
-  background: #eee;
-}
-
-.taco-small{
-  background: url("./images/taco-small.png");
-}
-
-.body-text{
-  text-align: justify;
-}
-
-.full-text{
-  margin-left: 20px;
-  margin-right: 20px;
-}
-
-.whytaco-icon{
-  width: 160px;
-  height: 160px;
-}
-
-.banner{
-  height: 160px;
-  margin:0;
-  padding-left: 20px;
-  padding-top: 50px;
-}
-
-.mdl-layout__header-row{
-  padding-left: 30px;
-}
-
-a{
-  text-decoration: none;
-}
-
-.fast-textbox,.easy-textbox, .versatile-textbox, .whytaco-box{
-  margin:auto;
-  width:80%;
-/*  color:white;
-*/}
-
-.mit-news{
-  background: url('../images/mit_tensor_algebra.jpg') no-repeat #fff;
-  background-size: 360px;
-  background-position: 50% 10%;
-}
-
-.scientific-computing{
-  background: url('../images/scientific_computing_thumbnail.png') no-repeat #fff;
-  background-size: 260px;
-  background-position: 50% 10%;
-}
-
-.machine-learning{
-  background: url('../images/machine_learning_thumbnail.png') no-repeat #fff;
-  background-size: 320px;
-  background-position: 50% 20%;
-}
-
-.data-analytics{
-  background: url('../images/data_analytics_thumbnail.png') no-repeat #fff;
-  background-size: 320px;
-  background-position: 50% 0%;
-}
-
-.performance-engineering{
-  background: url('../images/speed.png') no-repeat #fff;
-  background-size: 160px;
-  background-position: 50% 30%;
-}
-
-.demo-card-container {
-  min-width: 325px;
-}
-
-.demo-card-square{
-  margin-left:auto;
-  margin-right: auto;
-}
-
-.demo-card-square.mdl-card {
-  width: 95%;
-  height: 320px;
-}
-
 ul {
   list-style-type: none; 
 }
-
-.video-card-square.mdl-card {
-  margin-left:auto;
-  margin-right: auto;
-  width: 95%;
-  height: 360px;
-} 
 
 .sortable {
   margin: 0px; 
@@ -160,62 +17,16 @@ ul {
   margin-bottom: 6px;
 }
 
-/*Publications: */
-.demo-list-three {
-  width: 650px;
-  margin:0 auto;
-}
-
-.paper{
-  padding: 0;
-}
-
-.bibtex{
-  white-space: pre-wrap;
-  padding: 0px;
-  padding-left: 0;
-  border-radius: 10px;
-  margin: 0px;
-  line-height: 150%;
-}
-
-.getpdf{
-  width: 100%;
-  margin-bottom: 10px;
-}
-
 .parent-center {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.home-header {
-  padding-left: 12px;
-}
-
-.normal-section-header {
-  padding-bottom: 0px;
-}
-
-.normal-section-header > div {
-  margin-bottom: 0px;
-}
-
 .help-btn {
   width: 22px;
   height: 22px;
   min-width: initial;
-}
-
-.help-menu {
-  padding: 10px;
-  width: 360px;
-  color: black;
-}
-
-.help-menu p {
-  white-space: initial;
 }
 
 .centered-img {
@@ -257,10 +68,6 @@ ul {
   line-height: 60px;
 }
 
-.getmdl-select .mdl-icon-toggle__label {
-  margin-top: 0px;
-}
-
 li {
   list-style: none;
 }
@@ -274,35 +81,36 @@ h1, h2, h3, h4, h5, h6 {
   padding-right: 0px;
 }
 
-@media (max-width: 575px) {
+.format-selector {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  min-height: 75px;
+}
+
+.format-selector > div {
+  padding-right: 28px;
+}
+
+#levelHeading {
+  display: inline;
+}
+
+@media (max-width: 540px) {
   .format-selector {
-    display: flex;
     flex-wrap: wrap;
-    align-items: center;
   }
 
   .format-selector > div {
     padding-right: 0px;
   }
 
+  .schedule-list li {
+    padding-right: 0px;
+  }
+
   #levelHeading {
     display: none;
-  }
-}
-@media (min-width: 575px) {
-  .format-selector {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
-    min-height: 75px;
-  }
-
-  .format-selector > div {
-    padding-right: 28px;
-  }
-
-  #levelHeading {
-    display: inline;
   }
 }
 
@@ -321,14 +129,22 @@ h1, h2, h3, h4, h5, h6 {
 
 .input-bar {
   display: flex;
+  flex-wrap: nowrap;
 }
 
 .input-bar-misc {
   display: flex;
   justify-content: space-between;
+  min-width: 450px;
 }
 
-@media (max-width: 800px) {
+#btnExamples {
+  margin-left: 8px;
+  margin-right: 8px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 900px) {
   .input-bar {
     flex-wrap: wrap;
   }
@@ -339,22 +155,30 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .expr-input {
-    padding-bottom: 0px;
+    padding-bottom: 5px;
+  }
+
+  .is-invalid {
+    padding-bottom: 24px;
+  }
+
+  #btnExamples {
+    margin-left: 0px;
   }
 }
 
-@media (min-width: 800px) {
+@media (min-width: 900px) {
   .input-bar {
-    flex-wrap: nowrap;
   }
 
   .input-bar-misc {
-    min-width: 375px;
   }
 }
 
 .demo-btn {
   margin-top: 16px;
+  width: 175px;
+  min-width: 175px;
 }
 
 .prefix-input {
@@ -364,4 +188,28 @@ h1, h2, h3, h4, h5, h6 {
 
 .expr-input {
   width: 100%;
+}
+
+.sample-button {
+  margin-bottom: 8px;
+}
+
+#cellBtnDownload {
+  padding-right: 0px;
+}
+
+@media (max-width: 525px) {
+  #cellBtnDownload {
+    display: none;
+  }
+}
+
+@media (max-width: 425px) {
+  .prefix-input {
+    display: none;
+  }
+
+  .demo-btn {
+    width: 100%;
+  }
 }
