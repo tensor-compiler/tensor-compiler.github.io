@@ -37,7 +37,7 @@ We also [welcome pull requests](https://github.com/tensor-compiler/taco/pulls) i
 
 # Acknowledgements 
 
-TACO is developed and maintained by members of [Prof. Fredrik Kjolstad](http://fredrikbk.com/)'s research group at Stanford University, members of the [COMMIT research group](http://groups.csail.mit.edu/commit/) at MIT CSAIL, and [other contributors](https://github.com/tensor-compiler/taco/graphs/contributors).
+TACO is developed and maintained by members of [Prof. Fredrik Kjolstad](http://fredrikbk.com/)'s research group at Stanford University, members of the [COMMIT research group](http://groups.csail.mit.edu/commit/) (led by Prof. Saman Amarasinghe) at MIT CSAIL, and [other contributors](https://github.com/tensor-compiler/taco/graphs/contributors).
 
 TACO is built on research supported by the National Science Foundation; the U.S. Department of Energy, Office of Science, Office of Advanced Scientific Computing Research; the Direction Générale de l'Armement; the Toyota Research Institute; the Application Driving Architectures (ADA) Research Center, a JUMP Center co-sponsored by SRC and DARPA; the Defense Advanced Research Projects Agency; the Google Research Scholar Program; and the Stanford Data Analytics for What’s Next (DAWN) Affiliate Program.
 Any opinions, findings, and conclusions or recommendations expressed here are those of the developers of TACO and do not necessarily reflect the views of the aforementioned funding agencies.
