@@ -829,7 +829,7 @@ function demo() {
         var reorderId = "reorder" + row;
         parameters += "<li class=\"add-reorder\" id=\"";
         parameters += reorderId;
-        parameters += "\"><button class=\"button\" style=\"width: 200px; ";
+        parameters += "\"><button class=\"button is-primary\" style=\"width: 200px; ";
         parameters += "margin-top: 13.5px\">Add IndexVar</button></li>";
       }
 
