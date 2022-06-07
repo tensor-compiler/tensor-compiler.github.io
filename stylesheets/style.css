@@ -216,7 +216,7 @@ h1, h2, h3, h4, h5, h6 {
   padding-right: 0px;
 }
 
-@media (max-width: 525px) {
+@media (max-width: 460px) {
   #cellBtnDownload {
     display: none;
   }
