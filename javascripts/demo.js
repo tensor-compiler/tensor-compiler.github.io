@@ -3,7 +3,10 @@ function demo() {
     input: {
       expression: "",
       tensorOrders: {},
-      error: "",
+      error: {
+        message: "",
+        delay: 0
+      },
       indices: [],
       prefix: ""
     },
@@ -25,69 +28,70 @@ function demo() {
 
     addInputView: function(newView) {
       model.inputViews.push(newView);
-      newView(400);
+      newView();
     },
     updateInputViews: function() {
       for (v in model.inputViews) {
-        model.inputViews[v](400);
+        model.inputViews[v]();
       }
     },
     updateScheduleView: function() {
       model.removeInvalidIndices();
       model.removeInvalidAccesses();
-      model.scheduleView(0);
+      model.scheduleView();
     },
     addExampleScheduleView: function(newView) {
       model.exampleScheduleViews.push(newView);
-      newView(0);
+      newView();
     },
     updateExampleScheduleViews: function() {
       for (v in model.exampleScheduleViews) {
-        model.exampleScheduleViews[v](0);
+        model.exampleScheduleViews[v]();
       }
     },
     addOutputView: function(newView) {
       model.outputViews.push(newView);
-      newView(0);
+      newView();
     },
     updateOutputViews: function() {
       for (v in model.outputViews) {
-        model.outputViews[v](0);
+        model.outputViews[v]();
       }
     },
     addReqView: function(newView) {
       model.reqViews.push(newView);
-      newView(0);
+      newView();
     },
     updateReqViews: function() {
       for (v in model.reqViews) {
-        model.reqViews[v](0);
+        model.reqViews[v]();
       }
     },
 
-    setInput: function(expression) {
+    setInput: function(expression, errorDelay = 400) {
       model.cancelReq();
       model.setOutput("", "", "", "");
 
       model.input.expression = expression;
+      model.input.error.delay = errorDelay;
       if (model.input.expression.length > 256) {
         model.input.tensorOrders = {};
-        model.input.error = "Input expression is too long";
+        model.input.error.message = "Input expression is too long";
       } else {
         try {
           model.input.tensorOrders = parser.parse(expression);
           model.input.indices = [...new Set(parser_indices.parse(expression))];
-          model.input.error = "";
+          model.input.error.message = "";
           for (t in model.input.tensorOrders) {
             if (model.input.tensorOrders[t] < 0) {
               model.input.tensorOrders = {};
-              model.input.error = "Tensor " + t + " has inconsistent order";
+              model.input.error.message = "Tensor " + t + " has inconsistent order";
               break;
             }
           }
         } catch (e) {
           model.input.tensorOrders = {};
-          model.input.error = "Input expression is invalid";
+          model.input.error.message = "Input expression is invalid";
         }
       }
       model.updateInputViews();
@@ -115,9 +119,6 @@ function demo() {
         }
         model.setReq(null);
       }
-    },
-    getError: function() {
-      return (model.output.error !== "") ? model.output.error : model.input.error;
     },
 
     setExampleSchedule: function(e) {
@@ -267,15 +268,23 @@ function demo() {
   var txtExprView = {
     timerEvent: null,
 
-    updateView: function(timeout) {
-      clearTimeout(txtExprView.timerEvent);
-      if (model.getError() !== "") {
-        var markError = function() { 
-          $("#lblError").html(model.getError());
-          $("#txtExpr").parent().addClass('is-invalid');
-        };
-        txtExprView.timerEvent = setTimeout(markError, timeout);
+    updateView: function() {
+      if (model.output.error !== "") {
+        clearTimeout(txtExprView.timerEvent);
+        txtExprView.timerEvent = null;
+        $("#lblError").html(model.output.error);
+        $("#txtExpr").parent().addClass('is-invalid');
+      } else if (model.input.error.message !== "") {
+        if (!txtExprView.timerEvent) {
+          var markError = function() { 
+            $("#lblError").html(model.input.error.message);
+            $("#txtExpr").parent().addClass('is-invalid');
+          };
+          txtExprView.timerEvent = setTimeout(markError, model.input.error.delay);
+        }
       } else {
+        clearTimeout(txtExprView.timerEvent);
+        txtExprView.timerEvent = null;
         $("#txtExpr").parent().removeClass('is-invalid');
       }
     }
@@ -388,15 +397,15 @@ function demo() {
           return "";
       }
     },
-    updateView: function(timeout) {
+    updateView: function() {
       clearTimeout(tblFormatsView.timerEvent);
-      if (model.getError() !== "") {
+      if (model.input.error.message !== "") {
         var hideTables = function() { 
           $("#tblFormats").hide(); 
           $("#tblSchedule").hide(); 
           model.resetSchedule();
         };
-        tblFormatsView.timerEvent = setTimeout(hideTables, timeout);
+        tblFormatsView.timerEvent = setTimeout(hideTables, model.input.error.delay);
       } else {
         var listTensorsBody = "";
         for (t in model.input.tensorOrders) {
@@ -841,7 +850,7 @@ function demo() {
       return parameters;
     },
 
-    updateView: function(timeout) {
+    updateView: function() {
       var scheduleBody = "";
       for (var r = 0; r < model.schedule.length; ++r) {
         var rowId = "schedule" + r;
@@ -983,7 +992,7 @@ function demo() {
   model.scheduleView = tblScheduleView.updateView;
 
   var btnExampleScheduleView = {
-    updateView: function(timeout) {
+    updateView: function() {
       if (model.exampleSchedule.length === 0) {
         $("#btnCPU").hide();
         $("#btnGPU").hide();
@@ -1000,8 +1009,8 @@ function demo() {
   model.addExampleScheduleView(btnExampleScheduleView.updateView);
 
   var btnGetKernelView = {
-    updateView: function(timeout) {
-      $("#btnGetKernel").prop('disabled', model.input.error !== "" || model.req);
+    updateView: function() {
+      $("#btnGetKernel").prop('disabled', model.input.error.message !== "" || model.req);
       if (model.req) {
         $("#btnGetKernel").addClass("is-loading");
       } else {
@@ -1014,14 +1023,14 @@ function demo() {
   model.addInputView(tblFormatsView.updateView);
   model.addInputView(btnGetKernelView.updateView);
 
-  $("#txtExpr").keyup(function() {
+  $("#txtExpr").on("input", function() {
     model.setInput($("#txtExpr").val());
     model.resetSchedule();
     model.setExampleSchedule("");
   });
 
   var panelKernelsView = {
-    updateView: function(timeout) {
+    updateView: function() {
       var computeLoops = (model.output.computeLoops === "") ? 
                          "/* The generated compute code will appear here */" :
                          model.output.computeLoops.replace(/</g, "&lt;");
@@ -1044,7 +1053,7 @@ function demo() {
   };
 
   var btnDownloadView = {
-    updateView: function(timeout) {
+    updateView: function() {
       if (model.output.fullCode === "") {
         $("#btnDownload").hide();
         $("#btnDownload").parent().css("width", "0px");
@@ -1241,8 +1250,11 @@ function demo() {
   };
 
   var inited = false;
+  var validInit = true;
   var expr = getURLParam("expr");
   if (expr !== "") {
+    inited = true;
+
     var formats = getURLParam("format").split(";");
     for (var f in formats) {
       var [tensor, levelFormats, ordering] = formats[f].split(":");
@@ -1255,23 +1267,32 @@ function demo() {
     }
 
     expr = expr.replaceAll("%20", " ");
-    model.setInput(expr);
+    model.setInput(expr, 0);
     $("#txtExpr").val(expr);
-    inited = (model.error == null);
+    validInit = (model.input.error.message === "");
 
-    var schedule = [];
-    var scheduleString = getURLParam("sched");
-    if (scheduleString !== "") {
-      var commands = scheduleString.split(";");
-      for (var c in commands) {
-        var [transform, ...args] = commands[c].split(":").map(function(x) {
-          return x.replaceAll("%20", " ");
-        });
-        command = { command: transform, parameters: args };
-        schedule.push(command);
+    if (validInit) {
+      var schedule = [];
+      var scheduleString = getURLParam("sched");
+      if (scheduleString !== "") {
+        var commands = scheduleString.split(";");
+        for (var c in commands) {
+          var [transform, ...args] = commands[c].split(":").map(function(x) {
+            return x.replaceAll("%20", " ");
+          });
+          command = { command: transform, parameters: args };
+          if (!scheduleCommands.hasOwnProperty(transform)) {
+            model.setOutput("", "", "", "Invalid scheduling command: " + transform); 
+            validInit = false;
+            break;
+          }
+          schedule.push(command);
+        }
+      }
+      if (validInit) {
+        model.setSchedule(schedule);
       }
     }
-    model.setSchedule(schedule);
   }
 
   var demo = getURLParam("demo");
@@ -1304,7 +1325,9 @@ function demo() {
   }
 
   if (inited) {
-    getKernel();
+    if (validInit) {
+      getKernel();
+    }
   } else {
     var urlPrefix = "http://tensor-compiler.org/examples/" + demo;
     var computeGet = $.get(urlPrefix + "_compute.c");
