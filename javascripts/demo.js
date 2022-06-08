@@ -553,7 +553,7 @@ function demo() {
 
           for (t in model.input.tensorOrders) {
             if (model.input.tensorOrders[t] > 0) {
-              tblFormatsView.insertNamesCacheEntry(t, $("#format" + t).val());
+              tblFormatsView.insertNamesCacheEntry(t, $("#format" + t).html());
               tblFormatsView.insertLevelsCacheEntry(t, 
                   tblFormatsView.createEntryFromId("dims" + t));
             }
@@ -612,55 +612,55 @@ function demo() {
 
   var scheduleCommands = {
     pos: {
-      parameters: ["Original IndexVar", "Derived IndexVar", "Accessed Tensor"],
+      parameters: ["Original Index Variable", "Derived Index Variable", "Accessed Tensor"],
       0: ["index dropdown", [1, "pos"]],
       1: ["default", ""],
       2: ["access dropdown"]
     },
     fuse: {
-      parameters: ["Outer IndexVar", "Inner IndexVar", "Fused IndexVar"],
+      parameters: ["Outer Index Variable", "Inner Index Variable", "Fused Index Variable"],
       0: ["index dropdown"],
       1: ["index dropdown"],
       2: ["default", "f"]
     },
     split: {
-      parameters: ["Split IndexVar", "Outer IndexVar", "Inner IndexVar", "Split Factor"],
+      parameters: ["Split Index Variable", "Outer Index Variable", "Inner Index Variable", "Split Factor"],
       0: ["index dropdown", [1, "0"], [2, "1"]],
       1: ["default", ""],
       2: ["default", ""],
       3: ["text"]
     },
     divide: {
-      parameters: ["Divided IndexVar", "Outer IndexVar", "Inner IndexVar", "Divide Factor"],
+      parameters: ["Divided Index Variable", "Outer Index Variable", "Inner Index Variable", "Divide Factor"],
       0: ["index dropdown", [1, "0"], [2, "1"]],
       1: ["default", ""],
       2: ["default", ""],
       3: ["text"]
     },
     precompute: {
-      parameters: ["Precomputed Expr", "Original IndexVar", "Workspace IndexVar"],
+      parameters: ["Precomputed Expression", "Original Index Variable", "Workspace Index Variable"],
       0: ["long text"],
       1: ["index dropdown", [2, ""]],
       2: ["default", ""]
     },
     reorder: {
-      parameters: ["Reordered IndexVar"],
+      parameters: ["Index Variable"],
       0: ["index dropdown"]
     },
     bound: {
-      parameters: ["Original IndexVar", "Bounded IndexVar", "Bound", "Bound Type"],
+      parameters: ["Original Index Variable", "Bounded Index Variable", "Bound", "Bound Type"],
       0: ["index dropdown", [1, "bound"]],
       1: ["default", ""],
       2: ["text"],
       3: ["predefined dropdown", "Max Exact", "Min Exact", "Min Constraint", "Max Exact", "Max Constraint"]
     },
     unroll: {
-      parameters: ["Unrolled IndexVar", "Unroll Factor"],
+      parameters: ["Unrolled Index Variable", "Unroll Factor"],
       0: ["index dropdown"],
       1: ["text"]
     },
     parallelize: {
-      parameters: ["Parallel IndexVar", "Hardware", "Race Strategy"],
+      parameters: ["Parallelized Index Variable", "Hardware", "Race Strategy"],
       0: ["index dropdown"],
       1: ["predefined dropdown", "CPU Thread",
           "Not Parallel", "CPU Thread", "CPU Vector",
@@ -791,6 +791,10 @@ function demo() {
         var inputId = "param" + row + "-" + p;
         var input = model.getScheduleParameter(row, p);
 
+        if (command === "reorder") {
+          parameterName += " 1";
+        }
+
         var parameterInfo = commandInfo[p];
         switch (parameterInfo[0]) {
           case "index dropdown":
@@ -819,7 +823,7 @@ function demo() {
 
       if (command === "reorder") {
         for (var p = 1; p < model.schedule[row].parameters.length; ++p) {
-          var parameterName = parametersList[0];
+          var parameterName = parametersList[0] + " " + (p + 1);
           var inputId = "param" + row + "-" + p;
           var input = model.getScheduleParameter(row, p);
 
@@ -1019,10 +1023,10 @@ function demo() {
   var panelKernelsView = {
     updateView: function(timeout) {
       var computeLoops = (model.output.computeLoops === "") ? 
-                         "/* The generated compute loops will appear here */" :
+                         "/* The generated compute code will appear here */" :
                          model.output.computeLoops.replace(/</g, "&lt;");
       var assemblyLoops = (model.output.assemblyLoops === "") ? 
-                          "/* The generated assemble loops will appear here */" :
+                          "/* The generated assemble code will appear here */" :
                           model.output.assemblyLoops.replace(/</g, "&lt;");
       var fullCode = (model.output.fullCode === "") ? 
                      "/* The complete generated code will appear here */" :

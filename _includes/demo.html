@@ -28,8 +28,9 @@
     <h6 style="margin-bottom: 0px; margin-top: 18px">Input a tensor algebra expression in index notation to generate code that computes it:</h6>
     <div class="input-bar">
       <div class="mdl-textfield mdl-js-textfield expr-input">
-        <input id="txtExpr" class="mdl-textfield__input" value="y(i) = A(i,j) * x(j)" style="font-family: monospace" spellcheck="false" autocomplete="false" autocorrect="false" autocapitalize="false">
+        <input id="txtExpr" class="mdl-textfield__input" value="y(i) = A(i,j) * x(j)" style="font-family: monospace" spellcheck="false" autocomplete="off" autocorrect="false" autocapitalize="false">
         <span id="lblError" class="mdl-textfield__error" style="font-size: 14px"></span>
+        <label class="mdl-textfield__label"></label>
       </div>
       <div class="input-bar-misc">
         <div style="float: left; margin-top: 16px">
@@ -171,10 +172,10 @@
         </tr>
       </table>
       <div class="mdl-tabs__panel is-active" id="compute-panel">
-        <pre style="margin: 0px 0px; padding: 0px 0px"><code id="txtComputeLoops" class="lang-cpp">/* The generated compute loops will appear here */</code></pre>
+        <pre style="margin: 0px 0px; padding: 0px 0px"><code id="txtComputeLoops" class="lang-cpp">/* The generated compute code will appear here */</code></pre>
       </div>
       <div class="mdl-tabs__panel" id="assembly-panel">
-        <pre style="margin: 0px 0px; padding: 0px 0px"><code id="txtAssemblyLoops" class="lang-cpp">/* The generated assemble loops will appear here */</code></pre>
+        <pre style="margin: 0px 0px; padding: 0px 0px"><code id="txtAssemblyLoops" class="lang-cpp">/* The generated assemble code will appear here */</code></pre>
       </div>
       <div class="mdl-tabs__panel" id="full-panel">
         <pre style="margin: 0px 0px; padding: 0px 0px"><code id="txtFullCode" class="lang-cpp">/* The complete generated code will appear here */</code></pre>
