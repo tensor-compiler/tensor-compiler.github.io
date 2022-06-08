@@ -85,7 +85,7 @@ function demo() {
           for (t in model.input.tensorOrders) {
             if (model.input.tensorOrders[t] < 0) {
               model.input.tensorOrders = {};
-              model.input.error.message = "Tensor " + t + " has inconsistent order";
+              model.input.error.message = "Tensor <tt>" + t + "</tt> has inconsistent order";
               break;
             }
           }
@@ -267,26 +267,33 @@ function demo() {
 
   var txtExprView = {
     timerEvent: null,
+    errorMsg: "",
+    lastInput: "",
 
     updateView: function() {
+      var currInput = $("#txtExpr").val();
       if (model.output.error !== "") {
         clearTimeout(txtExprView.timerEvent);
-        txtExprView.timerEvent = null;
-        $("#lblError").html(model.output.error);
+        txtExprView.errorMsg = model.output.error;
         $("#txtExpr").parent().addClass('is-invalid');
       } else if (model.input.error.message !== "") {
-        if (!txtExprView.timerEvent) {
+        if (model.input.error.message !== txtExprView.errorMsg || 
+            txtExprView.lastInput != currInput) {
+          clearTimeout(txtExprView.timerEvent);
+          txtExprView.errorMsg = model.input.error.message;
           var markError = function() { 
-            $("#lblError").html(model.input.error.message);
             $("#txtExpr").parent().addClass('is-invalid');
+            txtExprView.errorMsg = "";
           };
           txtExprView.timerEvent = setTimeout(markError, model.input.error.delay);
         }
       } else {
         clearTimeout(txtExprView.timerEvent);
-        txtExprView.timerEvent = null;
+        txtExprView.errorMsg = "";
         $("#txtExpr").parent().removeClass('is-invalid');
       }
+      $("#lblError").html(txtExprView.errorMsg);
+      txtExprView.lastInput = currInput;
     }
   };
 
