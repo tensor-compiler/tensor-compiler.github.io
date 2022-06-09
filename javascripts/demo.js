@@ -288,6 +288,9 @@ function demo() {
             txtExprView.errorMsg = "";
           };
           txtExprView.timerEvent = setTimeout(markError, model.input.error.delay);
+        } else {
+          $("#txtExpr").parent().removeClass('is-invalid');
+          $("#txtExpr").removeClass('is-danger');
         }
       } else {
         clearTimeout(txtExprView.timerEvent);
