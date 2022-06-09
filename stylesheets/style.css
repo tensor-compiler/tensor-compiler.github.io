@@ -161,7 +161,7 @@ h1, h2, h3, h4, h5, h6 {
 .input-bar-misc {
   display: flex;
   justify-content: space-between;
-  min-width: 450px;
+  min-width: 425px;
 }
 
 #btnExamples {
@@ -177,7 +177,7 @@ h1, h2, h3, h4, h5, h6 {
   min-width: 175px;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 875px) {
   .input-bar {
     flex-wrap: wrap;
   }
@@ -229,7 +229,7 @@ h1, h2, h3, h4, h5, h6 {
   padding-right: 0px;
 }
 
-@media (max-width: 460px) {
+@media (max-width: 474px) {
   #cellBtnDownload {
     display: none;
   }
