@@ -161,16 +161,23 @@ h1, h2, h3, h4, h5, h6 {
 .input-bar-misc {
   display: flex;
   justify-content: space-between;
-  min-width: 400px;
+  min-width: 450px;
 }
 
 #btnExamples {
   margin-left: 8px;
   margin-right: 8px;
   margin-bottom: 20px;
+  margin-top: 25px;
 }
 
-@media (max-width: 825px) {
+.demo-btn {
+  margin-top: 20px;
+  width: 175px;
+  min-width: 175px;
+}
+
+@media (max-width: 900px) {
   .input-bar {
     flex-wrap: wrap;
   }
@@ -191,12 +198,18 @@ h1, h2, h3, h4, h5, h6 {
   #btnExamples {
     margin-left: 0px;
   }
-}
 
-.demo-btn {
-  margin-top: 16px;
-  width: 175px;
-  min-width: 175px;
+  .demo-btn {
+    margin-top: 15px;
+  }
+
+  .prefix-input {
+    padding-top: 15px;
+  }
+
+  #btnExamples {
+    margin-top: 20px;
+  }
 }
 
 .prefix-input {
@@ -222,7 +235,7 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-@media (max-width: 425px) {
+@media (max-width: 500px) {
   .prefix-input {
     display: none;
   }

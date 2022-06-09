@@ -276,6 +276,7 @@ function demo() {
         clearTimeout(txtExprView.timerEvent);
         txtExprView.errorMsg = model.output.error;
         $("#txtExpr").parent().addClass('is-invalid');
+        $("#txtExpr").addClass('is-danger');
       } else if (model.input.error.message !== "") {
         if (model.input.error.message !== txtExprView.errorMsg || 
             txtExprView.lastInput != currInput) {
@@ -283,6 +284,7 @@ function demo() {
           txtExprView.errorMsg = model.input.error.message;
           var markError = function() { 
             $("#txtExpr").parent().addClass('is-invalid');
+            $("#txtExpr").addClass('is-danger');
             txtExprView.errorMsg = "";
           };
           txtExprView.timerEvent = setTimeout(markError, model.input.error.delay);
@@ -291,6 +293,7 @@ function demo() {
         clearTimeout(txtExprView.timerEvent);
         txtExprView.errorMsg = "";
         $("#txtExpr").parent().removeClass('is-invalid');
+        $("#txtExpr").removeClass('is-danger');
       }
       $("#lblError").html(txtExprView.errorMsg);
       txtExprView.lastInput = currInput;

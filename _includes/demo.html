@@ -27,21 +27,20 @@
     <p style="line-height: 100%">This is an prototype implementation of the sparse tensor algebra compiler theory and contains known bugs, which are documented <a href="https://github.com/tensor-compiler/taco/issues">here</a>. If you find additional issues, please consider submitting a bug report.</p>
     <h6 style="margin-bottom: 0px; margin-top: 18px">Input a tensor algebra expression in index notation to generate code that computes it:</h6>
     <div class="input-bar">
-      <div class="mdl-textfield mdl-js-textfield expr-input">
-        <input id="txtExpr" class="mdl-textfield__input" value="y(i) = A(i,j) * x(j)" style="font-family: monospace" spellcheck="false" autocomplete="off" autocorrect="false" autocapitalize="false">
+      <div class="mdl-textfield expr-input">
+        <input id="txtExpr" class="input" value="y(i) = A(i,j) * x(j)" style="font-family: monospace" spellcheck="false" autocomplete="off" autocorrect="false" autocapitalize="false">
         <span id="lblError" class="mdl-textfield__error" style="font-size: 14px"></span>
         <label class="mdl-textfield__label"></label>
       </div>
       <div class="input-bar-misc">
-        <div style="float: left; margin-top: 16px">
+        <div style="float: left">
           <button id="btnExamples" class="mdl-button mdl-js-button mdl-button--icon">
             <i class="material-icons">more_vert</i>
           </button>
           <ul id="listExamples" class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" style="margin-top: 0em; margin-left: 0em" for="btnExamples"></ul>
         </div>
-        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label prefix-input">
-          <input id="prefix" class="mdl-textfield__input" style="font-family: monospace" spellcheck="false" autocomplete="off" autocorrect="false" autocapitalize="false">
-          <label class="mdl-textfield__label">Prefix (Optional)</label>
+        <div class="mdl-textfield prefix-input">
+          <input id="prefix" class="input" placeholder="Prefix (Optional)" style="font-family: monospace" spellcheck="false" autocomplete="off" autocorrect="false" autocapitalize="false">
         </div>
         <button id="btnGetKernel" class="button is-primary demo-btn">Generate Kernel</button>
       </div>
@@ -188,4 +187,3 @@
 
 <script>demo()</script>
 
-<link rel="stylesheet" href="{{ site.baseurl }}/assets/css/app.css">
