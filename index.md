@@ -27,7 +27,7 @@ The code base includes a README that describes how to build the C++ and Python A
 The [online documentation](docs/index.html) describes how to use the C++ and Python APIs as well as includes some example programs that show how TACO can be used.
 The command-line tool also includes a help menu that documents all of its features; you can access the help menu by invoking the tool with the `--help` option.
 
-You can also use TACO as a code generator [online](codegen.html) without having to download it.
+You can also use TACO as a code generator [directly within your browser](codegen.html) without having to download it.
 
 # How can I contribute to TACO?
 
