@@ -6,7 +6,7 @@
 }
 
 .formats li {
-  width: 160px;
+  width: 100%;
 }
 
 .level-formats {
@@ -14,7 +14,7 @@
 }
 
 .level-formats li {
-  width: 160px; 
+  width: 100%; 
 }
 
 .dropdown li {
@@ -27,20 +27,10 @@
   padding: 8px 16px;
 }
 
-.dropdown-submenu {
-  position: relative;
-}
-
-.dropdown-submenu .dropdown-menu {
-  top: 0;
-  left: 100%;
-  margin-top: -1px;
-}
-
 .commands li {
-  width: 120px;
+  width: 100%;
 }
 
 .schedule-input li {
-  width: 120px;
+  width: 100%;
 }

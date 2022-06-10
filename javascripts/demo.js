@@ -3,7 +3,10 @@ function demo() {
     input: {
       expression: "",
       tensorOrders: {},
-      error: "",
+      error: {
+        message: "",
+        delay: 0
+      },
       indices: [],
       prefix: ""
     },
@@ -25,69 +28,70 @@ function demo() {
 
     addInputView: function(newView) {
       model.inputViews.push(newView);
-      newView(400);
+      newView();
     },
     updateInputViews: function() {
       for (v in model.inputViews) {
-        model.inputViews[v](400);
+        model.inputViews[v]();
       }
     },
     updateScheduleView: function() {
       model.removeInvalidIndices();
       model.removeInvalidAccesses();
-      model.scheduleView(0);
+      model.scheduleView();
     },
     addExampleScheduleView: function(newView) {
       model.exampleScheduleViews.push(newView);
-      newView(0);
+      newView();
     },
     updateExampleScheduleViews: function() {
       for (v in model.exampleScheduleViews) {
-        model.exampleScheduleViews[v](0);
+        model.exampleScheduleViews[v]();
       }
     },
     addOutputView: function(newView) {
       model.outputViews.push(newView);
-      newView(0);
+      newView();
     },
     updateOutputViews: function() {
       for (v in model.outputViews) {
-        model.outputViews[v](0);
+        model.outputViews[v]();
       }
     },
     addReqView: function(newView) {
       model.reqViews.push(newView);
-      newView(0);
+      newView();
     },
     updateReqViews: function() {
       for (v in model.reqViews) {
-        model.reqViews[v](0);
+        model.reqViews[v]();
       }
     },
 
-    setInput: function(expression) {
+    setInput: function(expression, errorDelay = 400) {
       model.cancelReq();
       model.setOutput("", "", "", "");
 
       model.input.expression = expression;
+      model.input.error.delay = errorDelay;
       if (model.input.expression.length > 256) {
         model.input.tensorOrders = {};
-        model.input.error = "Input expression is too long";
+        model.input.error.message = "Input expression is too long";
       } else {
         try {
           model.input.tensorOrders = parser.parse(expression);
           model.input.indices = [...new Set(parser_indices.parse(expression))];
-          model.input.error = "";
+          model.input.error.message = "";
           for (t in model.input.tensorOrders) {
             if (model.input.tensorOrders[t] < 0) {
               model.input.tensorOrders = {};
-              model.input.error = "Tensor " + t + " has inconsistent order";
+              model.input.error.message = "Tensor <tt>" + t + "</tt> has inconsistent order";
               break;
             }
           }
         } catch (e) {
           model.input.tensorOrders = {};
-          model.input.error = "Input expression is invalid";
+          model.input.error.message = "Input expression is invalid";
         }
       }
       model.updateInputViews();
@@ -115,9 +119,6 @@ function demo() {
         }
         model.setReq(null);
       }
-    },
-    getError: function() {
-      return (model.output.error !== "") ? model.output.error : model.input.error;
     },
 
     setExampleSchedule: function(e) {
@@ -266,18 +267,39 @@ function demo() {
 
   var txtExprView = {
     timerEvent: null,
+    errorMsg: "",
+    lastInput: "",
 
-    updateView: function(timeout) {
-      clearTimeout(txtExprView.timerEvent);
-      if (model.getError() !== "") {
-        var markError = function() { 
-          $("#lblError").html(model.getError());
-          $("#txtExpr").parent().addClass('is-invalid');
-        };
-        txtExprView.timerEvent = setTimeout(markError, timeout);
+    updateView: function() {
+      var currInput = $("#txtExpr").val();
+      if (model.output.error !== "") {
+        clearTimeout(txtExprView.timerEvent);
+        txtExprView.errorMsg = model.output.error;
+        $("#txtExpr").parent().addClass('is-invalid');
+        $("#txtExpr").addClass('is-danger');
+      } else if (model.input.error.message !== "") {
+        if (model.input.error.message !== txtExprView.errorMsg || 
+            txtExprView.lastInput != currInput) {
+          clearTimeout(txtExprView.timerEvent);
+          txtExprView.errorMsg = model.input.error.message;
+          var markError = function() { 
+            $("#txtExpr").parent().addClass('is-invalid');
+            $("#txtExpr").addClass('is-danger');
+            txtExprView.errorMsg = "";
+          };
+          txtExprView.timerEvent = setTimeout(markError, model.input.error.delay);
+        } else {
+          $("#txtExpr").parent().removeClass('is-invalid');
+          $("#txtExpr").removeClass('is-danger');
+        }
       } else {
+        clearTimeout(txtExprView.timerEvent);
+        txtExprView.errorMsg = "";
         $("#txtExpr").parent().removeClass('is-invalid');
+        $("#txtExpr").removeClass('is-danger');
       }
+      $("#lblError").html(txtExprView.errorMsg);
+      txtExprView.lastInput = currInput;
     }
   };
 
@@ -388,15 +410,15 @@ function demo() {
           return "";
       }
     },
-    updateView: function(timeout) {
+    updateView: function() {
       clearTimeout(tblFormatsView.timerEvent);
-      if (model.getError() !== "") {
+      if (model.input.error.message !== "") {
         var hideTables = function() { 
           $("#tblFormats").hide(); 
           $("#tblSchedule").hide(); 
           model.resetSchedule();
         };
-        tblFormatsView.timerEvent = setTimeout(hideTables, timeout);
+        tblFormatsView.timerEvent = setTimeout(hideTables, model.input.error.delay);
       } else {
         var listTensorsBody = "";
         for (t in model.input.tensorOrders) {
@@ -415,44 +437,40 @@ function demo() {
 
             listTensorsBody += "<tr>";
             listTensorsBody += "<td class=\"mdl-data-table__cell--non-numeric\" ";
-            listTensorsBody += "width=\"100\"><div align=\"center\" ";
-            listTensorsBody += "style=\"font-size: 16px\">";
+            listTensorsBody += "width=\"100\" style=\"vertical-align: middle; ";
+            listTensorsBody += "padding-left: 9px\"><div align=\"center\" ";
+            listTensorsBody += "style=\"font-size: 16px\" class=\"space-font\">";
             listTensorsBody += t;
             listTensorsBody += "</div></td>";
 
             listTensorsBody += "<td class=\"mdl-data-table__cell--non-numeric\" ";
-            listTensorsBody += "style=\"padding: 0px\">";
-            listTensorsBody += "<div class=\"dropdown mdl-textfield mdl-js-textfield ";
-            listTensorsBody += "mdl-textfield--floating-label getmdl-select\" ";
-            listTensorsBody += "style=\"width: 155px\">";
-            listTensorsBody += "<input class=\"mdl-textfield__input\" ";
-            listTensorsBody += "data-toggle=\"dropdown\" id=\"";
-            listTensorsBody += formatNameId;
-            listTensorsBody += "\" type=\"text\" readonly ";
-            listTensorsBody += "value=\"";
-            listTensorsBody += formatName;
-            listTensorsBody += "\"/>";
-            listTensorsBody += "<label data-toggle=\"dropdown\">";
-            listTensorsBody += "<i class=\"mdl-icon-toggle__label ";
-            listTensorsBody += "material-icons\">keyboard_arrow_down</i>";
-            listTensorsBody += "</label>";
-            listTensorsBody += "<label class=\"mdl-textfield__label\"></label>";
-            listTensorsBody += "<ul class=\"formats dropdown-menu\" for=\"";
+            listTensorsBody += "style=\"padding: 0px; vertical-align: middle\">";
+
+            listTensorsBody += "<div class=\"format-selector\">";
+            listTensorsBody += "<div class=\"dropdown format-dropdown\" style=\"margin-top: 6px; margin-bottom: 6px\">";
+            listTensorsBody += "<div class=\"dropdown-trigger\">";
+            listTensorsBody += "<button class=\"button has-text-spaced\" style=\"width: 190px\" ";
+            listTensorsBody += "aria-haspopup=\"true\" aria-controls=\"dropdown-menu\">";
+            listTensorsBody += "<span style=\"font-weight: normal\" id=\"";
             listTensorsBody += formatNameId;
             listTensorsBody += "\">";
-
+            listTensorsBody += formatName;
+            listTensorsBody += "</span><span class=\"icon is-small\" style=\"\">";
+            listTensorsBody += "<i class=\"fas fa-angle-down\" aria-hidden=\"true\"></i>";
+            listTensorsBody += "</span></button></div>";
+            listTensorsBody += "<div class=\"dropdown-menu\" id=\"dropdown-menu\" role=\"menu\">";
+            listTensorsBody += "<div class=\"dropdown-content formats\">";
             for (var name of namesList) {
-              listTensorsBody += "<li><a id=\"";
+              listTensorsBody += "<a class=\"dropdown-item\" id=\"";
               listTensorsBody += formatNameId + "_" + name + "\" >";
-              listTensorsBody += name + "</a></li>";
+              listTensorsBody += name + "</a>";
             }
-            listTensorsBody += "</ul></div></td>";
+            listTensorsBody += "</div></div></div>";
 
-            listTensorsBody += "<td class=\"mdl-data-table__cell--non-numeric\" ";
-            listTensorsBody += "style=\"padding: 0px\">";
             listTensorsBody += "<ul id=\"";
             listTensorsBody += listId;
-            listTensorsBody += "\" class=\"ui-state-default sortable\">";
+            listTensorsBody += "\" class=\"ui-state-default sortable\" ";
+            listTensorsBody += "style=\"margin-top: 0px; margin-left: 0px\">";
             listTensorsBody += "<li class=\"ui-state-default\" ";
             listTensorsBody += "style=\"width: 0px; padding: 0px\"></li>";
 
@@ -464,58 +482,58 @@ function demo() {
 
               listTensorsBody += "<li id=\"";
               listTensorsBody += id;
-              listTensorsBody += "\" class=\"ui-state-default\">";
-              listTensorsBody += "<div class=\"dropdown mdl-textfield mdl-js-textfield ";
-              listTensorsBody += "mdl-textfield--floating-label getmdl-select\" ";
-              listTensorsBody += "style=\"cursor: move\">";
-              listTensorsBody += "<input class=\"mdl-textfield__input\" ";
-              listTensorsBody += "data-toggle=\"dropdown\" id=\"";
-              listTensorsBody += selectId;
-              listTensorsBody += "\" type=\"text\" readonly ";
-              listTensorsBody += "value=\"";
-              listTensorsBody += tblFormatsView.getLevelFormatString(level);
-              listTensorsBody += "\" data-val=\"";
+              listTensorsBody += "\" class=\"ui-state-default\" style=\"cursor: move\">";
+              listTensorsBody += "<div class=\"field\" style=\"cursor: move;\">";
+              listTensorsBody += "<label class=\"label\" style=\"cursor: move; margin-bottom: 0px\">";
+              listTensorsBody += "<small>Dimension ";
+              listTensorsBody += (dim + 1)
+              listTensorsBody += "</small></label><div class=\"dropdown format-dropdown\" data-val=\"";
               listTensorsBody += level;
-              listTensorsBody += "\"/>";
-              listTensorsBody += "<label data-toggle=\"dropdown\">";
-              listTensorsBody += "<i class=\"mdl-icon-toggle__label ";
-              listTensorsBody += "material-icons\">keyboard_arrow_down</i>";
-              listTensorsBody += "</label>";
-              listTensorsBody += "<label class=\"mdl-textfield__label\">Dimension ";
-              listTensorsBody += (dim + 1);
-              listTensorsBody += "</label>";
-              listTensorsBody += "<ul class=\"level-formats dropdown-menu\" for=\""
+              listTensorsBody += "\" id=\"";
               listTensorsBody += selectId;
-              listTensorsBody += "\"><li class =\"dense\"><a data-val=\""
-              listTensorsBody += "d\">Dense</a></li>";
-              listTensorsBody += "<li class=\"sparse dropdown-submenu\">";
-              listTensorsBody += "<a>Compressed";
-              listTensorsBody += "<i class=\"material-icons\" style=\"float:right\">";
-              listTensorsBody += "keyboard_arrow_right</i></a>";
-              listTensorsBody += "<ul class=\"level-formats dropdown-menu\">";
-              listTensorsBody += "<li><a data-val=\"s\">Unique</a></li>";
-              listTensorsBody += "<li><a data-val=\"u\">Not Unique</a></li>";
-              listTensorsBody += "</ul></li>";
-              listTensorsBody += "<li class=\"singleton dropdown-submenu\">";
-              listTensorsBody += "<a>Singleton";
-              listTensorsBody += "<i class=\"material-icons\" style=\"float:right\">";
-              listTensorsBody += "keyboard_arrow_right</i></a>";
-              listTensorsBody += "<ul class=\"level-formats dropdown-menu\">";
-              listTensorsBody += "<li><a data-val=\"q\">Unique</a></li>";
-              listTensorsBody += "<li><a data-val=\"c\">Not Unique</a></li>";
-              listTensorsBody += "</ul></li>";
-              listTensorsBody += "</ul></div></li>";
+              listTensorsBody += "\"><div class=\"dropdown-trigger\">";
+              listTensorsBody += "<button class=\"button has-text-spaced\" ";
+              listTensorsBody += "style=\"width: 190px\" aria-haspopup=\"true\" ";
+              listTensorsBody += "aria-controls=\"dropdown-menu\">";
+              listTensorsBody += "<span class=\"level-format-label\">";
+              listTensorsBody += tblFormatsView.getLevelFormatString(level);
+              listTensorsBody += "</span><span class=\"icon is-small\">";
+              listTensorsBody += "<i class=\"fas fa-angle-down\" aria-hidden=\"true\"></i>";
+              listTensorsBody += "</span></button></div>";
+              listTensorsBody += "<div class=\"dropdown-menu\" role=\"menu\" for=\""
+              listTensorsBody += selectId;
+              listTensorsBody += "\">";
+              listTensorsBody += "<div class=\"dropdown-content level-formats\">";
+              listTensorsBody += "<a data-val=\"d\" class=\"dropdown-item\">Dense</a>";
+              listTensorsBody += "<hr class=\"dropdown-divider\">";
+              listTensorsBody += "<a data-val=\"s\" class=\"dropdown-item\">";
+              listTensorsBody += "<div>Compressed</div><div>(w/ Unique Elements)</div></a>";
+              listTensorsBody += "<a data-val=\"u\" class=\"dropdown-item\">";
+              listTensorsBody += "<div>Compressed</div><div>(w/ Duplicate Elements)</div></a>";
+              listTensorsBody += "<hr class=\"dropdown-divider\">";
+              listTensorsBody += "<a data-val=\"q\" class=\"dropdown-item\">";
+              listTensorsBody += "<div>Singleton</div><div>(w/ Unique Elements)</div></a>";
+              listTensorsBody += "<a data-val=\"c\" class=\"dropdown-item\">";
+              listTensorsBody += "<div>Singleton</div><div>(w/ Duplicate Elements)</div></a>";
+              listTensorsBody += "</div></div></div></div></li>";
             }
 
-            listTensorsBody += "</ul></td></tr>";
+            listTensorsBody += "</ul></div></td></tr>";
           }
         }
 
         if (listTensorsBody !== "") {
           $("#listTensors").html(listTensorsBody);
-          getmdlSelect.init(".getmdl-select");
 
           $(".sortable").sortable({
+            // From https://stackoverflow.com/questions/2451528/jquery-ui-sortable-scroll-helper-element-offset-firefox-issue
+            sort: function(ev, ui) {
+              var $target = $(ev.target);
+              if (!/html|body/i.test($target.offsetParent()[0].tagName)) {
+                var top = ev.pageY - $target.offsetParent().offset().top - (ui.helper.outerHeight(true) / 2);
+                ui.helper.css({'top' : top + 'px'});
+              }
+            },
             update: function(ev, ui) {
               var listId = ui.item.parent().attr('id');
               var id = ui.item.context.id;
@@ -523,7 +541,8 @@ function demo() {
 
               var entry = tblFormatsView.createEntryFromId(listId);
               var name = tblFormatsView.getFormatName(entry, model.input.tensorOrders[tensor]);
-              $("#format" + tensor).val(name);
+
+              $("#format" + tensor).html(name);
               tblFormatsView.insertNamesCacheEntry(tensor, name);
 
               model.cancelReq();
@@ -533,20 +552,20 @@ function demo() {
 
           function updateCache(selectParent, val) {
             var selectId = selectParent.attr('for');
-            var listId = selectParent.parent().parent().parent().attr('id');
+            var listId = selectParent.parent().parent().parent().parent().attr('id');
             var tensor = listId.replace("dims", "");
 
             var level = tblFormatsView.getLevelFormatString(val);
             level = level.replace("&not;", $("<div>").html("&not;").text());
 
-            $("#" + selectId).val(level);
+            $("#" + selectId + " > .dropdown-trigger > .button > .level-format-label").html(level);
             $("#" + selectId).attr('data-val', val);
 
             var tensor = listId.substring(4);
             var entry = tblFormatsView.createEntryFromId(listId);
             var name = tblFormatsView.getFormatName(entry, model.input.tensorOrders[tensor]);
 
-            $("#format" + tensor).val(name);
+            $("#format" + tensor).html(name);
             tblFormatsView.insertNamesCacheEntry(tensor, name);
             tblFormatsView.insertLevelsCacheEntry(tensor, entry);
             
@@ -556,42 +575,14 @@ function demo() {
 
           for (t in model.input.tensorOrders) {
             if (model.input.tensorOrders[t] > 0) {
-              tblFormatsView.insertNamesCacheEntry(t, $("#format" + t).val());
+              tblFormatsView.insertNamesCacheEntry(t, $("#format" + t).html());
               tblFormatsView.insertLevelsCacheEntry(t, 
                   tblFormatsView.createEntryFromId("dims" + t));
             }
           }
 
-          $('.dropdown-submenu a').on("mouseover", function(e){
-            $(this).next('ul').show();
-          });
-
-          $('.sparse').on("mouseleave", function(e) {
-            $(this).find('ul').hide();
-          });
-
-          $('.singleton').on("mouseleave", function(e) {
-            $(this).find('ul').hide();
-          });
-          
-          $(".dense a").on("click", function(e){
-            var selectParent = $(this).parent().parent();
-            var val = $(this).attr("data-val");
-            updateCache(selectParent, val);
-          });
-
-          $('.dropdown-submenu .dropdown-menu a').on("click", function(e) {
-            var selectParent = $(this).parent().parent().parent().parent();            
-            var val = $(this).attr("data-val");
-            updateCache(selectParent, val);
-          });
-
-          $(".formats a").each(function() {
-            $(this).click(function() {
-              var formatParent = $(this).parent().parent();
-              var formatId = formatParent.attr('for');
-              $("#" + formatId).val($(this).text());
-
+          $(".formats > a").each(function() {
+            $(this).mousedown(function() {
               var id = $(this).attr('id');
               var tensor = id.substring(6, id.indexOf("_"));
               var name = id.substring(id.indexOf("_") + 1);
@@ -606,6 +597,33 @@ function demo() {
             });
           });
 
+          $(".level-formats > a").each(function() {
+            $(this).mousedown(function() {
+              var selectParent = $(this).parent().parent();
+              var val = $(this).attr("data-val");
+              updateCache(selectParent, val);
+            });
+          });
+
+          $(".dropdown-item").mousedown(function() {
+            var dropdown = $(this).parents('.dropdown');
+            dropdown.removeClass('is-active');
+          });
+
+          $(".format-dropdown .button").click(function() {
+            var dropdown = $(this).parents('.dropdown');
+            dropdown.toggleClass('is-active');
+          });
+
+          $(".format-dropdown .button").each(function() {
+            var dropdown = $(this).parents('.dropdown');
+            document.addEventListener("click", function(ev) {
+              if (!dropdown[0].contains(ev.target)) {
+                dropdown.removeClass('is-active');
+              }
+            });
+          });
+
           $("#tblFormats").show();
         } else {
           $("#tblFormats").hide();
@@ -616,55 +634,55 @@ function demo() {
 
   var scheduleCommands = {
     pos: {
-      parameters: ["Original IndexVar", "Derived IndexVar", "Accessed Tensor"],
+      parameters: ["Original Index Variable", "Derived Index Variable", "Accessed Tensor"],
       0: ["index dropdown", [1, "pos"]],
       1: ["default", ""],
       2: ["access dropdown"]
     },
     fuse: {
-      parameters: ["Outer IndexVar", "Inner IndexVar", "Fused IndexVar"],
+      parameters: ["Outer Index Variable", "Inner Index Variable", "Fused Index Variable"],
       0: ["index dropdown"],
       1: ["index dropdown"],
       2: ["default", "f"]
     },
     split: {
-      parameters: ["Split IndexVar", "Outer IndexVar", "Inner IndexVar", "Split Factor"],
+      parameters: ["Split Index Variable", "Outer Index Variable", "Inner Index Variable", "Split Factor"],
       0: ["index dropdown", [1, "0"], [2, "1"]],
       1: ["default", ""],
       2: ["default", ""],
       3: ["text"]
     },
     divide: {
-      parameters: ["Divided IndexVar", "Outer IndexVar", "Inner IndexVar", "Divide Factor"],
+      parameters: ["Divided Index Variable", "Outer Index Variable", "Inner Index Variable", "Divide Factor"],
       0: ["index dropdown", [1, "0"], [2, "1"]],
       1: ["default", ""],
       2: ["default", ""],
       3: ["text"]
     },
     precompute: {
-      parameters: ["Precomputed Expr", "Original IndexVar", "Workspace IndexVar"],
+      parameters: ["Precomputed Expression", "Original Index Variable", "Workspace Index Variable"],
       0: ["long text"],
       1: ["index dropdown", [2, ""]],
       2: ["default", ""]
     },
     reorder: {
-      parameters: ["Reordered IndexVar"],
+      parameters: ["Index Variable"],
       0: ["index dropdown"]
     },
     bound: {
-      parameters: ["Original IndexVar", "Bounded IndexVar", "Bound", "Bound Type"],
+      parameters: ["Original Index Variable", "Bounded Index Variable", "Bound", "Bound Type"],
       0: ["index dropdown", [1, "bound"]],
       1: ["default", ""],
       2: ["text"],
       3: ["predefined dropdown", "Max Exact", "Min Exact", "Min Constraint", "Max Exact", "Max Constraint"]
     },
     unroll: {
-      parameters: ["Unrolled IndexVar", "Unroll Factor"],
+      parameters: ["Unrolled Index Variable", "Unroll Factor"],
       0: ["index dropdown"],
       1: ["text"]
     },
     parallelize: {
-      parameters: ["Parallel IndexVar", "Hardware", "Race Strategy"],
+      parameters: ["Parallelized Index Variable", "Hardware", "Race Strategy"],
       0: ["index dropdown"],
       1: ["predefined dropdown", "CPU Thread",
           "Not Parallel", "CPU Thread", "CPU Vector",
@@ -684,49 +702,45 @@ function demo() {
     makeParameters: function(row, command) {
       // a normal textfield
       function empty(parameterName, inputId, input, long = false) {
-        var parameter = "<li>";
-        parameter += "<div class=\"schedule-input mdl-textfield mdl-js-textfield ";
-        parameter += "mdl-textfield--floating-label getmdl-select has-placeholder\" ";
-        parameter += long ? "style=\"width:200px\"" : "";
-        parameter += "><input class=\"space-font mdl-textfield__input\"";
+        var parameter = "<li style=\"margin-top: 3.5px; margin-bottom: 6px\">";
+        parameter += "<label class=\"label\" style=\"margin-bottom: 0px\"><small>";
+        parameter += parameterName;
+        parameter += "</small></label>";
+        parameter += "<div class=\"schedule-input has-placeholder\" ";
+        //parameter += long ? "style=\"width: 200px\"" : "";
+        parameter += "><input class=\"input space-font\"";
         parameter += "type=\"text\" autocomplete=\"off\" placeholder=\"\" value = \"";
         parameter += input;
         parameter += "\" id=\"";
         parameter += inputId;
-        parameter += "\"><label class=\"mdl-textfield__label\">";
-        parameter += parameterName;
-        parameter += "</label><ul></ul>";
+        parameter += "\">";
         parameter += "</div></li>";
         return parameter;
       }
 
       function dropdown(paramterName, inputId, input, defaultValue = "", useMonospace = true, length = "120px") {
-        var parameter = "<li>";
-        parameter += "<div class=\"schedule-input dropdown mdl-textfield mdl-js-textfield ";
-        parameter += "mdl-textfield--floating-label getmdl-select has-placeholder\" ";
-        parameter += "style=\"width:" + length + "\"";
-        parameter += "><input class=\"mdl-textfield__input ";
-        if (useMonospace) {
-          parameter += "space-font";
-        }
-        parameter += "\" data-toggle=\"dropdown\" id=\"";
-        parameter += inputId;
-        parameter += "\" type=\"text\" readonly placeholder=\"\" value=\"";
-        parameter += input ? input : defaultValue;
-        parameter += "\"><label data-toggle=\"dropdown\">";
-        parameter += "<i class=\"mdl-icon-toggle__label ";
-        parameter += "material-icons\">keyboard_arrow_down</i>";
-        parameter += "</label><label class=\"mdl-textfield__label\">";
+        var parameter = "<li style=\"margin-top: 3.5px; margin-bottom: 6px\">";
+        parameter += "<label class=\"label\" style=\"margin-bottom: 0px\"><small>";
         parameter += parameterName;
-        parameter += "</label>";
-        parameter += "<label class=\"mdl-textfield__label\"></label>";
-        parameter += "<ul class=\"options dropdown-menu ";
+        parameter += "</small></label>";
+        parameter += "<div class=\"dropdown schedule-param-select schedule-dropdown\">";
+        parameter += "<div class=\"dropdown-trigger\">";
+        parameter += "<button class=\"button has-text-spaced\" style=\"width: 200px\" ";
+        parameter += "aria-haspopup=\"true\" aria-controls=\"dropdown-menu\">";
+        parameter += "<span ";
         if (useMonospace) {
-          parameter += "space-font";
+          parameter += "class=\"space-font\" ";
         }
-        parameter += "\" for=\"";
+        parameter += "style=\"font-weight: normal\" id=\"";
         parameter += inputId;
         parameter += "\">";
+        parameter += input ? input : defaultValue;
+        parameter += "</span><span class=\"icon is-small\" style=\"\">";
+        parameter += "<i class=\"fas fa-angle-down\" aria-hidden=\"true\"></i>";
+        parameter += "</span></button></div>";
+        parameter += "<div class=\"dropdown-menu\" id=\"dropdown-menu\" role=\"menu\" for =\"";
+        parameter += inputId;
+        parameter += "\"><div class=\"dropdown-content\">";
         return parameter;
       }
 
@@ -734,12 +748,11 @@ function demo() {
       function indexDropdown(parameterName, inputId, input) {
         var parameter = dropdown(parameterName, inputId, input);
         for (var index of model.getIndices(row)) {
-          parameter += "<li><a>";
+          parameter += "<a class=\"dropdown-item space-font\">";
           parameter += index;
-          parameter += "</a></li>";
+          parameter += "</a>";
         }
-
-        parameter += "</ul></div></li>";
+        parameter += "</div></div></div>";
         return parameter;
       }
 
@@ -749,12 +762,12 @@ function demo() {
         for (var access in model.input.tensorOrders) {
           if (model.input.tensorOrders[access] > 0
               && model.input.expression.indexOf(access) > model.input.expression.indexOf("=")) {
-            parameter += "<li><a>";
+            parameter += "<a class=\"dropdown-item space-font\">";
             parameter += access;
-            parameter += "</a></li>";
+            parameter += "</a>";
           }
         }
-        parameter += "</ul></div></li>";
+        parameter += "</div></div></div>";
         return parameter;
       }
 
@@ -765,16 +778,16 @@ function demo() {
         for (var access in model.input.tensorOrders) {
           if (model.input.tensorOrders[access] > 0
               && model.input.expression.indexOf(access) <= model.input.expression.indexOf("=")) {
-            parameter += "<li><a>";
+            parameter += "<a class=\"dropdown-item space-font\">";
             parameter += access;
-            parameter += "</a></li>";
+            parameter += "</a>";
             if (defaultParam === "") {
               defaultParam += access;
             }
           }
         }
-        parameter = dropdown(parameterName, inputId, input, defaultParam) 
-                  + parameter + "</ul></div></li>";
+        parameter = dropdown(parameterName, inputId, input, defaultParam) + parameter;
+        parameter += "</div></div></div>";
         return parameter;
       }
 
@@ -782,25 +795,30 @@ function demo() {
       function predefinedDropdown(parameterName, inputId, input, options) {
         var parameter = dropdown(parameterName, inputId, input, options[0], false, "160px");
         for (var option of options.slice(1)) {
-          parameter += "<li style=\"width:160px\"><a>";
+          parameter += "<a class=\"dropdown-item\">";
           parameter += option;
-          parameter += "</a></li>";
+          parameter += "</a>";
         }
-        parameter += "</ul></div></li>";
+        parameter += "</div></div></div>";
         return parameter;
       }
 
       var commandInfo = scheduleCommands[command];
       var parametersList = commandInfo.parameters;
 
-      var parameters = "<ul class=\"ui-state-default schedule-list\">";
+      var parameters = "<ul class=\"ui-state-default schedule-list\" ";
+      parameters += "style=\"margin-left: 0px; margin-top: 0px\">";
       for (var p = 0; p < parametersList.length; ++p) {
         var parameterName = parametersList[p];
         var inputId = "param" + row + "-" + p;
         var input = model.getScheduleParameter(row, p);
 
+        if (command === "reorder") {
+          parameterName += " 1";
+        }
+
         var parameterInfo = commandInfo[p];
-        switch(parameterInfo[0]) {
+        switch (parameterInfo[0]) {
           case "index dropdown":
             parameters += indexDropdown(parameterName, inputId, input);
             break;
@@ -827,7 +845,7 @@ function demo() {
 
       if (command === "reorder") {
         for (var p = 1; p < model.schedule[row].parameters.length; ++p) {
-          var parameterName = parametersList[0];
+          var parameterName = parametersList[0] + " " + (p + 1);
           var inputId = "param" + row + "-" + p;
           var input = model.getScheduleParameter(row, p);
 
@@ -837,75 +855,109 @@ function demo() {
         var reorderId = "reorder" + row;
         parameters += "<li class=\"add-reorder\" id=\"";
         parameters += reorderId;
-        parameters += "\"><button class=\"mdl-button mdl-js-button mdl-button--raised demo-btn\">";
-        parameters += "Add";
-        parameters += "</button></li>";
+        parameters += "\"><button class=\"button is-primary\" style=\"width: 200px; ";
+        parameters += "margin-top: 13.5px\">Add IndexVar</button></li>";
       }
 
       parameters += "</ul>";
       return parameters;
     },
 
-    updateView: function(timeout) {
+    updateView: function() {
       var scheduleBody = "";
       for (var r = 0; r < model.schedule.length; ++r) {
         var rowId = "schedule" + r;
         var command = model.getScheduleCommand(r);
 
-        var row = "<tr style=\"cursor: move\">";
+        var row = "<tr style=\"cursor: auto\">";
         row += "<td class=\"removable-row mdl-data-table__cell--non-numeric\" id=\"";
-        row += rowId + "-button\">";
+        row += rowId + "-button\"; style=\"vertical-align: middle; ";
+        row += "padding-left: 14px; padding-right: 14px; width: 60px\">";
         row += "<button class=\"mdl-button mdl-js-button mdl-button--icon\">";
         row += "<i class=\"material-icons\" style=\"font-size:16px\">clear</i>";
         row += "</button></td>";
 
         row += "<td class=\"mdl-data-table__cell--non-numeric\" ";
-        row += "style=\"padding: 0px 20px\">";
-        row += "<div class=\"dropdown mdl-textfield mdl-js-textfield ";
-        row += "mdl-textfield--floating-label getmdl-select\" ";
-        row += "style=\"width: 120px\">";
-        row += "<input class=\"mdl-textfield__input\" ";
-        row += "data-toggle=\"dropdown\" id=\"";
-        row += rowId;
-        row += "\" type=\"text\" readonly value=\"";
-        row += command;
-        row += "\"><label data-toggle=\"dropdown\">";
-        row += "<i class=\"mdl-icon-toggle__label ";
-        row += "material-icons\">keyboard_arrow_down</i>";
-        row += "</label>";
-        row += "<label class=\"mdl-textfield__label\"></label>";
-        row += "<ul class=\"commands dropdown-menu\" for=\"";
+        row += "style=\"padding: 0px; vertical-align: middle\">";
+        row += "<div class=\"format-selector\">";
+        row += "<div class=\"dropdown schedule-dropdown schedule-command-select\" ";
+        row += "style=\"margin-top: 6px; margin-bottom: 6px\">";
+        row += "<div class=\"dropdown-trigger\">";
+        row += "<button class=\"button has-text-spaced\" style=\"width: 200px\" ";
+        row += "aria-haspopup=\"true\" aria-controls=\"dropdown-menu\">";
+        row += "<span style=\"font-weight: normal\" id=\"";
         row += rowId;
         row += "\">";
+        row += command;
+        row += "</span><span class=\"icon is-small\" style=\"\">";
+        row += "<i class=\"fas fa-angle-down\" aria-hidden=\"true\"></i>";
+        row += "</span></button></div>";
+        row += "<div class=\"dropdown-menu\" id=\"dropdown-menu\" role=\"menu\" for =\"";
+        row += rowId;
+        row += "\">";
+        row += "<div class=\"dropdown-content\">";
         for (var c in scheduleCommands) {
-          row += "<li><a>" + c + "</a></li>";
+          row += "<a class=\"dropdown-item\">";
+          row += c;
+          row += "</a>";
         }
-        row += "</ul></div></td>";
-        row += "<td class=\"mdl-data-table__cell--non-numeric\"";
-        row += "style=\"width: 100%; padding: 0px 20px\">";
+        row += "</div></div></div>";
         if (command) {
+          row += "<div style=\"padding-right: 0px\">";
           row += tblScheduleView.makeParameters(r, command);
+          row += "</div>";
         }
-        row += "</td></tr>";
+        row += "</div></td></tr>";
 
         scheduleBody += row;
       }
+      scheduleBody += "<tr style=\"cursor: auto\">";
+      scheduleBody += "<td class=\"mdl-data-table__cell--non-numeric\" ";
+      scheduleBody += "style=\"vertical-align: middle; padding-left: 14px; ";
+      scheduleBody += "padding-right: 14px; width: 60px\">";
+      scheduleBody += "<button id=\"btnSchedule\" class=\"mdl-button mdl-js-button mdl-button--icon\">";
+      scheduleBody += "<i class=\"material-icons\" style=\"font-size:16px\">add</i>";
+      scheduleBody += "</button></td><td></td></tr>";
 
       if (scheduleBody !== "") {
         $("#tblSchedule").html(scheduleBody);
-        getmdlSelect.init(".getmdl-select");
         $("#tblSchedule").show();
       } else {
         $("#tblSchedule").hide();
       }
 
-      $(".commands a").on("click", function(e) {
-        var command = $(this).text();
-        var rowId = $(this).parent().parent().attr("for");
-        var row = rowId.substring(("schedule").length);
+      $("#btnSchedule").click(function() {
+        model.addScheduleRow();
+      });
 
-        $("#" + rowId).val(command);
-        model.addScheduleCommand(row, command);
+      $(".schedule-command-select a").each(function() {
+        $(this).mousedown(function() {
+          var command = $(this).text();
+          var rowId = $(this).parent().parent().attr("for");
+          var row = rowId.substring(("schedule").length);
+
+          $("#" + rowId).val(command);
+          model.addScheduleCommand(row, command);
+        });
+      });
+
+      $(".dropdown-item").mousedown(function() {
+        var dropdown = $(this).parents('.dropdown');
+        dropdown.removeClass('is-active');
+      });
+
+      $(".schedule-dropdown .button").click(function() {
+        var dropdown = $(this).parents('.schedule-dropdown');
+        dropdown.toggleClass('is-active');
+      });
+
+      $(".schedule-dropdown .button").each(function() {
+        var dropdown = $(this).parents('.schedule-dropdown');
+        document.addEventListener("click", function(ev) {
+          if (!dropdown[0].contains(ev.target)) {
+            dropdown.removeClass('is-active');
+          }
+        });
       });
 
       $(".schedule-input input").on("change", function(e) {
@@ -916,7 +968,7 @@ function demo() {
         model.addScheduleParameter(row, index, $(this).val());
       });
 
-      $(".options a").on("click", function(e) {
+      $(".schedule-param-select a").on("mousedown", function(e) {
         var option = $(this).text();
         var inputId = $(this).parent().parent().attr("for");
         var row = inputId[inputId.indexOf("-") - 1];
@@ -925,14 +977,14 @@ function demo() {
         model.addScheduleParameter(row, index, option);
       });
 
-      $("tbody").sortable({
-        start: function(ev, ui) {
-          ui.item.startPos = ui.item.index();
-        },
-        update: function(ev, ui) {
-          model.swapScheduleRows(ui.item.startPos, ui.item.index());
-        }
-      });
+      //$("tbody").sortable({
+      //  start: function(ev, ui) {
+      //    ui.item.startPos = ui.item.index();
+      //  },
+      //  update: function(ev, ui) {
+      //    model.swapScheduleRows(ui.item.startPos, ui.item.index());
+      //  }
+      //});
 
       $(".removable-row").each(function() {
         $(this).click(function() {
@@ -953,16 +1005,16 @@ function demo() {
   model.scheduleView = tblScheduleView.updateView;
 
   var btnExampleScheduleView = {
-    updateView: function(timeout) {
+    updateView: function() {
       if (model.exampleSchedule.length === 0) {
-        $("#btnDefaults").hide();
+        $("#btnCPU").hide();
+        $("#btnGPU").hide();
       } else {
-        $("#btnDefaults").show();
+        $("#btnCPU").show();
         $("#btnCPU").attr('data-val', model.exampleSchedule);
-        $("#btnCPU").text(model.exampleSchedule + " CPU");
 
+        $("#btnGPU").show();
         $("#btnGPU").attr('data-val', model.exampleSchedule);
-        $("#btnGPU").text(model.exampleSchedule + " GPU");
       }
     }
   };
@@ -970,9 +1022,13 @@ function demo() {
   model.addExampleScheduleView(btnExampleScheduleView.updateView);
 
   var btnGetKernelView = {
-    updateView: function(timeout) {
-      $("#btnGetKernel").prop('disabled', model.input.error !== "" || model.req);
-      $("#btnGetKernel").html(model.req ? "Processing..." : "Generate Kernel");
+    updateView: function() {
+      $("#btnGetKernel").prop('disabled', model.input.error.message !== "" || model.req);
+      if (model.req) {
+        $("#btnGetKernel").addClass("is-loading");
+      } else {
+        $("#btnGetKernel").removeClass("is-loading");
+      }
     }
   };
 
@@ -980,19 +1036,19 @@ function demo() {
   model.addInputView(tblFormatsView.updateView);
   model.addInputView(btnGetKernelView.updateView);
 
-  $("#txtExpr").keyup(function() {
+  $("#txtExpr").on("input", function() {
     model.setInput($("#txtExpr").val());
     model.resetSchedule();
     model.setExampleSchedule("");
   });
 
   var panelKernelsView = {
-    updateView: function(timeout) {
+    updateView: function() {
       var computeLoops = (model.output.computeLoops === "") ? 
-                         "/* The generated compute loops will appear here */" :
+                         "/* The generated compute code will appear here */" :
                          model.output.computeLoops.replace(/</g, "&lt;");
       var assemblyLoops = (model.output.assemblyLoops === "") ? 
-                          "/* The generated assembly loops will appear here */" :
+                          "/* The generated assemble code will appear here */" :
                           model.output.assemblyLoops.replace(/</g, "&lt;");
       var fullCode = (model.output.fullCode === "") ? 
                      "/* The complete generated code will appear here */" :
@@ -1010,13 +1066,13 @@ function demo() {
   };
 
   var btnDownloadView = {
-    updateView: function(timeout) {
+    updateView: function() {
       if (model.output.fullCode === "") {
         $("#btnDownload").hide();
         $("#btnDownload").parent().css("width", "0px");
       } else {
         $("#btnDownload").show();
-        $("#btnDownload").parent().css("width", "200px");
+        $("#btnDownload").parent().css("width", "187px");
       }
     }
   };
@@ -1149,7 +1205,7 @@ function demo() {
           C: { name: "CSR", levels: { formats: ["d", "s"], ordering: [0, 1] } },
         }
       },
-      ttv: { name: "Tensor-times-vector", 
+      ttv: { name: "Sparse tensor-times-vector", 
         code: "A(i,j) = B(i,j,k) * c(k)",
         formats: {
           A: { name: "CSR", levels: { formats: ["d", "s"], ordering: [0, 1] } },
@@ -1157,7 +1213,7 @@ function demo() {
           c: { name: "Dense array", levels: { formats: ["d"], ordering: [0] } },
         }
       },
-      mttkrp: { name: "MTTKRP", 
+      mttkrp: { name: "SpMTTKRP", 
         code: "A(i,j) = B(i,k,l) * D(l,j) * C(k,j)",
         formats: {
           A: { name: "Dense array", levels: { formats: ["d", "d"], ordering: [0, 1] } },
@@ -1172,13 +1228,25 @@ function demo() {
   for (var e in examples) {
     listExamplesBody += "<li id=\"example_";
     listExamplesBody += e;
-    listExamplesBody += "\" class=\"mdl-menu__item\">";
+    listExamplesBody += "\" class=\"mdl-menu__item\"><div class=\"short-name\">";
     listExamplesBody += examples[e].name;
-    listExamplesBody += ":&nbsp; <code>";
+    listExamplesBody += "</div><div class=\"long-name\">";
+    listExamplesBody += examples[e].name;
+    listExamplesBody += ":&nbsp; <code style=\"background-color: transparent\">";
     listExamplesBody += examples[e].code;
-    listExamplesBody += "</code></li>";
+    listExamplesBody += "</code></div></li>";
   }
   $("#listExamples").html(listExamplesBody);
+
+  $("#btnExamples").click(function() {
+    if ($(window).width() > 480) {
+      $("#listExamples .long-name").css("display", "block");
+      $("#listExamples .short-name").css("display", "none");
+    } else {
+      $("#listExamples .long-name").css("display", "none");
+      $("#listExamples .short-name").css("display", "block");
+    }
+  });
 
   var getURLParam = function(k) {
     var url = window.location.search.substring(1);
@@ -1195,8 +1263,11 @@ function demo() {
   };
 
   var inited = false;
+  var validInit = true;
   var expr = getURLParam("expr");
   if (expr !== "") {
+    inited = true;
+
     var formats = getURLParam("format").split(";");
     for (var f in formats) {
       var [tensor, levelFormats, ordering] = formats[f].split(":");
@@ -1209,21 +1280,32 @@ function demo() {
     }
 
     expr = expr.replaceAll("%20", " ");
-    model.setInput(expr);
+    model.setInput(expr, 0);
     $("#txtExpr").val(expr);
-    inited = (model.error == null);
+    validInit = (model.input.error.message === "");
 
-    var schedule = [];
-    var scheduleString = getURLParam("sched");
-    if (scheduleString !== "") {
-      var commands = scheduleString.split(";");
-      for (var c in commands) {
-        var [transform, ...args] = commands[c].split(":").map(function(x) { return x.replaceAll("%20", " "); });
-        command = { command: transform, parameters: args };
-        schedule.push(command);
+    if (validInit) {
+      var schedule = [];
+      var scheduleString = getURLParam("sched");
+      if (scheduleString !== "") {
+        var commands = scheduleString.split(";");
+        for (var c in commands) {
+          var [transform, ...args] = commands[c].split(":").map(function(x) {
+            return x.replaceAll("%20", " ");
+          });
+          command = { command: transform, parameters: args };
+          if (!scheduleCommands.hasOwnProperty(transform)) {
+            model.setOutput("", "", "", "Invalid scheduling command: " + transform); 
+            validInit = false;
+            break;
+          }
+          schedule.push(command);
+        }
+      }
+      if (validInit) {
+        model.setSchedule(schedule);
       }
     }
-    model.setSchedule(schedule);
   }
 
   var demo = getURLParam("demo");
@@ -1256,7 +1338,9 @@ function demo() {
   }
 
   if (inited) {
-    getKernel();
+    if (validInit) {
+      getKernel();
+    }
   } else {
     var urlPrefix = "http://tensor-compiler.org/examples/" + demo;
     var computeGet = $.get(urlPrefix + "_compute.c");
@@ -1269,10 +1353,6 @@ function demo() {
     });
   }
 
-  $("#btnSchedule").click(function() {
-    model.addScheduleRow();
-  });
-
   $("#btnCPU").click(function() {
     model.setSchedule(default_CPU_schedules[$(this).attr('data-val')]);
   });
@@ -1283,5 +1363,49 @@ function demo() {
 
   $("#prefix").keyup(function() {
     model.setPrefix($("#prefix").val());
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Functions to open and close a modal
+    function openModal($el) {
+      $el.classList.add('is-active');
+    }
+  
+    function closeModal($el) {
+      $el.classList.remove('is-active');
+    }
+  
+    function closeAllModals() {
+      (document.querySelectorAll('.modal') || []).forEach(($modal) => {
+        closeModal($modal);
+      });
+    }
+  
+    // Add a click event on buttons to open a specific modal
+    (document.querySelectorAll('.js-modal-trigger') || []).forEach(($trigger) => {
+      const modal = $trigger.dataset.target;
+      const $target = document.getElementById(modal);
+      $trigger.addEventListener('click', () => {
+        openModal($target);
+      });
+    });
+  
+    // Add a click event on various child elements to close the parent modal
+    (document.querySelectorAll(
+        '.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button') || []).
+        forEach(($close) => {
+      const $target = $close.closest('.modal');
+      $close.addEventListener('click', () => {
+        closeModal($target);
+      });
+    });
+  
+    // Add a keyboard event to close all modals
+    document.addEventListener('keydown', (event) => {
+      const e = event || window.event;
+      if (e.keyCode === 27) { // Escape key
+        closeAllModals();
+      }
+    });
   });
 }
