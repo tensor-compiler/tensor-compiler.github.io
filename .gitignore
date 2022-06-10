@@ -1,2 +1,6 @@
+.DS_Store
 *.swp
-*.DS_Store
+*.swo
+*.swn
+.jekyll-cache/
+_site/

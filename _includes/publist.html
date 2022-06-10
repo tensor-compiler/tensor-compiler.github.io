@@ -1,0 +1,49 @@
+{% assign sections=site.data.[include.pubs] %}
+{% for section in sections %}
+  <p class="title is-3 my-5">{% if section.link %}<a href="{{ section.link }}">{% endif %}{{ section.heading }}{% if section.link %}</a>{% endif %}</p>
+  {% if section.desc %}
+  <p>{{ section.desc }}</p>
+  {% endif %}
+  {% for pub in section.pubs %}
+  <details>
+    <summary>
+      {% if pub.is_thesis == true %}
+      <i class="fas fa-book"></i>
+      {% else %}
+      <i class="fas fa-newspaper"></i>
+      {% endif %}
+      &nbsp;
+      <b>{{ pub.title }}</b>
+      &nbsp;
+      <small>{{ pub.authors }} {% if pub.venue %}({{ pub.venue }}){% endif %}</small>
+    </summary>
+    <blockquote>
+      {% if pub.paper_link %}
+      <a href="{{ pub.paper_link }}" class="button is-primary" style="box-sizing: border-box">Download {% if pub.is_thesis == true %}Thesis{% else %}Paper{% endif %}</a>
+      {% endif %}
+      {% if pub.slide_link %}
+      <a href="{{ pub.slide_link }}" class="button is-primary" style="box-sizing: border-box">Download Slides</a>
+      {% endif %}
+      {% if pub.abstract %}
+      <p class="title is-5 pt-5">Abstract</p>
+      <p class="mb-0 pb-0">{{ pub.abstract }}</p>
+      {% endif %}
+      {% if pub.bibtex %}
+      <p class="title is-5 pt-5">BibTex</p>
+      <pre class="mb-0 pb-0 pt-0">{{ pub.bibtex }}</pre>
+      {% endif %}
+      {% if pub.youtube %}
+      <p class="title is-5 pt-5">Video</p>
+      <figure class="image is-16by9 mt-5"> 
+          <iframe class="has-ratio" 
+              src="https://www.youtube.com/embed/{{ pub.youtube }}" 
+              frameborder="0" 
+              allowfullscreen
+              >
+          </iframe>
+      </figure>
+      {% endif %}
+    </blockquote>
+  </details>
+  {% endfor %}
+{% endfor %}
