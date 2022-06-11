@@ -69,11 +69,19 @@ class Handler(BaseHTTPRequestHandler):
     except:
       self.send_response(400)
     
+    response = str.encode(json.dumps(response))
+    lenResponse = len(response)
+
     self.send_header('Access-Control-Allow-Origin', '*')
     self.send_header('Content-type', 'application/json')
+    self.send_header('Content-Length', lenResponse)
     self.end_headers()
     
-    self.wfile.write(str.encode(json.dumps(response)))
+    i = 0
+    while i < lenResponse:
+      end = min(i + 10000, lenResponse)
+      self.wfile.write(response[i:end])
+      i = end
 
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
   def finish_request(self, request, client_address):
