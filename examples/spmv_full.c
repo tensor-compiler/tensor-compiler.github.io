@@ -26,6 +26,7 @@ typedef struct {
   taco_mode_t* mode_types;    // mode storage types
   uint8_t***   indices;       // tensor index data (per mode)
   uint8_t*     vals;          // tensor values
+  uint8_t*     fill_value;    // tensor fill value
   int32_t      vals_size;     // values array size
 } taco_tensor_t;
 #endif
@@ -35,6 +36,26 @@ int omp_get_max_threads() { return 1; }
 #endif
 int cmp(const void *a, const void *b) {
   return *((const int*)a) - *((const int*)b);
+}
+int taco_gallop(int *array, int arrayStart, int arrayEnd, int target) {
+  if (array[arrayStart] >= target || arrayStart >= arrayEnd) {
+    return arrayStart;
+  }
+  int step = 1;
+  int curr = arrayStart;
+  while (curr + step < arrayEnd && array[curr + step] < target) {
+    curr += step;
+    step = step * 2;
+  }
+
+  step = step / 2;
+  while (step > 0) {
+    if (curr + step < arrayEnd && array[curr + step] < target) {
+      curr += step;
+    }
+    step = step / 2;
+  }
+  return curr+1;
 }
 int taco_binarySearchAfter(int *array, int arrayStart, int arrayEnd, int target) {
   if (array[arrayStart] >= target) {

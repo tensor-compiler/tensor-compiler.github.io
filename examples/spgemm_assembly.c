@@ -66,10 +66,10 @@ int assemble(taco_tensor_t *A, taco_tensor_t *B, taco_tensor_t *C) {
     int32_t workspace_index_list_size = 0;
     int32_t* restrict workspace_index_list = workspace_index_list_all + C2_dimension * omp_get_thread_num();
     bool* restrict workspace_already_set = workspace_already_set_all + C2_dimension * omp_get_thread_num();
-    for (int32_t kB0 = B2_pos[i]; kB0 < B2_pos[(i + 1)]; kB0++) {
-      int32_t k = B2_crd[kB0];
-      for (int32_t jC0 = C2_pos[k]; jC0 < C2_pos[(k + 1)]; jC0++) {
-        int32_t j = C2_crd[jC0];
+    for (int32_t kB = B2_pos[i]; kB < B2_pos[(i + 1)]; kB++) {
+      int32_t k = B2_crd[kB];
+      for (int32_t jC = C2_pos[k]; jC < C2_pos[(k + 1)]; jC++) {
+        int32_t j = C2_crd[jC];
         if (!workspace_already_set[j]) {
           workspace_index_list[workspace_index_list_size] = j;
           workspace_already_set[j] = 1;

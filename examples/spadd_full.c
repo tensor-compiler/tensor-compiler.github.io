@@ -26,6 +26,7 @@ typedef struct {
   taco_mode_t* mode_types;    // mode storage types
   uint8_t***   indices;       // tensor index data (per mode)
   uint8_t*     vals;          // tensor values
+  uint8_t*     fill_value;    // tensor fill value
   int32_t      vals_size;     // values array size
 } taco_tensor_t;
 #endif
@@ -35,6 +36,26 @@ int omp_get_max_threads() { return 1; }
 #endif
 int cmp(const void *a, const void *b) {
   return *((const int*)a) - *((const int*)b);
+}
+int taco_gallop(int *array, int arrayStart, int arrayEnd, int target) {
+  if (array[arrayStart] >= target || arrayStart >= arrayEnd) {
+    return arrayStart;
+  }
+  int step = 1;
+  int curr = arrayStart;
+  while (curr + step < arrayEnd && array[curr + step] < target) {
+    curr += step;
+    step = step * 2;
+  }
+
+  step = step / 2;
+  while (step > 0) {
+    if (curr + step < arrayEnd && array[curr + step] < target) {
+      curr += step;
+    }
+    step = step / 2;
+  }
+  return curr+1;
 }
 int taco_binarySearchAfter(int *array, int arrayStart, int arrayEnd, int target) {
   if (array[arrayStart] >= target) {
@@ -231,21 +252,21 @@ int assemble(taco_tensor_t *A, taco_tensor_t *B, taco_tensor_t *C) {
   #pragma omp parallel for schedule(runtime)
   for (int32_t i = 0; i < C1_dimension; i++) {
 
-    int32_t jB1 = B2_pos[i];
-    int32_t pB2_end0 = B2_pos[(i + 1)];
-    int32_t jC1 = C2_pos[i];
-    int32_t pC2_end0 = C2_pos[(i + 1)];
+    int32_t jB = B2_pos[i];
+    int32_t pB2_end = B2_pos[(i + 1)];
+    int32_t jC = C2_pos[i];
+    int32_t pC2_end = C2_pos[(i + 1)];
 
-    while (jB1 < pB2_end0 && jC1 < pC2_end0) {
-      int32_t jB2 = B2_crd[jB1];
-      int32_t jC2 = C2_crd[jC1];
-      int32_t j = TACO_MIN(jB2,jC2);
-      if (jB2 == j && jC2 == j) {
+    while (jB < pB2_end && jC < pC2_end) {
+      int32_t jB0 = B2_crd[jB];
+      int32_t jC0 = C2_crd[jC];
+      int32_t j = TACO_MIN(jB0,jC0);
+      if (jB0 == j && jC0 == j) {
         int32_t pA2 = A2_pos[i];
         A2_pos[i] = A2_pos[i] + 1;
         A2_crd[pA2] = j;
       }
-      else if (jB2 == j) {
+      else if (jB0 == j) {
         int32_t pA20 = A2_pos[i];
         A2_pos[i] = A2_pos[i] + 1;
         A2_crd[pA20] = j;
@@ -255,22 +276,22 @@ int assemble(taco_tensor_t *A, taco_tensor_t *B, taco_tensor_t *C) {
         A2_pos[i] = A2_pos[i] + 1;
         A2_crd[pA21] = j;
       }
-      jB1 += (int32_t)(jB2 == j);
-      jC1 += (int32_t)(jC2 == j);
+      jB += (int32_t)(jB0 == j);
+      jC += (int32_t)(jC0 == j);
     }
-    while (jB1 < pB2_end0) {
-      int32_t j = B2_crd[jB1];
+    while (jB < pB2_end) {
+      int32_t j = B2_crd[jB];
       int32_t pA22 = A2_pos[i];
       A2_pos[i] = A2_pos[i] + 1;
       A2_crd[pA22] = j;
-      jB1++;
+      jB++;
     }
-    while (jC1 < pC2_end0) {
-      int32_t j = C2_crd[jC1];
+    while (jC < pC2_end) {
+      int32_t j = C2_crd[jC];
       int32_t pA23 = A2_pos[i];
       A2_pos[i] = A2_pos[i] + 1;
       A2_crd[pA23] = j;
-      jC1++;
+      jC++;
     }
   }
 
@@ -342,51 +363,51 @@ int evaluate(taco_tensor_t *A, taco_tensor_t *B, taco_tensor_t *C) {
   #pragma omp parallel for schedule(runtime)
   for (int32_t i = 0; i < C1_dimension; i++) {
 
-    int32_t jB1 = B2_pos[i];
-    int32_t pB2_end0 = B2_pos[(i + 1)];
-    int32_t jC1 = C2_pos[i];
-    int32_t pC2_end0 = C2_pos[(i + 1)];
+    int32_t jB = B2_pos[i];
+    int32_t pB2_end = B2_pos[(i + 1)];
+    int32_t jC = C2_pos[i];
+    int32_t pC2_end = C2_pos[(i + 1)];
 
-    while (jB1 < pB2_end0 && jC1 < pC2_end0) {
-      int32_t jB2 = B2_crd[jB1];
-      int32_t jC2 = C2_crd[jC1];
-      int32_t j = TACO_MIN(jB2,jC2);
-      if (jB2 == j && jC2 == j) {
+    while (jB < pB2_end && jC < pC2_end) {
+      int32_t jB0 = B2_crd[jB];
+      int32_t jC0 = C2_crd[jC];
+      int32_t j = TACO_MIN(jB0,jC0);
+      if (jB0 == j && jC0 == j) {
         int32_t pA2 = A2_pos[i];
         A2_pos[i] = A2_pos[i] + 1;
         A2_crd[pA2] = j;
-        A_vals[pA2] = B_vals[jB1] + C_vals[jC1];
+        A_vals[pA2] = B_vals[jB] + C_vals[jC];
       }
-      else if (jB2 == j) {
+      else if (jB0 == j) {
         int32_t pA20 = A2_pos[i];
         A2_pos[i] = A2_pos[i] + 1;
         A2_crd[pA20] = j;
-        A_vals[pA20] = B_vals[jB1];
+        A_vals[pA20] = B_vals[jB];
       }
       else {
         int32_t pA21 = A2_pos[i];
         A2_pos[i] = A2_pos[i] + 1;
         A2_crd[pA21] = j;
-        A_vals[pA21] = C_vals[jC1];
+        A_vals[pA21] = C_vals[jC];
       }
-      jB1 += (int32_t)(jB2 == j);
-      jC1 += (int32_t)(jC2 == j);
+      jB += (int32_t)(jB0 == j);
+      jC += (int32_t)(jC0 == j);
     }
-    while (jB1 < pB2_end0) {
-      int32_t j = B2_crd[jB1];
+    while (jB < pB2_end) {
+      int32_t j = B2_crd[jB];
       int32_t pA22 = A2_pos[i];
       A2_pos[i] = A2_pos[i] + 1;
       A2_crd[pA22] = j;
-      A_vals[pA22] = B_vals[jB1];
-      jB1++;
+      A_vals[pA22] = B_vals[jB];
+      jB++;
     }
-    while (jC1 < pC2_end0) {
-      int32_t j = C2_crd[jC1];
+    while (jC < pC2_end) {
+      int32_t j = C2_crd[jC];
       int32_t pA23 = A2_pos[i];
       A2_pos[i] = A2_pos[i] + 1;
       A2_crd[pA23] = j;
-      A_vals[pA23] = C_vals[jC1];
-      jC1++;
+      A_vals[pA23] = C_vals[jC];
+      jC++;
     }
   }
 

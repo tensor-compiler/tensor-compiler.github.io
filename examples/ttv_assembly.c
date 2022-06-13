@@ -40,13 +40,13 @@ int assemble(taco_tensor_t *A, taco_tensor_t *B, taco_tensor_t *c) {
   A_vals = (double*)malloc(sizeof(double) * A2_pos[A1_dimension]);
 
   #pragma omp parallel for schedule(runtime)
-  for (int32_t iB0 = B1_pos[0]; iB0 < B1_pos[1]; iB0++) {
-    int32_t i = B1_crd[iB0];
+  for (int32_t iB = B1_pos[0]; iB < B1_pos[1]; iB++) {
+    int32_t i = B1_crd[iB];
 
-    for (int32_t jB0 = B2_pos[iB0]; jB0 < B2_pos[(iB0 + 1)]; jB0++) {
-      int32_t j = B2_crd[jB0];
+    for (int32_t jB = B2_pos[iB]; jB < B2_pos[(iB + 1)]; jB++) {
+      int32_t j = B2_crd[jB];
       bool tkA_set = 0;
-      if (B3_pos[jB0] < B3_pos[(jB0 + 1)]) {
+      if (B3_pos[jB] < B3_pos[(jB + 1)]) {
         tkA_set = 1;
       }
       if (tkA_set) {

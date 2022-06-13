@@ -26,6 +26,7 @@ typedef struct {
   taco_mode_t* mode_types;    // mode storage types
   uint8_t***   indices;       // tensor index data (per mode)
   uint8_t*     vals;          // tensor values
+  uint8_t*     fill_value;    // tensor fill value
   int32_t      vals_size;     // values array size
 } taco_tensor_t;
 #endif
@@ -35,6 +36,26 @@ int omp_get_max_threads() { return 1; }
 #endif
 int cmp(const void *a, const void *b) {
   return *((const int*)a) - *((const int*)b);
+}
+int taco_gallop(int *array, int arrayStart, int arrayEnd, int target) {
+  if (array[arrayStart] >= target || arrayStart >= arrayEnd) {
+    return arrayStart;
+  }
+  int step = 1;
+  int curr = arrayStart;
+  while (curr + step < arrayEnd && array[curr + step] < target) {
+    curr += step;
+    step = step * 2;
+  }
+
+  step = step / 2;
+  while (step > 0) {
+    if (curr + step < arrayEnd && array[curr + step] < target) {
+      curr += step;
+    }
+    step = step / 2;
+  }
+  return curr+1;
 }
 int taco_binarySearchAfter(int *array, int arrayStart, int arrayEnd, int target) {
   if (array[arrayStart] >= target) {
@@ -199,13 +220,13 @@ int assemble(taco_tensor_t *A, taco_tensor_t *B, taco_tensor_t *c) {
   A_vals = (double*)malloc(sizeof(double) * A2_pos[A1_dimension]);
 
   #pragma omp parallel for schedule(runtime)
-  for (int32_t iB0 = B1_pos[0]; iB0 < B1_pos[1]; iB0++) {
-    int32_t i = B1_crd[iB0];
+  for (int32_t iB = B1_pos[0]; iB < B1_pos[1]; iB++) {
+    int32_t i = B1_crd[iB];
 
-    for (int32_t jB0 = B2_pos[iB0]; jB0 < B2_pos[(iB0 + 1)]; jB0++) {
-      int32_t j = B2_crd[jB0];
+    for (int32_t jB = B2_pos[iB]; jB < B2_pos[(iB + 1)]; jB++) {
+      int32_t j = B2_crd[jB];
       bool tkA_set = 0;
-      if (B3_pos[jB0] < B3_pos[(jB0 + 1)]) {
+      if (B3_pos[jB] < B3_pos[(jB + 1)]) {
         tkA_set = 1;
       }
       if (tkA_set) {
@@ -270,16 +291,16 @@ int evaluate(taco_tensor_t *A, taco_tensor_t *B, taco_tensor_t *c) {
   A_vals = calloc(A2_pos[A1_dimension], sizeof(double));
 
   #pragma omp parallel for schedule(runtime)
-  for (int32_t iB0 = B1_pos[0]; iB0 < B1_pos[1]; iB0++) {
-    int32_t i = B1_crd[iB0];
+  for (int32_t iB = B1_pos[0]; iB < B1_pos[1]; iB++) {
+    int32_t i = B1_crd[iB];
 
-    for (int32_t jB0 = B2_pos[iB0]; jB0 < B2_pos[(iB0 + 1)]; jB0++) {
-      int32_t j = B2_crd[jB0];
+    for (int32_t jB = B2_pos[iB]; jB < B2_pos[(iB + 1)]; jB++) {
+      int32_t j = B2_crd[jB];
       double tkA_val = 0.0;
       bool tkA_set = 0;
-      for (int32_t kB0 = B3_pos[jB0]; kB0 < B3_pos[(jB0 + 1)]; kB0++) {
-        int32_t k = B3_crd[kB0];
-        tkA_val += B_vals[kB0] * c_vals[k];
+      for (int32_t kB = B3_pos[jB]; kB < B3_pos[(jB + 1)]; kB++) {
+        int32_t k = B3_crd[kB];
+        tkA_val += B_vals[kB] * c_vals[k];
         tkA_set = 1;
       }
       if (tkA_set) {
