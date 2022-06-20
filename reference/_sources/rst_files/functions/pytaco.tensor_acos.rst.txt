@@ -1,4 +1,4 @@
-pytaco.tensor\_acos
+﻿pytaco.tensor\_acos
 ===================
 
 .. currentmodule:: pytaco

@@ -1,4 +1,4 @@
-pytaco.tensor\_logical\_not
+﻿pytaco.tensor\_logical\_not
 ===========================
 
 .. currentmodule:: pytaco

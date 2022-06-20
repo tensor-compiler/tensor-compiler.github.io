@@ -1,4 +1,4 @@
-pytaco.log
+﻿pytaco.log
 ==========
 
 .. currentmodule:: pytaco

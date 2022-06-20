@@ -1,4 +1,4 @@
-pytaco.max
+﻿pytaco.max
 ==========
 
 .. currentmodule:: pytaco

@@ -1,4 +1,4 @@
-pytaco.lt
+﻿pytaco.lt
 =========
 
 .. currentmodule:: pytaco

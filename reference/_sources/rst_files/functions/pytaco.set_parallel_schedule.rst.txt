@@ -1,4 +1,4 @@
-pytaco.set\_parallel\_schedule
+﻿pytaco.set\_parallel\_schedule
 ==============================
 
 .. currentmodule:: pytaco

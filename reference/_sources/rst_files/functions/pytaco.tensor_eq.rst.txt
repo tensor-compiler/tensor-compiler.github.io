@@ -1,4 +1,4 @@
-pytaco.tensor\_eq
+﻿pytaco.tensor\_eq
 =================
 
 .. currentmodule:: pytaco

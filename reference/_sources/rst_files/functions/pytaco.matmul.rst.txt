@@ -1,4 +1,4 @@
-pytaco.matmul
+﻿pytaco.matmul
 =============
 
 .. currentmodule:: pytaco

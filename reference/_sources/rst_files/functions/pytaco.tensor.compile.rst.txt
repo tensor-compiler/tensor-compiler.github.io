@@ -1,4 +1,4 @@
-pytaco.tensor.compile
+﻿pytaco.tensor.compile
 =====================
 
 .. currentmodule:: pytaco

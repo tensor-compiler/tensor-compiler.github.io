@@ -1,4 +1,4 @@
-pytaco.inner
+﻿pytaco.inner
 ============
 
 .. currentmodule:: pytaco

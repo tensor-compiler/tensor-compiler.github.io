@@ -1,4 +1,4 @@
-pytaco.tensor.insert
+﻿pytaco.tensor.insert
 ====================
 
 .. currentmodule:: pytaco

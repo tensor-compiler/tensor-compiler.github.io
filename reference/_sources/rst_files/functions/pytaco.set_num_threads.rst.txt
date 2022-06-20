@@ -1,4 +1,4 @@
-pytaco.set\_num\_threads
+﻿pytaco.set\_num\_threads
 ========================
 
 .. currentmodule:: pytaco

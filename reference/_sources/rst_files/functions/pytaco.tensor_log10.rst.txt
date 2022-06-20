@@ -1,4 +1,4 @@
-pytaco.tensor\_log10
+﻿pytaco.tensor\_log10
 ====================
 
 .. currentmodule:: pytaco

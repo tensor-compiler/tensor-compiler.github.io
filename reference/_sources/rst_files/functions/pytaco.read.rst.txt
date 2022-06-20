@@ -1,4 +1,4 @@
-pytaco.read
+﻿pytaco.read
 ===========
 
 .. currentmodule:: pytaco

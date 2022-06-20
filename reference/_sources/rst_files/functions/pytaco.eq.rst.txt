@@ -1,4 +1,4 @@
-pytaco.eq
+﻿pytaco.eq
 =========
 
 .. currentmodule:: pytaco

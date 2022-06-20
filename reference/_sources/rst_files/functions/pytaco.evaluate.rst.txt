@@ -1,4 +1,4 @@
-pytaco.evaluate
+﻿pytaco.evaluate
 ===============
 
 .. currentmodule:: pytaco

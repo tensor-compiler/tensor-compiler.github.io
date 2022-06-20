@@ -1,4 +1,4 @@
-pytaco.tensor\_sin
+﻿pytaco.tensor\_sin
 ==================
 
 .. currentmodule:: pytaco

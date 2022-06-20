@@ -1,4 +1,4 @@
-pytaco.pow
+﻿pytaco.pow
 ==========
 
 .. currentmodule:: pytaco

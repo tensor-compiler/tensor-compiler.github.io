@@ -1,67 +1,35 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>pytaco.from_array &mdash; Taco  documentation</title>
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pytaco.from_array &mdash; TACO Python API Reference</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  
-  
-  
-
-  
-  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="pytaco.from_sp_csc" href="pytaco.from_sp_csc.html" />
     <link rel="prev" title="pytaco.write" href="pytaco.write.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
-            <a href="../../index.html" class="icon icon-home"> Taco
-          
-
-          
+            <a href="../../index.html" class="icon icon-home"> TACO Python API Reference
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -69,22 +37,11 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <p class="caption"><span class="caption-text">Home:</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../datatype.html">Datatypes</a></li>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../datatype.html">Data Types</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../format.html">Formats</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../file_io.html">Tensor IO</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../file_io.html">Tensor I/O</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="pytaco.read.html">pytaco.read</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pytaco.write.html">pytaco.write</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">pytaco.from_array</a></li>
@@ -99,103 +56,64 @@
 <li class="toctree-l1"><a class="reference internal" href="../sched.html">Scheduling Commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../index_expressions.html">Index Expressions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tensors.html">Tensors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../parsers.html">Evaluate String Expressions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../udfs.html">User Defined Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parsers.html">Evaluating String Expressions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../udfs.html">User-Defined Functions</a></li>
 </ul>
 
-            
-          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Taco</a>
-        
+          <a href="../../index.html">TACO Python API Reference</a>
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
-        
-          <li><a href="../file_io.html">Tensor IO</a> &raquo;</li>
-        
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../file_io.html">Tensor I/O</a> &raquo;</li>
       <li>pytaco.from_array</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-            
             <a href="../../_sources/rst_files/functions/pytaco.from_array.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="pytaco-from-array">
-<h1>pytaco.from_array<a class="headerlink" href="#pytaco-from-array" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
-<dt id="pytaco.from_array">
-<code class="descclassname">pytaco.</code><code class="descname">from_array</code><span class="sig-paren">(</span><em>array</em>, <em>copy=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pytaco.from_array" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert a numpy array to a tensor.</p>
-<p>Initializes a taco tensor from a numpy array and copies the array by default. This always creates a dense
+             
+  <section id="pytaco-from-array">
+<h1>pytaco.from_array<a class="headerlink" href="#pytaco-from-array" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="pytaco.from_array">
+<span class="sig-prename descclassname"><span class="pre">pytaco.</span></span><span class="sig-name descname"><span class="pre">from_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytaco.from_array" title="Permalink to this definition"></a></dt>
+<dd><p>Convert a NumPy array to a tensor.</p>
+<p>Initializes a taco tensor from a NumPy array and copies the array by default. This always creates a dense
 tensor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>array: numpy.array</strong></dt><dd><p>A numpy array to convert to a taco tensor</p>
+<dt><strong>array: numpy.array</strong></dt><dd><p>A NumPy array to convert to a taco tensor</p>
 </dd>
-<dt><strong>copy: boolean, optional</strong></dt><dd><p>If true, taco copies the data from numpy and stores its own copy. If false, taco points to the same
-underlying data as the numpy array.</p>
+<dt><strong>copy: boolean, optional</strong></dt><dd><p>If true, taco copies the data from NumPy and stores its own copy. If false, taco points to the same
+underlying data as the NumPy array.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
-<dt>t: tensor</dt><dd><p>A taco tensor pointing to the same underlying data as the numpy array if copy was set to False. Otherwise,
-returns a taco tensor containing data copied from the numpy array.</p>
+<dt>t: tensor</dt><dd><p>A taco tensor pointing to the same underlying data as the NumPy array if copy was set to False. Otherwise,
+returns a taco tensor containing data copied from the NumPy array.</p>
 </dd>
 </dl>
 </dd>
 </dl>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Taco’s changes to tensors may NOT be visible to numpy since taco places inserts in buffers may copy tensor data
+<p>Taco’s changes to tensors may NOT be visible to NumPy since taco places inserts in buffers may copy tensor data
 after inserting. See notes for details.</p>
 </div>
 <div class="admonition seealso">
@@ -206,16 +124,17 @@ after inserting. See notes for details.</p>
 </div>
 <p class="rubric">Notes</p>
 <p>The copy flag is ignored if the input array is not C contiguous or F contiguous (so for most transposed views).
-If taco detects an array that is not contiguous, it will always copy the numpy array into a C contiguous format.
-This restriction will be lifted in future versions of taco.</p>
+If taco detects an array that is not contiguous, it will always copy the NumPy array into a C contiguous format.
+Additionally, if the GPU backend is enabled, taco will always copy the NumPy array to CUDA unified memory.
+These restriction will be lifted in future versions of taco.</p>
 <p>Taco is mainly intended to operate on sparse tensors. As a result, it buffers inserts since inserting into sparse
 structures is very costly. This means that when the full tensor structure is needed, taco will copy the tensor to
 another location and insert the new values as needed. This saves a lot of time when dealing with sparse structures
-but is not needed for dense tensors (like numpy arrays). Currently, taco does this copy for dense and sparse tensors.
-As a result, after inserting into a taco tensor numpy will not see the changes since taco will not be writing to
-the same memory location that numpy is referencing.</p>
+but is not needed for dense tensors (like NumPy arrays). Currently, taco does this copy for dense and sparse tensors.
+As a result, after inserting into a taco tensor, NumPy will not see the changes since taco will not be writing to
+the same memory location that NumPy is referencing.</p>
 <p class="rubric">Examples</p>
-<p>If we choose not to copy, modifying the tensor also modifies the numpy array and vice-versa. An example of this is
+<p>If we choose not to copy, modifying the tensor also modifies the NumPy array and vice-versa. An example of this is
 shown:</p>
 <div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pytaco</span> <span class="k">as</span> <span class="nn">pt</span>
@@ -228,55 +147,37 @@ shown:</p>
 </div>
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="pytaco.from_sp_csc.html" class="btn btn-neutral float-right" title="pytaco.from_sp_csc" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="pytaco.write.html" class="btn btn-neutral float-left" title="pytaco.write" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pytaco.write.html" class="btn btn-neutral float-left" title="pytaco.write" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pytaco.from_sp_csc.html" class="btn btn-neutral float-right" title="pytaco.from_sp_csc" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &copy; Copyright 2019, MIT COMMIT GROUP
-
-    </p>
+    <p>&#169; Copyright 2022 TACO Development Team.</p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
-
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

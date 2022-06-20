@@ -1,4 +1,4 @@
-pytaco.heaviside
+﻿pytaco.heaviside
 ================
 
 .. currentmodule:: pytaco

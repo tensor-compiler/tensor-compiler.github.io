@@ -1,4 +1,4 @@
-pytaco.atan
+﻿pytaco.atan
 ===========
 
 .. currentmodule:: pytaco

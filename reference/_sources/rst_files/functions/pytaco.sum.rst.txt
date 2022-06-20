@@ -1,4 +1,4 @@
-pytaco.sum
+﻿pytaco.sum
 ==========
 
 .. currentmodule:: pytaco

@@ -1,4 +1,4 @@
-pytaco.tensor\_asinh
+﻿pytaco.tensor\_asinh
 ====================
 
 .. currentmodule:: pytaco

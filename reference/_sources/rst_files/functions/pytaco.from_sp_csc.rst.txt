@@ -1,4 +1,4 @@
-pytaco.from\_sp\_csc
+﻿pytaco.from\_sp\_csc
 ====================
 
 .. currentmodule:: pytaco

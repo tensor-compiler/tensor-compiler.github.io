@@ -1,4 +1,4 @@
-pytaco.tensor\_atan2
+﻿pytaco.tensor\_atan2
 ====================
 
 .. currentmodule:: pytaco

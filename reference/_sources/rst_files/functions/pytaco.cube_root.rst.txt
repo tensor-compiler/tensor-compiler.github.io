@@ -1,4 +1,4 @@
-pytaco.cube\_root
+﻿pytaco.cube\_root
 =================
 
 .. currentmodule:: pytaco

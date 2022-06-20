@@ -1,4 +1,4 @@
-pytaco.tensor\_max
+﻿pytaco.tensor\_max
 ==================
 
 .. currentmodule:: pytaco

@@ -1,4 +1,4 @@
-pytaco.tensor\_sum
+﻿pytaco.tensor\_sum
 ==================
 
 .. currentmodule:: pytaco

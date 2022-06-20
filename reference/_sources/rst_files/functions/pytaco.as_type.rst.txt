@@ -1,4 +1,4 @@
-pytaco.as\_type
+﻿pytaco.as\_type
 ===============
 
 .. currentmodule:: pytaco

@@ -1,4 +1,4 @@
-pytaco.acosh
+﻿pytaco.acosh
 ============
 
 .. currentmodule:: pytaco

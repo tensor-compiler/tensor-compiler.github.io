@@ -1,4 +1,4 @@
-pytaco.cosh
+﻿pytaco.cosh
 ===========
 
 .. currentmodule:: pytaco

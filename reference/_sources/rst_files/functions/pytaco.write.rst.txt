@@ -1,4 +1,4 @@
-pytaco.write
+﻿pytaco.write
 ============
 
 .. currentmodule:: pytaco

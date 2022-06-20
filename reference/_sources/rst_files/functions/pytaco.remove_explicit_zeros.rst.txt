@@ -1,4 +1,4 @@
-pytaco.remove\_explicit\_zeros
+﻿pytaco.remove\_explicit\_zeros
 ==============================
 
 .. currentmodule:: pytaco

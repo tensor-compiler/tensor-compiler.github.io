@@ -1,4 +1,4 @@
-pytaco.einsum
+﻿pytaco.einsum
 =============
 
 .. currentmodule:: pytaco

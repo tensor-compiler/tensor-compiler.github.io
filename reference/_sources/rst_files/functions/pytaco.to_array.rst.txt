@@ -1,4 +1,4 @@
-pytaco.to\_array
+﻿pytaco.to\_array
 ================
 
 .. currentmodule:: pytaco

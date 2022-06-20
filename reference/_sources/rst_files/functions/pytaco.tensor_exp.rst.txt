@@ -1,4 +1,4 @@
-pytaco.tensor\_exp
+﻿pytaco.tensor\_exp
 ==================
 
 .. currentmodule:: pytaco

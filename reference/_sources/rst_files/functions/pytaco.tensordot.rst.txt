@@ -1,4 +1,4 @@
-pytaco.tensordot
+﻿pytaco.tensordot
 ================
 
 .. currentmodule:: pytaco

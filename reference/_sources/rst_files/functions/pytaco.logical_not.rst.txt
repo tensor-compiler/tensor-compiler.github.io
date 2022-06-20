@@ -1,4 +1,4 @@
-pytaco.logical\_not
+﻿pytaco.logical\_not
 ===================
 
 .. currentmodule:: pytaco

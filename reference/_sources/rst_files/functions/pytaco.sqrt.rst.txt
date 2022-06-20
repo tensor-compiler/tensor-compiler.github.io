@@ -1,4 +1,4 @@
-pytaco.sqrt
+﻿pytaco.sqrt
 ===========
 
 .. currentmodule:: pytaco

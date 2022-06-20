@@ -1,4 +1,4 @@
-pytaco.apply
+﻿pytaco.apply
 ============
 
 .. currentmodule:: pytaco

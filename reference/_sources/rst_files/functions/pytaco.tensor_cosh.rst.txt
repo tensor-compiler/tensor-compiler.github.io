@@ -1,4 +1,4 @@
-pytaco.tensor\_cosh
+﻿pytaco.tensor\_cosh
 ===================
 
 .. currentmodule:: pytaco

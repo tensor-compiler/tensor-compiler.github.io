@@ -1,4 +1,4 @@
-pytaco.get\_index\_vars
+﻿pytaco.get\_index\_vars
 =======================
 
 .. currentmodule:: pytaco

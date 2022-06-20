@@ -1,4 +1,4 @@
-pytaco.tensor.pack
+﻿pytaco.tensor.pack
 ==================
 
 .. currentmodule:: pytaco

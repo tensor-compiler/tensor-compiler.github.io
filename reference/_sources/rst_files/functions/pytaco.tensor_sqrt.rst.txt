@@ -1,4 +1,4 @@
-pytaco.tensor\_sqrt
+﻿pytaco.tensor\_sqrt
 ===================
 
 .. currentmodule:: pytaco
