@@ -11,7 +11,7 @@ layout: page
 
 # What can I use TACO for?
 
-TACO can be used to implement sparse linear and tensor algebra applications in a wide range of domains, including---but not limited to---the following:
+TACO can be used to implement sparse linear and tensor algebra applications in a wide range of domains, such as...
 
 {% include inline_callouts.html callouts="where_taco" %}
 
