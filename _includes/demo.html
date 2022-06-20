@@ -32,18 +32,19 @@
           <th class="mdl-data-table__cell--non-numeric" style="min-width: 70px; vertical-align: middle; padding-left: 9px">
             <div align="center" style="position:relative"><big>Tensor</big></div></th>
           <th class="mdl-data-table__cell--non-numeric" style="width: 100%; padding-left: 0px; vertical-align: middle; text-align: left">
-            <big id="formatHeading">
-              Format
-            </big>
-            <big class="optional-header" style="padding-left: 96px">
-              (Level Formats)
-            </big>
-            <big>
-              <button class="help-btn js-modal-trigger mdl-button mdl-js-button mdl-button--icon" data-target="modal-level-formats"><i class="material-icons" style="font-size:20px">help_outline</i>
-              </button>
+            <div style="display: flex">
+              <div style="width: 190px">
+                <big style="text-align: center; display: inline-block; width: 100%">
+                  Format
+                  <button class="help-btn help-btn-alternate js-modal-trigger mdl-button mdl-js-button mdl-button--icon" data-target="modal-level-formats"><i class="material-icons" style="font-size: 20px">help_outline</i></button>
+                </big>
+              </div>
+              <big class="optional-header" style="padding-left: 28px">
+                (Level Formats)
+                <button class="help-btn js-modal-trigger mdl-button mdl-js-button mdl-button--icon" data-target="modal-level-formats"><i class="material-icons" style="font-size: 20px">help_outline</i></button>
+              </big>
               <div id="modal-level-formats" class="modal">
                 <div class="modal-background"></div>
-              
                 <div class="modal-content">
                   <div class="box">
                     <p>
@@ -79,10 +80,9 @@
                     </p>
                   </div>
                 </div>
-              
                 <button class="modal-close is-large" aria-label="close"></button>
               </div>
-            </big>
+            </div>
           </th>
         </tr>
       </thead>
@@ -107,19 +107,23 @@
         <tr>
           <th class="mdl-data-table__cell--non-numeric"></th>
           <th class="mdl-data-table__cell--non-numeric" style="padding-left: 0px; padding-right: 8px; vertical-align: middle; text-align: left">
-            <big style="padding-left: 10px">
-              Scheduling Command
-            </big>
-            <big>
-              <button class="help-btn mdl-button mdl-js-button mdl-button--icon">
-                <a target="_blank" rel="noopener noreferrer" href="http://tensor-compiler.org/docs/scheduling/index.html">
-                  <i class="material-icons" style="font-size: 20px; color: black">help_outline</i>
-                </a>
-              </button>
-            </big>
-            <big class="optional-header" style="padding-left: 34px">
-              Arguments
-            </big>
+            <div style="display: flex">
+              <div style="width: 200px">
+                <big style="text-align: center; display: inline-block; width: 100%">
+                  Scheduling Command
+                  <button class="help-btn mdl-button mdl-js-button mdl-button--icon">
+                    <a target="_blank" rel="noopener noreferrer" href="http://tensor-compiler.org/docs/scheduling/index.html">
+                      <i class="material-icons" style="font-size: 20px; color: black">help_outline</i>
+                    </a>
+                  </button>
+                </big>
+              </div>
+              <div>
+                <big class="optional-header" style="padding-left: 28px">
+                  Arguments
+                </big>
+              </div>
+            </div>
           </th>
         </tr>
       </thead>
