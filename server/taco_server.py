@@ -9,6 +9,7 @@ import urllib.parse
 import subprocess
 import re
 import time
+import os
 
 class Handler(BaseHTTPRequestHandler):
   def do_POST(self):
@@ -25,8 +26,10 @@ class Handler(BaseHTTPRequestHandler):
       prettyCmd = "taco " + cmd
       cmd = cmd.replace("\"", "")
       
-      logFile = "/home/ubuntu/success.log"
-      tacoPath = "/home/ubuntu/taco/build/bin/taco"
+      homeDir = os.path.expanduser('~')
+      logsDir = homeDir + "/web-tool-logs/"
+      logFile = logsDir + "/success.log"
+      tacoPath = "/taco/build/bin/taco"
 
       prefix = "/tmp/" + str(threading.current_thread().ident) + "_"
       writePath = prefix + "taco_kernel.c"
@@ -47,17 +50,17 @@ class Handler(BaseHTTPRequestHandler):
           response['assembly-kernel'] = assemblyKernel
       except subprocess.TimeoutExpired:
         response['error'] = 'Server is unable to process the request in a timely manner'
-        logFile = "/home/ubuntu/timeout.log"
+        logFile = logsDir + "/timeout.log"
       except subprocess.CalledProcessError as e:
         search = re.compile(':\n .*\n').search(e.output.decode())
         if search is not None: 
           response['error'] = search.group()[3:-1]
         else: 
           response['error'] = 'Expression and/or schedule is currently not supported'
-        logFile = "/home/ubuntu/errors.log"
+        logFile = logsDir + "/errors.log"
       except:
         response['error'] = 'Expression and/or schedule is currently not supported'
-        logFile = "/home/ubuntu/errors.log"
+        logFile = logsDir + "/errors.log"
 
       ip = ".".join(self.client_address[0].split('.')[0:-2]) + ".*.*"
       curTime = datetime.now().isoformat(' ')
