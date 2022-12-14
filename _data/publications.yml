@@ -5,7 +5,7 @@
     venue: OOPSLA 2022 
     is_thesis: false
     paper_link: files/chou-oopsla22-taco-dynamic.pdf
-    slide_link: files/amarasinghe-oopsla22-slides.pdf
+    slide_link: files/amarasinghe-oopsla22-slides.pptx
     abstract: >
       Many applications, from social network graph analytics to control flow analysis, compute on sparse data that evolves over the course of program execution. Such data can be represented as dynamic sparse tensors and efficiently stored in formats (data layouts) that utilize pointer-based data structures like block linked lists, binary search trees, B-trees, and C-trees among others. These specialized formats support fast in-place modification and are thus better suited than traditional, array-based data structures like CSR for storing dynamic sparse tensors. However, different dynamic sparse tensor formats have distinct benefits and drawbacks, and performing different computations on tensors that are stored in different formats can require vastly dissimilar code that are not straightforward to correctly implement and optimize.
       <br><br>
